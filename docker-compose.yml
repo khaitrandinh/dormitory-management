@@ -1,0 +1,65 @@
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: dormitory_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - dormitory-net
+
+  auth-service:
+    build:
+      context: ./services/auth-service
+    restart: always
+    depends_on:
+      - mysql
+    ports:
+      - "8001:8000"
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: dormitory_db  # Sửa đúng tên database
+      DB_USERNAME: root
+      DB_PASSWORD: root  # Thêm mật khẩu
+    volumes:
+      - ./services/auth-service:/var/www/html
+    networks:
+      - dormitory-net
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    restart: always
+    depends_on:
+      - auth-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api-gateway:/var/www/html
+    networks:
+      - dormitory-net
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+
+
+volumes:
+  mysql_data:
+
+networks:
+  dormitory-net:
