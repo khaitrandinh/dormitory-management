@@ -129,29 +129,28 @@ services/auth-service/
 git clone https://github.com/khaitrandinh/dormitory-management.git
 ```
 
-### 2. Cài đặt các service Laravel:
-```bash
-cd api-gateway && composer install
-cd ../services/auth-service && composer install
-cd ../services/room-service && composer install
-cd ../services/payment-service && composer install
-cd ../services/notification-service && composer install
-```
-
-### 3. Cài đặt frontend:
-```bash
-cd frontend
-npm install
-```
-
-### 4. Thiết lập file `.env`:
+### 2. Thiết lập file `.env`:
 - Copy các file `.env.example` thành `.env` ở mỗi service và frontend.
 - Điều chỉnh biến môi trường phù hợp hệ thống.
 
-### 5. Khởi chạy hệ thống:
+### 3. Build và khởi chạy toàn bộ hệ thống bằng Docker Compose:
 ```bash
-php artisan serve        # Với Laravel service
-npm start                # Với frontend
+docker-compose up --build
+```
+
+### 4. Truy cập các service:
+- **Frontend**: http://localhost:3000
+- **API Gateway**: http://localhost:8000 (hoặc cổng bạn cấu hình)
+- Các service khác sẽ chạy nội bộ theo cấu hình docker-compose.
+
+### 5. Các lệnh hỗ trợ khác:
+- Dừng hệ thống:
+```bash
+docker-compose down
+```
+- Xem log:
+```bash
+docker-compose logs -f
 ```
 
 ---
