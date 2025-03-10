@@ -1,4 +1,4 @@
-# 🏠 Dormitory Management System
+> # 🏠 Dormitory Management System
 
 Chào mừng đến với **Dormitory Management System** - Hệ thống quản lý ký túc xá được phát triển với kiến trúc microservices.
 
@@ -15,7 +15,7 @@ Chào mừng đến với **Dormitory Management System** - Hệ thống quản 
 
 ---
 
-## 🌟 Giới thiệu
+## 🎯 Giới thiệu
 
 Repo này là hệ thống quản lý ký túc xá được phát triển theo mô hình **Microservices**, bao gồm nhiều service riêng biệt: 
 - **Auth Service** (Đăng nhập, đăng ký, phân quyền)
@@ -33,27 +33,51 @@ Repo này là hệ thống quản lý ký túc xá được phát triển theo m
 dormitory-management/
 ├── api-gateway/             # API Gateway cho toàn hệ thống
 ├── frontend/                # Giao diện người dùng
-│   ├── node_modules/              # Thư viện, package cài qua npm (tự động tạo khi chạy npm install)
-│   ├── public/                   # Chứa các file tĩnh (static) như index.html, icon, manifest
-│   ├── src/                      # Chứa toàn bộ source code của frontend
-│   │   ├── Components/           # Các component dùng chung (ví dụ: Button, Header, Footer, Modal, v.v.)
-│   │   ├── Pages/                # Các page, mỗi page là 1 màn hình chính (ví dụ: Home, Login, Dashboard)
-│   │   ├── App.css              # File CSS chính cho App component
-│   │   ├── App.js               # File khởi tạo App chính, quản lý router, layout
-│   │   ├── index.css            # File CSS toàn cục cho toàn bộ app
-│   │   ├── index.js             # Điểm khởi tạo ứng dụng React, render App vào DOM
-│   ├── .gitignore               # Các file/thư mục bị git bỏ qua (ví dụ: node_modules, .env)
-│   ├── Dockerfile              # Cấu hình Docker để build image frontend
-│   ├── package-lock.json       # File quản lý version cụ thể của các package đã cài (tự tạo khi npm install)
-│   ├── package.json            # Khai báo các package, script, metadata của dự án
-│   └── README.md               # Tài liệu hướng dẫn riêng cho Frontend
 ├── services/
-│   ├── auth-service/        # Xác thực và phân quyền
-│   ├── room-service/        # Quản lý phòng
-│   ├── payment-service/     # Quản lý thanh toán
-│   ├── notification-service/ # Quản lý thông báo
+│   ├── auth-service/        # Xác thực và phân quyền (Laravel)
+│   ├── room-service/        # Quản lý phòng (Laravel)
+│   ├── payment-service/     # Quản lý thanh toán (Laravel)
+│   ├── notification-service/ # Quản lý thông báo (Laravel)
 │   └── student-service/     # Quản lý sinh viên (đang phát triển)
 └── README.md                # File hướng dẫn
+```
+
+### 📦 Cấu trúc thư mục Frontend
+
+```
+frontend/
+├── public/                 # File tĩnh
+├── src/                    # Mã nguồn chính
+│   ├── Components/         # Các component tái sử dụng
+│   ├── Pages/              # Các trang (Home, Login, Dashboard)
+│   ├── App.js              # App component, định nghĩa routes
+│   ├── App.css             # CSS cho App component
+│   ├── index.js            # Điểm khởi động app
+│   ├── index.css           # CSS toàn cục
+├── .gitignore              # Bỏ qua thư mục, file không cần commit
+├── Dockerfile              # Docker
+├── package.json            # Quản lý package JS
+├── package-lock.json       # Khóa phiên bản package
+└── README.md               # Hướng dẫn chi tiết frontend
+```
+
+### ⚙️ Cấu trúc Laravel Service (ví dụ auth-service)
+
+```
+services/auth-service/
+├── app/                   # Controllers, Models, Middleware, Services
+├── bootstrap/             # Khởi tạo Laravel
+├── config/                # Cấu hình hệ thống
+├── database/              # Migrations, Seeds
+├── lang/                  # Đa ngôn ngữ
+├── public/                # File tĩnh
+├── resources/             # Views, assets
+├── routes/                # API routes
+├── storage/               # Log, cache, uploads
+├── tests/                 # Test
+├── .env.example           # Mẫu biến môi trường
+├── Dockerfile             # Docker
+└── composer.json          # Packages PHP
 ```
 
 ---
@@ -86,7 +110,7 @@ dormitory-management/
 
 5. **Tạo Pull Request (PR) vào nhánh `main` hoặc `develop`**.
 
-6. **Chờ review và approve trước khi merge**.
+6. **Chờ review và được approve trước khi merge vào `main`.**
 
 ---
 
@@ -105,7 +129,7 @@ dormitory-management/
 git clone https://github.com/khaitrandinh/dormitory-management.git
 ```
 
-### 2. Cài đặt các service:
+### 2. Cài đặt các service Laravel:
 ```bash
 cd api-gateway && composer install
 cd ../services/auth-service && composer install
@@ -120,7 +144,15 @@ cd frontend
 npm install
 ```
 
-### 4. Thiết lập file `.env` và config theo service.
+### 4. Thiết lập file `.env`:
+- Copy các file `.env.example` thành `.env` ở mỗi service và frontend.
+- Điều chỉnh biến môi trường phù hợp hệ thống.
+
+### 5. Khởi chạy hệ thống:
+```bash
+php artisan serve        # Với Laravel service
+npm start                # Với frontend
+```
 
 ---
 
@@ -128,12 +160,13 @@ npm install
 
 - **Owner**: [Khai Tran Dinh](https://github.com/khaitrandinh)
 - Email: khaidinhtran0312@gmail.com
-
+- **Dev**: [Tran Sy Chuong](https://github.com/TranSenpai)
+- Email: chuongtran975@gmail.com
 ---
 
 ## 🚀 Góp ý và phát triển
 
 - Fork repo, tạo branch mới, tạo PR.
-- Liên hệ trực tiếp để thảo luận!
+- Liên hệ trực tiếp để thảo luận thêm!
 
 > **Mọi commit và PR phải đảm bảo an toàn, đã qua review.**
