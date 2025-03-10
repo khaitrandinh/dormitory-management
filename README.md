@@ -33,6 +33,20 @@ Repo này là hệ thống quản lý ký túc xá được phát triển theo m
 dormitory-management/
 ├── api-gateway/             # API Gateway cho toàn hệ thống
 ├── frontend/                # Giao diện người dùng
+│   ├── node_modules/              # Thư viện, package cài qua npm (tự động tạo khi chạy npm install)
+│   ├── public/                   # Chứa các file tĩnh (static) như index.html, icon, manifest
+│   ├── src/                      # Chứa toàn bộ source code của frontend
+│   │   ├── Components/           # Các component dùng chung (ví dụ: Button, Header, Footer, Modal, v.v.)
+│   │   ├── Pages/                # Các page, mỗi page là 1 màn hình chính (ví dụ: Home, Login, Dashboard)
+│   │   ├── App.css              # File CSS chính cho App component
+│   │   ├── App.js               # File khởi tạo App chính, quản lý router, layout
+│   │   ├── index.css            # File CSS toàn cục cho toàn bộ app
+│   │   ├── index.js             # Điểm khởi tạo ứng dụng React, render App vào DOM
+│   ├── .gitignore               # Các file/thư mục bị git bỏ qua (ví dụ: node_modules, .env)
+│   ├── Dockerfile              # Cấu hình Docker để build image frontend
+│   ├── package-lock.json       # File quản lý version cụ thể của các package đã cài (tự tạo khi npm install)
+│   ├── package.json            # Khai báo các package, script, metadata của dự án
+│   └── README.md               # Tài liệu hướng dẫn riêng cho Frontend
 ├── services/
 │   ├── auth-service/        # Xác thực và phân quyền
 │   ├── room-service/        # Quản lý phòng
