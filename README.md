@@ -161,6 +161,9 @@ docker-compose logs -f
 - Email: khaidinhtran0312@gmail.com
 - **Dev**: [Tran Sy Chuong](https://github.com/TranSenpai)
 - Email: chuongtran975@gmail.com
+- **Dev**: [Tran Sy Chuong](https://github.com/nguyenhuuthang113)
+- Email: HuuThang030603@gmail.com
+
 ---
 
 ## 🚀 Góp ý và phát triển
