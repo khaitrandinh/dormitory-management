@@ -23,13 +23,14 @@ services:
     ports:
       - "8001:8000"
     environment:
+      DB_CONNECTION: mysql
       DB_HOST: mysql
       DB_PORT: 3306
       DB_DATABASE: dormitory_db
       DB_USERNAME: root
       DB_PASSWORD: root
     volumes:
-      - ./services/auth-service:/var/www/html
+      - ./services/auth-service:/var/www
     networks:
       - dormitory-net
 
@@ -118,7 +119,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./api-gateway:/var/www/html
+      - ./api-gateway:/var/www
     networks:
       - dormitory-net
 
@@ -135,7 +136,7 @@ services:
     environment:
       - NODE_ENV=development
     networks:
-      - dormitory-net
+
 
 volumes:
   mysql_data:

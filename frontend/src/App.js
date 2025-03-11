@@ -1,22 +1,33 @@
-import { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
 
 function App() {
-  const [data, setData] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [result, setResult] = useState('');
 
-  const fetchData = async () => {
-    const response = await axios.post("http://localhost:8000/auth/login", {
-      email: "test@example.com",
-      password: "password",
-    });
-    setData(response.data);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8000/auth/login', {
+        email,
+        password
+      });
+      setResult(response.data.token);
+    } catch (error) {
+      setResult('Login failed: ' + error.response.data.error);
+    }
   };
 
   return (
     <div>
-      <h1>Quản lý ký túc xá</h1>
-      <button onClick={fetchData}>Đăng nhập</button>
-      <p>{data ? JSON.stringify(data) : "Chưa có dữ liệu"}</p>
+      <h1>Login</h1>
+      <form onSubmit={handleLogin}>
+        <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
+        <button type="submit">Login</button>
+      </form>
+      <p>Result: {result}</p>
     </div>
   );
 }
