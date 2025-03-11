@@ -2,43 +2,85 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name', 'email', 'password', 'role'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
     /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
+     * Relation to Roles (Many to Many)
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_roles');
+    }
+
+    /**
+     * Check if user has specific role
+     */
+    public function hasRole($role)
+    {
+        return $this->roles()->where('name', $role)->exists();
+    }
+
+    /**
+     * Get permissions via roles
+     */
+    public function permissions()
+    {
+        return $this->roles()->with('permissions')->get()->pluck('permissions')->flatten()->unique('id');
+    }
+
+    /**
+     * Check if user has permission via role
+     */
+    public function hasPermissionViaRole($permission)
+    {
+        foreach ($this->roles as $role) {
+            if ($role->permissions->contains('name', $permission)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if user has specific permission
+     */
+    public function hasPermission($permissionName)
+    {
+        foreach ($this->roles as $role) {
+            foreach ($role->permissions as $permission) {
+                if ($permission->name === $permissionName) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // ===== JWTSubject Required Methods ===== //
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }

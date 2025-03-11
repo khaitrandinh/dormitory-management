@@ -1,24 +1,34 @@
 <?php
+
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
+    Route::post('/register', function (Request $request) {
+        return Http::post('http://auth-service:8000/api/auth/register', $request->all())->json();
+    });
+
     Route::post('/login', function (Request $request) {
-        Log::info('Gateway received login request', $request->all());
+        return Http::post('http://auth-service:8000/api/auth/login', $request->all())->json();
+    });
 
-        $response = Http::post('http://auth-service:8001/api/login', $request->all());
+    Route::post('/logout', function (Request $request) {
+        return Http::withHeaders([
+            'Authorization' => $request->header('Authorization')
+        ])->post('http://auth-service:8000/api/auth/logout')->json();
+    });
 
-        if ($response->failed()) {
-            Log::error('Auth-service login failed', [
-                'status' => $response->status(),
-                'body' => $response->body()
-            ]);
-            return response()->json(['error' => 'Auth Service not available'], 500);
-        }
+    Route::post('/refresh', function (Request $request) {
+        return Http::withHeaders([
+            'Authorization' => $request->header('Authorization')
+        ])->post('http://auth-service:8000/api/auth/refresh')->json();
+    });
 
-        return $response->json();
+    Route::get('/user', function (Request $request) {
+        return Http::withHeaders([
+            'Authorization' => $request->header('Authorization')
+        ])->get('http://auth-service:8000/api/auth/user')->json();
     });
 });
 
-?>

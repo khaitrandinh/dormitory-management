@@ -15,7 +15,7 @@ RUN npm install && npm install axios react-router-dom react-icons react-bootstra
 # Copy toàn bộ mã nguồn vào container
 COPY . .
 
-# # Build ứng dụng (nếu chạy production)
+# Build ứng dụng (nếu chạy production)
 # RUN npm run build
 
 # Mở port 3000
