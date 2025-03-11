@@ -19,7 +19,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . .
 
 # Cài đặt các dependencies của Laravel
-RUN composer install
+RUN composer install 
 
 # Gán quyền cho thư mục storage và bootstrap/cache
 RUN chmod -R 777 storage bootstrap/cache

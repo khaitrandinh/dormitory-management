@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -14,22 +14,18 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'name' => 'required|string',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string|confirmed'
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => bcrypt($validated['password']),
-            'role' => 'student',
+            'password' => Hash::make($validated['password']),
         ]);
 
-        return response()->json([
-            'message' => 'User registered successfully',
-            'user' => $user
-        ], 201);
+        return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
     }
 
     // Đăng nhập
@@ -48,33 +44,32 @@ class AuthController extends Controller
         ]);
     }
 
-    // Lấy thông tin user
+    // Lấy user hiện tại
     public function user(Request $request)
     {
-        return response()->json(auth()->user());
+        return response()->json(auth('api')->user());
     }
+
+    // Refresh token
     public function refresh()
     {
-        try {
-            $newToken = JWTAuth::parseToken()->refresh();
-            return response()->json([
-                'access_token' => $newToken,
-                'token_type' => 'bearer',
-                'expires_in' => auth('api')->factory()->getTTL() * 60
-            ]);
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'Token invalid or expired'], 401);
-        }
+        return response()->json([
+            'access_token' => auth('api')->refresh(),
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60
+        ]);
     }
 
-
+    // Logout
     public function logout()
     {
-        JWTAuth::invalidate(JWTAuth::parseToken());
-        return response()->json(['message' => 'Successfully logged out']);
+        try {
+            JWTAuth::invalidate(JWTAuth::getToken());
+            return response()->json([
+                'message' => 'User logged out successfully'
+            ], 200);
+        } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['error' => 'Failed to logout, please try again'], 500);
+        }
     }
-
-
-
-
 }

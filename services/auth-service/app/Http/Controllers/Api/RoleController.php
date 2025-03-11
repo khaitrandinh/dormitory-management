@@ -1,46 +1,29 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\Role;
-use App\Models\Permission;
+use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    // Gán role cho user
-    public function assignRole(Request $request)
+    public function index()
     {
-        $user = User::findOrFail($request->user_id);
-        $role = Role::where('name', $request->role)->firstOrFail();
-        $user->roles()->attach($role);
-
-        return response()->json(['message' => 'Role assigned successfully']);
+        return Role::all();
     }
 
-    // Gán permission cho role
-    public function assignPermission(Request $request)
+    public function store(Request $request)
     {
-        $role = Role::where('name', $request->role)->firstOrFail();
-        $permission = Permission::where('name', $request->permission)->firstOrFail();
-        $role->permissions()->attach($permission);
-
-        return response()->json(['message' => 'Permission assigned successfully']);
-    }
-
-    // Tạo Role mới
-    public function createRole(Request $request)
-    {
+        $request->validate(['name' => 'required|unique:roles']);
         $role = Role::create(['name' => $request->name]);
-        return response()->json(['message' => 'Role created', 'role' => $role]);
+        return response()->json($role, 201);
     }
 
-    // Tạo Permission mới
-    public function createPermission(Request $request)
+    public function assignToUser(Request $request)
     {
-        $permission = Permission::create(['name' => $request->name]);
-        return response()->json(['message' => 'Permission created', 'permission' => $permission]);
+        $request->validate(['user_id' => 'required', 'role_id' => 'required']);
+        $user = \App\Models\User::findOrFail($request->user_id);
+        $user->roles()->attach($request->role_id);
+        return response()->json(['message' => 'Role assigned to user']);
     }
 }

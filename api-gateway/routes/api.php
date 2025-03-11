@@ -6,18 +6,29 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->group(function () {
     Route::post('/register', function (Request $request) {
-        $response = Http::post('http://auth-service:8000/api/auth/register', $request->all());
-        return response()->json($response->json(), $response->status());
+        return Http::post('http://auth-service:8000/api/auth/register', $request->all())->json();
     });
 
     Route::post('/login', function (Request $request) {
-        $response = Http::post('http://auth-service:8000/api/auth/login', $request->all());
-        return response()->json($response->json(), $response->status());
+        return Http::post('http://auth-service:8000/api/auth/login', $request->all())->json();
     });
 
-    Route::middleware('auth:api')->get('/user', function (Request $request) {
-        $token = $request->bearerToken();
-        $response = Http::withToken($token)->get('http://auth-service:8000/api/auth/user');
-        return response()->json($response->json(), $response->status());
+    Route::post('/logout', function (Request $request) {
+        return Http::withHeaders([
+            'Authorization' => $request->header('Authorization')
+        ])->post('http://auth-service:8000/api/auth/logout')->json();
+    });
+
+    Route::post('/refresh', function (Request $request) {
+        return Http::withHeaders([
+            'Authorization' => $request->header('Authorization')
+        ])->post('http://auth-service:8000/api/auth/refresh')->json();
+    });
+
+    Route::get('/user', function (Request $request) {
+        return Http::withHeaders([
+            'Authorization' => $request->header('Authorization')
+        ])->get('http://auth-service:8000/api/auth/user')->json();
     });
 });
+

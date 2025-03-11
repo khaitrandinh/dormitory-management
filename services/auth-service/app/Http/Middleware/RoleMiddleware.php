@@ -4,18 +4,18 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Auth;
 
 class RoleMiddleware
 {
-    public function handle($request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, $role)
     {
-        if (! $request->user() || ! $request->user()->roles->contains('name', $role)) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+        $user = Auth::user();
+
+        if (!$user || !$user->hasRole($role)) {
+            return response()->json(['message' => 'Unauthorized.'], 403);
         }
+
         return $next($request);
     }
-
 }
-
-
