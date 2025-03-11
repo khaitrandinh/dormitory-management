@@ -14,7 +14,7 @@ RUN npm install && npm install axios
 COPY . .
 
 # Build ứng dụng (nếu chạy production)
-RUN npm run build
+# RUN npm run build
 
 # Mở port 3000
 EXPOSE 3000
