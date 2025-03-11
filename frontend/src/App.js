@@ -1,29 +1,54 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import PrivateRoute from './components/PrivateRoute';
+import RoleBasedRoute from './components/RoleBasedRoute';
+
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
 import RoomPage from './pages/RoomPage';
+import AdminPage from './pages/AdminPage';
+import ManagerPage from './pages/ManagerPage';
+import StudentPage from './pages/StudentPage';
 
-const PrivateRoute = ({ children }) => {
-    const { user, loading } = useAuth();
-    if (loading) return <div>Loading...</div>;
-    return user ? children : <Navigate to="/" />;
-};
 
-const App = () => {
-    return (
-        <AuthProvider>
-            <Router>
-                <Routes>
-                    <Route path="/" element={<Login />} />
-                    <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-                    <Route path="/rooms" element={<RoomPage />} />
-                </Routes>
-            </Router>
-        </AuthProvider>
-    );
-};
+
+function App() {
+  return (
+    <AuthProvider>
+      
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/rooms" element={<RoomPage />} />      
+          <Route path="/" element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          } />
+          <Route path="/admin" element={
+            <RoleBasedRoute allowedRoles={['admin']}>
+              <AdminPage />
+            </RoleBasedRoute>
+          } />
+          <Route path="/manager" element={
+            <RoleBasedRoute allowedRoles={['manager']}>
+              <ManagerPage />
+            </RoleBasedRoute>
+          } />
+          <Route path="/student" element={
+            <RoleBasedRoute allowedRoles={['student']}>
+              <StudentPage />
+            </RoleBasedRoute>
+          } />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
+}
+
 
 export default App;

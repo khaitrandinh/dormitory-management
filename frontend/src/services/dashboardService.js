@@ -1,11 +1,16 @@
 // ⚠️ Đây là mock data, khi nào có services student/room/notification sẽ kết nối thật.
+import api from './api';
+
 export const getDashboardStats = async () => {
+    // Giả lập data (có thể thay bằng API sau này)
     return {
         emptyRooms: 10,
-        totalStudents: 150,
-        pendingPayments: 20,
+        currentStudents: 150,
+        finance: { income: '50M', expense: '20M' },
+        notifications: 5,
     };
 };
+
 
 export const getImportantNotifications = async () => {
     return [
@@ -14,20 +19,53 @@ export const getImportantNotifications = async () => {
     ];
 };
 
-export const getStudentStatsByMonth = async () => {
-    return [
-        { month: 'Tháng 1', count: 120 },
-        { month: 'Tháng 2', count: 130 },
-        { month: 'Tháng 3', count: 150 },
-        { month: 'Tháng 4', count: 145 },
-    ];
+export const getStudentChart = async () => {
+    return {
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        students: [100, 120, 130, 110, 150, 160],
+    };
 };
 
-export const getFinanceReport = async () => {
-    return [
-        { month: 'Tháng 1', income: 50000, expense: 20000 },
-        { month: 'Tháng 2', income: 52000, expense: 22000 },
-        { month: 'Tháng 3', income: 53000, expense: 21000 },
-        { month: 'Tháng 4', income: 54000, expense: 25000 },
-    ];
+export const getFinanceChart = async () => {
+    return {
+        months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        income: [10, 15, 12, 18, 20, 22],
+        expense: [5, 7, 6, 8, 9, 10],
+    };
+}; // Sử dụng chung API Gateway
+
+export const getDashboardData = async () => {
+    try {
+        // Tạm thời giả lập data, sau kết nối API Gateway thì sửa lại chỗ này
+        return {
+            availableRooms: 15,
+            occupiedStudents: 85,
+            paymentStatus: {
+                paid: 70,
+                unpaid: 15
+            },
+            studentStats: [
+                { month: 'January', count: 10 },
+                { month: 'February', count: 15 },
+                { month: 'March', count: 20 },
+                { month: 'April', count: 18 },
+                { month: 'May', count: 25 },
+                { month: 'June', count: 22 }
+            ],
+            finance: {
+                income: 15000,
+                expenses: 7000
+            },
+            notifications: [
+                { id: 1, message: "Hạn cuối nộp phí KTX tháng này là 30/03" },
+                { id: 2, message: "Bắt đầu kiểm tra phòng từ 20/03" }
+            ]
+        };
+        // Khi có API thật:
+        // const res = await api.get('/dashboard');
+        // return res.data;
+    } catch (error) {
+        console.error("Failed to fetch dashboard data:", error);
+        return null;
+    }
 };
