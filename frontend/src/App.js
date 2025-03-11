@@ -5,11 +5,12 @@ import PrivateRoute from './components/PrivateRoute';
 import RoleBasedRoute from './components/RoleBasedRoute';
 
 import Login from './pages/Login';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import AdminPage from './pages/AdminPage';
 import ManagerPage from './pages/ManagerPage';
 import StudentPage from './pages/StudentPage';
-import Sidebar from './components/Sidebar';
+
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/" element={
             <PrivateRoute>
               <Dashboard />
