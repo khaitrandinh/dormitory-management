@@ -1,23 +1,15 @@
-import { useState } from "react";
-import axios from "axios";
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import RoomPage from './pages/RoomPage';
 
 function App() {
-  const [data, setData] = useState("");
-
-  const fetchData = async () => {
-    const response = await axios.post("http://localhost:8000/auth/login", {
-      email: "test@example.com",
-      password: "password",
-    });
-    setData(response.data);
-  };
-
   return (
-    <div>
-      <h1>Quản lý ký túc xá</h1>
-      <button onClick={fetchData}>Đăng nhập</button>
-      <p>{data ? JSON.stringify(data) : "Chưa có dữ liệu"}</p>
-    </div>
+    <Router>
+      <div className="p-4">
+        <Routes>
+          <Route path="/rooms" element={<RoomPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

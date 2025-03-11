@@ -8,13 +8,15 @@ WORKDIR /app
 COPY package*.json ./
 
 # Cài đặt dependencies
-RUN npm install && npm install axios
+RUN npm install 
+
+RUN npm install && npm install axios react-router-dom react-icons react-bootstrap bootstrap
 
 # Copy toàn bộ mã nguồn vào container
 COPY . .
 
-# Build ứng dụng (nếu chạy production)
-RUN npm run build
+# # Build ứng dụng (nếu chạy production)
+# RUN npm run build
 
 # Mở port 3000
 EXPOSE 3000

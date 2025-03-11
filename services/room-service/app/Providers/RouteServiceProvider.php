@@ -29,10 +29,12 @@ class RouteServiceProvider extends ServiceProvider
         $this->configureRateLimiting();
 
         $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
+            // Đảm bảo API routes có prefix 'api'
+            Route::prefix('api')
+                ->middleware('api')
                 ->group(base_path('routes/api.php'));
 
+            // Load routes web
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
@@ -50,3 +52,6 @@ class RouteServiceProvider extends ServiceProvider
         });
     }
 }
+
+
+?>
