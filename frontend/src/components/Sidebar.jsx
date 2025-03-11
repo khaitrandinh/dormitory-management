@@ -1,17 +1,16 @@
-import React from 'react';
-import './Sidebar.css';
+import React, { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const Sidebar = () => {
+  const { role } = useContext(AuthContext);
+
   return (
-    <div className="sidebar bg-light p-3">
-      <h4 className="text-center mb-4">Dormitory</h4>
-      <ul className="nav flex-column">
-        <li className="nav-item"><a className="nav-link" href="#">Home</a></li>
-        <li className="nav-item"><a className="nav-link" href="#">Dashboard</a></li>
-        <li className="nav-item"><a className="nav-link" href="#">Admin</a></li>
-        <li className="nav-item"><a className="nav-link" href="#">Messages</a></li>
-        <li className="nav-item"><a className="nav-link" href="#">Settings</a></li>
-        <li className="nav-item mt-5"><a className="nav-link text-danger" href="#">Logout</a></li>
+    <div className="sidebar bg-light p-3 vh-100">
+      <ul className="list-unstyled">
+        <li><a href="/dashboard">Dashboard</a></li>
+        {role === 'admin' && <li><a href="/admin">Admin Page</a></li>}
+        {role === 'manager' && <li><a href="/manager">Manager Page</a></li>}
+        {role === 'student' && <li><a href="/student">Student Page</a></li>}
       </ul>
     </div>
   );
