@@ -1,5 +1,5 @@
 # Sử dụng PHP 8.1 FPM bản Debian-based (dễ cài ext hơn Alpine)
-FROM php:8.1-fpm
+FROM php:8.2-fpm
 
 # Set working directory
 WORKDIR /var/www

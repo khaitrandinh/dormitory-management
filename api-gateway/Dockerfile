@@ -1,5 +1,5 @@
 # Sử dụng PHP 8.1 FPM với Alpine Linux để tối ưu
-FROM php:8.1-fpm
+FROM php:8.2-fpm
 
 # Thiết lập thư mục làm việc
 WORKDIR /var/www

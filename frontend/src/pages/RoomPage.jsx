@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import RoomTable from "../components/RoomTable";
 import RoomForm from "../components/ARoomForm"; // Đổi tên import nếu cần
-import "../styles/RoomPage.css";
+import "../Styles/RoomPage.css";
+import Sidebar from '../components/Sidebar';
+import Navbar from '../components/Navbar';
 
 const apiEndpoint = "http://localhost:8004/api/rooms";
 
@@ -56,8 +58,8 @@ const RoomPage = () => {
   
       console.log("✅ Phản hồi từ API:", response.data);
   
-      if (response && response.status === 200) {
-        fetchRooms();
+      if (response && (response.status === 200 || response.status === 201)) {
+        await fetchRooms(); // 👉 CHỜ cập nhật danh sách phòng xong
         setErrorMessage(""); // Xóa lỗi khi thành công
         return { success: true, message: "Thêm phòng thành công!" };
       }
@@ -76,28 +78,35 @@ const RoomPage = () => {
   };
   
   
+  
   return (
-    <div className="container mt-4">
-      <h1 className="mb-3">Dashboard Quản Lý Phòng</h1>
-      {role === "manager" && (
-        <button
-          className="btn btn-primary mb-3"
-          onClick={() => {
-            setSelectedRoom(null);
-            setShowForm(true);
-          }}
-        >
-          Thêm Phòng
-        </button>
-      )}
-      <RoomTable rooms={rooms} onEdit={handleEdit} onDelete={handleDelete} />
-      {showForm && (
-        <RoomForm
-          roomData={selectedRoom || {}}
-          onSubmit={handleFormSubmit}
-          onClose={() => setShowForm(false)}
-        />
-      )}
+    <div className="d-flex">
+      <Sidebar />
+        <div className="flex-grow-1" style={{ marginLeft: '250px' }}>
+          <Navbar />
+          <div className="container mt-4">
+            <h1 className="mb-3">Dashboard Quản Lý Phòng</h1>
+            {role === "manager" && (
+              <button
+                className="btn btn-primary mb-3"
+                onClick={() => {
+                  setSelectedRoom(null);
+                  setShowForm(true);
+                }}
+              >
+                Thêm Phòng
+              </button>
+            )}
+            <RoomTable rooms={rooms} onEdit={handleEdit} onDelete={handleDelete} />
+            {showForm && (
+              <RoomForm
+                roomData={selectedRoom || {}}
+                onSubmit={handleFormSubmit}
+                onClose={() => setShowForm(false)}
+              />
+            )}
+          </div>
+        </div>
     </div>
   );
 };

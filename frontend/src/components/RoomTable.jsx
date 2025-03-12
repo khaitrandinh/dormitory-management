@@ -1,7 +1,6 @@
 import React from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { useAuth } from "../components/AuthContext";
-import "../styles/RoomTable.css";
+import "../Styles/RoomTable.css";
 
 
 const RoomTable = ({ rooms, onEdit, onDelete }) => {

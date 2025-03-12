@@ -34,5 +34,6 @@ RUN chmod -R 777 storage bootstrap/cache
 EXPOSE 8000
 
 # Chạy Laravel khi container khởi động
-CMD php artisan migrate && php artisan serve --host=0.0.0.0 --port=8000
+CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000
+
 
