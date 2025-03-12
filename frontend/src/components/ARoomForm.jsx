@@ -1,18 +1,31 @@
-import React, { useState } from "react";
-import "../styles/RoomForm.css";
+import React, { useState, useEffect } from "react";
+import "../Styles/RoomForm.css";
 
 const RoomForm = ({ roomData, onSubmit, onClose }) => {
-  const [formData, setFormData] = useState(roomData || {
+  const [formData, setFormData] = useState({
     name: "",
     floor: "",
     building: "",
     bed_count: "",
     type: "",
     price: "",
-    status: "available",  // 🔥 Thêm giá trị mặc định
+    status: "available",
   });
-  
-  const [errorMessage, setErrorMessage] = useState(""); // Thêm state để hiển thị lỗi
+
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    console.log("👉 Data truyền vào form:", roomData);
+    setFormData(roomData || {
+      name: "",
+      floor: "",
+      building: "",
+      bed_count: "",
+      type: "",
+      price: "",
+      status: "available",
+    });
+  }, [roomData]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,31 +33,21 @@ const RoomForm = ({ roomData, onSubmit, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const result = await onSubmit(formData); // Gọi API từ RoomPage
-  
-    if (!result || typeof result.success === "undefined") {
-      setErrorMessage("Đã xảy ra lỗi không xác định.");
-      return;
-    }
-  
+    const result = await onSubmit(formData);
     if (result.success) {
-      setErrorMessage(""); // Xóa lỗi nếu có
-      alert(result.message || "Thêm phòng thành công!"); // 🔥 Thêm thông báo thành công
-      onClose(); // Đóng form
+      alert(result.message);
+      setErrorMessage("");
+      onClose();
     } else {
-      setErrorMessage(result.message || "Có lỗi xảy ra, vui lòng thử lại.");
-    }    
+      setErrorMessage(result.message);
+    }
   };
-  
 
   return (
     <div className="modal-backdrop">
       <div className="modal-content">
         <h2>{formData.id ? "Chỉnh sửa phòng" : "Thêm phòng mới"}</h2>
-
-        {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Hiển thị lỗi nếu có */}
-
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
         <form onSubmit={handleSubmit}>
           <input name="name" value={formData.name} onChange={handleChange} placeholder="Tên phòng" required />
           <input name="floor" type="number" value={formData.floor} onChange={handleChange} placeholder="Tầng" required />
