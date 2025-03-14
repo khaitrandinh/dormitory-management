@@ -9,8 +9,9 @@ class Permission extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'description'];
+    protected $fillable = ['name'];
 
+    // ✅ Quan hệ Nhiều - Nhiều giữa Permission và Role
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'role_permissions');

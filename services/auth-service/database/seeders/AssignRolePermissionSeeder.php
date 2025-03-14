@@ -3,37 +3,23 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\Role;
 use App\Models\Permission;
 
 class AssignRolePermissionSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        // Lấy user đầu tiên (hoặc tạo mới nếu chưa có)
-        $user = User::firstOrCreate(
-            ['email' => 'test@example.com'],
-            [
-                'name' => 'Test User',
-                'password' => bcrypt('password')
-            ]
-        );
+        $adminRole = Role::where('name', 'admin')->first();
+        $studentRole = Role::where('name', 'student')->first();
 
-        // Tạo role admin nếu chưa có
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        
-        // Gán role cho user
-        $user->roles()->syncWithoutDetaching([$adminRole->id]);
+        $permissions = Permission::all();
 
-        // Tạo các permissions
-        $viewUsers = Permission::firstOrCreate(['name' => 'view_users', 'description' => 'Xem danh sách user']);
-        $editUsers = Permission::firstOrCreate(['name' => 'edit_users', 'description' => 'Chỉnh sửa user']);
-        $deleteUsers = Permission::firstOrCreate(['name' => 'delete_users', 'description' => 'Xoá user']);
+        // Gán tất cả quyền cho admin
+        $adminRole->permissions()->attach($permissions->pluck('id'));
 
-        // Gán permissions cho role admin
-        $adminRole->permissions()->syncWithoutDetaching([$viewUsers->id, $editUsers->id, $deleteUsers->id]);
-
-        echo "Đã gán Role và Permission thành công!\n";
+        // Nếu muốn gán quyền hạn chế cho student, ví dụ chỉ view
+        $studentPermissions = Permission::whereIn('name', ['view_dashboard'])->get();
+        $studentRole->permissions()->attach($studentPermissions->pluck('id'));
     }
 }

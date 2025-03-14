@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
@@ -21,9 +22,20 @@ class RoleController extends Controller
 
     public function assignToUser(Request $request)
     {
-        $request->validate(['user_id' => 'required', 'role_id' => 'required']);
-        $user = \App\Models\User::findOrFail($request->user_id);
-        $user->roles()->attach($request->role_id);
-        return response()->json(['message' => 'Role assigned to user']);
+        $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role_id' => 'required|exists:roles,id',
+        ]);
+
+        $user = User::find($validated['user_id']);
+        $user->role_id = $validated['role_id'];
+        $user->save();
+
+        return response()->json([
+            'message' => 'Role assigned successfully',
+            'user' => $user
+        ]);
     }
+
+
 }

@@ -3,6 +3,7 @@ import { getDashboardData } from '../services/dashboardService';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import { Bar, Line } from 'react-chartjs-2';
+import RoomStatusTable from '../components/RoomStatusTable';
 
 const Dashboard = () => {
     const [data, setData] = useState(null);
@@ -25,6 +26,17 @@ const Dashboard = () => {
             backgroundColor: 'rgba(54, 162, 235, 0.5)',
         }]
     };
+    const roomStatusData = [
+        { building: 'A', room: '101', status: 'Trống' },
+        { building: 'A', room: '102', status: 'Đã thuê' },
+        { building: 'A', room: '103', status: 'Trống' },
+        { building: 'B', room: '101', status: 'Đã thuê' },
+        { building: 'B', room: '102', status: 'Đã thuê' },
+        { building: 'B', room: '103', status: 'Trống' },
+        { building: 'C', room: '101', status: 'Trống' },
+        { building: 'C', room: '102', status: 'Đã thuê' },
+        { building: 'C', room: '103', status: 'Trống' },
+      ];
 
     return (
         <div className="d-flex">
@@ -82,6 +94,11 @@ const Dashboard = () => {
                                 <p>Chi: {data.finance.expenses} VND</p>
                             </div>
                         </div>
+                        <div className="col-md-8">
+                        <RoomStatusTable data={roomStatusData} />
+                        </div>
+                        
+                        
                     </div>
                 </div>
             </div>

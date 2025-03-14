@@ -22,9 +22,14 @@ class PermissionController extends Controller
 
     public function assignToRole(Request $request)
     {
-        $request->validate(['role_id' => 'required', 'permission_id' => 'required']);
+        $request->validate([
+            'role_id' => 'required|exists:roles,id',
+            'permission_id' => 'required|exists:permissions,id',
+        ]);
+
         $role = \App\Models\Role::findOrFail($request->role_id);
-        $role->permissions()->attach($request->permission_id);
-        return response()->json(['message' => 'Permission assigned to role']);
+        $role->permissions()->syncWithoutDetaching([$request->permission_id]); // Tránh bị duplicate
+
+        return response()->json(['message' => 'Permission assigned to role successfully']);
     }
 }

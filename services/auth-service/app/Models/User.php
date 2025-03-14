@@ -13,7 +13,7 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role'
+        'name', 'email', 'password', 'role_id'
     ];
 
     protected $hidden = [
@@ -22,55 +22,19 @@ class User extends Authenticatable implements JWTSubject
     ];
 
     /**
-     * Relation to Roles (Many to Many)
+     * Each user belongs to one role
      */
-    public function roles()
+    public function role()
     {
-        return $this->belongsToMany(Role::class, 'user_roles');
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
     /**
      * Check if user has specific role
      */
-    public function hasRole($role)
+    public function hasRole($roleName)
     {
-        return $this->roles()->where('name', $role)->exists();
-    }
-
-    /**
-     * Get permissions via roles
-     */
-    public function permissions()
-    {
-        return $this->roles()->with('permissions')->get()->pluck('permissions')->flatten()->unique('id');
-    }
-
-    /**
-     * Check if user has permission via role
-     */
-    public function hasPermissionViaRole($permission)
-    {
-        foreach ($this->roles as $role) {
-            if ($role->permissions->contains('name', $permission)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Check if user has specific permission
-     */
-    public function hasPermission($permissionName)
-    {
-        foreach ($this->roles as $role) {
-            foreach ($role->permissions as $permission) {
-                if ($permission->name === $permissionName) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return $this->role && $this->role->name === $roleName;
     }
 
     // ===== JWTSubject Required Methods ===== //

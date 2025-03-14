@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\Role;
 
 class AuthController extends Controller
 {
@@ -19,14 +20,19 @@ class AuthController extends Controller
             'password' => 'required|string|confirmed'
         ]);
 
+        $studentRole = Role::where('name', 'student')->first();
+
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'password' => bcrypt($validated['password']),
+            'role_id' => $studentRole->id
         ]);
 
         return response()->json(['message' => 'User registered successfully', 'user' => $user], 201);
     }
+
+
 
     // Đăng nhập
     public function login(Request $request)
@@ -47,8 +53,10 @@ class AuthController extends Controller
     // Lấy user hiện tại
     public function user(Request $request)
     {
-        return response()->json(auth('api')->user());
+        $user = auth('api')->user()->load('role'); // Load thêm quan hệ role
+        return response()->json($user);
     }
+
 
     // Refresh token
     public function refresh()
