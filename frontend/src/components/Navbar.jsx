@@ -65,7 +65,7 @@ const Navbar = () => {
   return (
     <nav id="navbar" className={`navbar navbar-expand-lg fixed-top ${showNavbar ? 'show-navbar' : ''}`}>
       <div className="container">
-        <Link to="/" className="navbar-brand">
+        <Link to="/dashboard" className="navbar-brand">
           <FaBuilding className="nav-icon" />
           <span className="brand-text">Dormitory Management</span>
         </Link>
