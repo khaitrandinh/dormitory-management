@@ -1,21 +1,80 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { FaHome, FaUserShield, FaUserGraduate, FaEnvelope, FaCog } from 'react-icons/fa';
-import '../Styles/Sidebar.css'; // File CSS custom
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { FaHome, FaUserShield, FaUserGraduate, FaEnvelope, FaCog, FaBars } from 'react-icons/fa';
+import '../Styles/Sidebar.css';
 
 const Sidebar = () => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const location = useLocation();
+
+  const isActiveRoute = (route) => {
+    return location.pathname === route ? 'active' : '';
+  };
+
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-header">
-        <h4>🏠 Dormitory</h4>
+        <div className="brand">
+          <FaHome className="brand-icon" />
+          <span className="brand-text">Dormitory</span>
+        </div>
+        <button 
+          className="toggle-btn"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          title={isCollapsed ? "Expand" : "Collapse"}
+        >
+          <FaBars />
+        </button>
       </div>
-      <ul className="sidebar-menu">
-        <li><Link to="/"><FaHome /> Dashboard</Link></li>
-        <li><Link to="/room"><FaUserShield /> Room</Link></li>
-        <li><Link to="/student"><FaUserGraduate /> Student</Link></li>
-        <li><Link to="/messages"><FaEnvelope /> Messages</Link></li>
-        <li><Link to="/settings"><FaCog /> Settings</Link></li>
-      </ul>
+
+      <div className="sidebar-content">
+        <ul className="sidebar-menu">
+          <li className={isActiveRoute('/')}>
+            <Link to="/">
+              <FaHome className="menu-icon" />
+              <span className="menu-text">Dashboard</span>
+            </Link>
+          </li>
+          <li className={isActiveRoute('/room')}>
+            <Link to="/room">
+              <FaUserShield className="menu-icon" />
+              <span className="menu-text">Phòng</span>
+            </Link>
+          </li>
+          <li className={isActiveRoute('/student')}>
+            <Link to="/student">
+              <FaUserGraduate className="menu-icon" />
+              <span className="menu-text">Sinh viên</span>
+            </Link>
+          </li>
+          <li className={isActiveRoute('/messages')}>
+            <Link to="/messages">
+              <FaEnvelope className="menu-icon" />
+              <span className="menu-text">Tin nhắn</span>
+            </Link>
+          </li>
+          <li className={isActiveRoute('/settings')}>
+            <Link to="/settings">
+              <FaCog className="menu-icon" />
+              <span className="menu-text">Cài đặt</span>
+            </Link>
+          </li>
+        </ul>
+      </div>
+
+      <div className="sidebar-footer">
+        <div className="footer-content">
+          <img 
+            src="/logo192.png" 
+            alt="Logo" 
+            className="footer-logo"
+          />
+          <div className="footer-info">
+            <p className="version">Version 1.0.0</p>
+            <p className="copyright">© 2024 Dormitory</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
