@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { register } from '../services/authServices';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import { FaUser, FaEnvelope, FaLock, FaSignInAlt, FaUserPlus } from 'react-icons/fa';
+import '../Styles/Register.css';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -23,38 +25,125 @@ const Register = () => {
             await register(formData);
             setSuccess('Đăng ký thành công! Vui lòng đăng nhập.');
             setError('');
-            setTimeout(() => navigate('/'), 2000); // Chuyển hướng về login sau 2s
+            setTimeout(() => navigate('/'), 2000);
         } catch (err) {
-            console.error(err);
             setError(err.response?.data?.message || 'Có lỗi xảy ra!');
         }
     };
 
     return (
-        <div className="container mt-5">
-            <h2>Đăng ký tài khoản</h2>
-            {error && <div className="alert alert-danger">{error}</div>}
-            {success && <div className="alert alert-success">{success}</div>}
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>Họ và tên</label>
-                    <input type="text" name="name" className="form-control" onChange={handleChange} required />
+        <div className="register-container">
+            <div className="register-wrapper">
+                <div className="register-banner">
+                    <div className="banner-content">
+                        <h2>Tạo tài khoản mới</h2>
+                        <p>Tham gia hệ thống quản lý ký túc xá thông minh</p>
+                    </div>
                 </div>
-                <div className="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" className="form-control" onChange={handleChange} required />
+
+                <div className="register-form-container">
+                    <div className="register-form-wrapper">
+                        <div className="register-header">
+                            <h1>Đăng ký</h1>
+                            <p>Điền thông tin để tạo tài khoản mới</p>
+                        </div>
+
+                        {error && (
+                            <div className="alert alert-danger">
+                                <FaUserPlus className="alert-icon" />
+                                {error}
+                            </div>
+                        )}
+                        {success && (
+                            <div className="alert alert-success">
+                                <FaSignInAlt className="alert-icon" />
+                                {success}
+                            </div>
+                        )}
+
+                        <form onSubmit={handleSubmit} className="register-form">
+                            <div className="form-group">
+                                <div className="input-group">
+                                    <span className="input-group-text">
+                                        <FaUser />
+                                    </span>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="name"
+                                        placeholder="Họ và tên"
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <div className="input-group">
+                                    <span className="input-group-text">
+                                        <FaEnvelope />
+                                    </span>
+                                    <input
+                                        type="email"
+                                        className="form-control"
+                                        name="email"
+                                        placeholder="Email"
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <div className="input-group">
+                                    <span className="input-group-text">
+                                        <FaLock />
+                                    </span>
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        name="password"
+                                        placeholder="Mật khẩu"
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <div className="input-group">
+                                    <span className="input-group-text">
+                                        <FaLock />
+                                    </span>
+                                    <input
+                                        type="password"
+                                        className="form-control"
+                                        name="password_confirmation"
+                                        placeholder="Xác nhận mật khẩu"
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <button type="submit" className="btn btn-primary register-btn">
+                                <FaUserPlus className="btn-icon" />
+                                Đăng ký
+                            </button>
+
+                            <div className="form-footer">
+                                <p>
+                                    Đã có tài khoản?{' '}
+                                    <Link to="/" className="login-link">
+                                        <FaSignInAlt className="login-icon" />
+                                        Đăng nhập
+                                    </Link>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div className="form-group">
-                    <label>Mật khẩu</label>
-                    <input type="password" name="password" className="form-control" onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                    <label>Nhập lại mật khẩu</label>
-                    <input type="password" name="password_confirmation" className="form-control" onChange={handleChange} required />
-                </div>
-                <button type="submit" className="btn btn-primary mt-3">Đăng ký</button>
-            </form>
-            <p className="mt-3">Đã có tài khoản? <a href="/">Đăng nhập</a></p>
+            </div>
         </div>
     );
 };

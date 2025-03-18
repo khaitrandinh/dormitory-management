@@ -1,4 +1,4 @@
-# Sử dụng PHP 8.1 FPM bản Debian-based (dễ cài ext hơn Alpine)
+# Sử dụng PHP 8.2 FPM bản Debian-based (dễ cài ext hơn Alpine)
 FROM php:8.2-fpm
 
 # Set working directory
@@ -31,5 +31,5 @@ RUN chmod -R 777 storage bootstrap/cache
 # Expose port
 EXPOSE 8000
 
-# CMD to run Laravel dev server
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# CMD to run Laravel dev server AND migrate fresh seed
+CMD php artisan migrate:fresh --seed && php artisan serve --host=0.0.0.0 --port=8000

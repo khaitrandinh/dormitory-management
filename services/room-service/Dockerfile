@@ -22,7 +22,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . .
 
 # Cài đặt các dependencies của Laravel
-RUN composer install
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 # Cài đặt các dependencies của Laravel
 RUN composer require fruitcake/laravel-cors
