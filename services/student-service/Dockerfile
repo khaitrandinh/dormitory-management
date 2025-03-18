@@ -1,30 +1,27 @@
-# Sử dụng PHP 8.1 FPM với Alpine Linux để tối ưu
-FROM php:8.1-fpm
+# Sử dụng PHP 8.2 với FPM để chạy Laravel
+FROM php:8.2-fpm
 
 # Thiết lập thư mục làm việc
 WORKDIR /var/www
 
-# Cài đặt các dependencies cần thiết
+# Cài đặt các dependency cần thiết cho Laravel
 RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    zip \
-    unzip \
-    git \
-    curl
+    libpng-dev zip unzip git curl libonig-dev libzip-dev mariadb-client \
+    && docker-php-ext-install pdo pdo_mysql mbstring zip exif pcntl
 
 # Cài đặt Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Sao chép toàn bộ mã nguồn vào container
+# Copy toàn bộ project vào container
 COPY . .
 
-# Cài đặt các dependencies của Laravel
-RUN composer install
+# Cài đặt Laravel dependencies
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Gán quyền cho thư mục storage và bootstrap/cache
+# Phân quyền cho thư mục storage và bootstrap/cache
 RUN chmod -R 777 storage bootstrap/cache
 
-# Mở cổng 8000
+# Expose port cho container
 EXPOSE 8000
 
 # Chạy Laravel khi container khởi động

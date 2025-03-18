@@ -38,3 +38,26 @@ Route::prefix('auth')->group(function () {
     });
 
 });
+
+Route::prefix('students')->group(function () {
+    Route::get('/', function (Request $request) {
+        return Http::get('http://student-service:8000/api/students')->json();
+    });
+
+    Route::post('/', function (Request $request) {
+        return Http::post('http://student-service:8000/api/students', $request->all())->json();
+    });
+
+    Route::get('/{id}', function ($id) {
+        return Http::get("http://student-service:8000/api/students/{$id}")->json();
+    });
+
+    Route::put('/{id}', function (Request $request, $id) {
+        return Http::put("http://student-service:8000/api/students/{$id}", $request->all())->json();
+    });
+
+    Route::delete('/{id}', function ($id) {
+        return Http::delete("http://student-service:8000/api/students/{$id}")->json();
+    });
+});
+
