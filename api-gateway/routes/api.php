@@ -35,6 +35,39 @@ Route::prefix('auth')->group(function () {
         return Http::withToken($request->bearerToken())
             ->get('http://auth-service:8000/api/auth/user')
             ->json();
+    });    
+});
+
+
+Route::prefix('rooms')->group(function () {
+    Route::get('/', function (Request $request) {
+        return Http::withHeaders([
+            'Authorization' => $request->header('Authorization')
+        ])->get('http://room-service:8001/api/rooms')->json();
     });
 
+    Route::get('/{id}', function (Request $request, $id) {
+        return Http::withHeaders([
+            'Authorization' => $request->header('Authorization')
+        ])->get("http://room-service:8001/api/rooms/{$id}")->json();
+    });
+
+    Route::post('/', function (Request $request) {
+        return Http::withHeaders([
+            'Authorization' => $request->header('Authorization')
+        ])->post('http://room-service:8001/api/rooms', $request->all())->json();
+    });
+
+    Route::put('/{id}', function (Request $request, $id) {
+        return Http::withHeaders([
+            'Authorization' => $request->header('Authorization')
+        ])->put("http://room-service:8001/api/rooms/{$id}", $request->all())->json();
+    });
+
+    Route::delete('/{id}', function (Request $request, $id) {
+        return Http::withHeaders([
+            'Authorization' => $request->header('Authorization')
+        ])->delete("http://room-service:8001/api/rooms/{$id}")->json();
+    });
 });
+
