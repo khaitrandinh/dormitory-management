@@ -1,34 +1,76 @@
 import React, { useEffect, useState } from 'react';
 import { getDashboardStats } from '../services/dashboardService';
+import { FaHome, FaUsers, FaChartLine, FaBell } from 'react-icons/fa';
+import '../Styles/DashboardCards.css';
 
 const DashboardCards = () => {
   const [stats, setStats] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
-      const data = await getDashboardStats();
-      setStats(data);
+      try {
+        const data = await getDashboardStats();
+        setStats(data);
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchStats();
   }, []);
 
-  if (!stats) return <p>Loading...</p>;
+  if (isLoading) {
+    return (
+      <div className="text-center p-4">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   const cards = [
-    { title: 'Phòng Trống', value: stats.emptyRooms },
-    { title: 'Sinh viên đang ở', value: stats.currentStudents },
-    { title: 'Thu/Chi tháng này', value: `${stats.finance.income}/${stats.finance.expense}` },
-    { title: 'Thông báo mới', value: stats.notifications },
+    { 
+      title: 'Phòng Trống', 
+      value: stats.emptyRooms,
+      icon: <FaHome />,
+      color: 'primary'
+    },
+    { 
+      title: 'Sinh viên đang ở', 
+      value: stats.currentStudents,
+      icon: <FaUsers />,
+      color: 'success'
+    },
+    { 
+      title: 'Thu/Chi tháng này', 
+      value: `${stats.finance.income.toLocaleString()}/${stats.finance.expense.toLocaleString()}`,
+      icon: <FaChartLine />,
+      color: 'info'
+    },
+    { 
+      title: 'Thông báo mới', 
+      value: stats.notifications,
+      icon: <FaBell />,
+      color: 'warning'
+    },
   ];
 
   return (
-    <div className="row">
+    <div className="row g-4">
       {cards.map((card, idx) => (
-        <div className="col-md-3 mb-4" key={idx}>
-          <div className="card shadow-sm">
-            <div className="card-body text-center">
-              <h5 className="card-title">{card.title}</h5>
-              <p className="card-text display-6">{card.value}</p>
+        <div className="col-md-3" key={idx}>
+          <div className={`stat-card bg-${card.color} text-white`}>
+            <div className="stat-card-body">
+              <div className="stat-card-icon">
+                {card.icon}
+              </div>
+              <div className="stat-card-info">
+                <h3>{card.value}</h3>
+                <p>{card.title}</p>
+              </div>
             </div>
           </div>
         </div>

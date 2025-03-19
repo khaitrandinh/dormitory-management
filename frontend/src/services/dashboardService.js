@@ -58,7 +58,10 @@ export const getDashboardData = async () => {
             },
             notifications: [
                 { id: 1, message: "Hạn cuối nộp phí KTX tháng này là 30/03" },
-                { id: 2, message: "Bắt đầu kiểm tra phòng từ 20/03" }
+                { id: 2, message: "Bắt đầu kiểm tra phòng từ 20/03" },
+                { id: 3, message: "Đã cập nhật lịch học kỳ mới" },
+                { id: 4, message: "Thông báo về việc sửa chữa hệ thống điện" },
+                { id: 5, message: "Hướng dẫn đăng ký tín chỉ học kỳ mới" }
             ]
         };
         // Khi có API thật:

@@ -103,7 +103,7 @@ services:
       DB_USERNAME: root
       DB_PASSWORD: root
     volumes:
-      - ./services/student-service:/var/www/html
+      - ./services/student-service:/var/www
     networks:
       - dormitory-net
 

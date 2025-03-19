@@ -1,5 +1,5 @@
-# Sử dụng PHP 8.1 FPM với Alpine Linux để tối ưu
-FROM php:8.1-fpm
+# Sử dụng PHP 8.2 FPM với Alpine Linux để tối ưu
+FROM php:8.2-fpm
 
 # Thiết lập thư mục làm việc
 WORKDIR /var/www
@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install -y \
     git \
     curl
 
+# Cài đặt và kích hoạt PDO MySQL
+RUN docker-php-ext-install pdo pdo_mysql && docker-php-ext-enable pdo_mysql
+
 # Cài đặt Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -19,7 +22,10 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . .
 
 # Cài đặt các dependencies của Laravel
-RUN composer install
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+
+# Cài đặt các dependencies của Laravel
+RUN composer require fruitcake/laravel-cors
 
 # Gán quyền cho thư mục storage và bootstrap/cache
 RUN chmod -R 777 storage bootstrap/cache
@@ -28,4 +34,6 @@ RUN chmod -R 777 storage bootstrap/cache
 EXPOSE 8000
 
 # Chạy Laravel khi container khởi động
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000
+
+
