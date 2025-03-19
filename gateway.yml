@@ -1,0 +1,28 @@
+services:
+  api-gateway:
+    build:
+      context: ./api-gateway
+    restart: always
+    container_name: api-gateway
+    #depends_on:
+    #  - auth-service
+    ports:
+      - "8000:8000"
+    #volumes:
+    #  - ./run-time/api-gateway:/var/www/vendor
+    environment:
+      TZ: "Asia/Ho_Chi_Minh"
+    env_file:
+      - ./api-gateway/.env
+    networks:
+      - dormitory-net
+    command:
+      - /bin/bash
+      - -c
+      - |
+        date
+        php artisan serve --host=0.0.0.0 --port=8000
+
+networks:
+  dormitory-net:
+    external: true
