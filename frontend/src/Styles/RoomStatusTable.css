@@ -1,0 +1,164 @@
+.room-status-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  margin: 0;
+  color: #2c3e50;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-icon {
+  color: #3498db;
+  font-size: 1.2rem;
+}
+
+.status-legend {
+  display: flex;
+  gap: 1rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.table-responsive {
+  padding: 1rem;
+}
+
+.table {
+  margin: 0;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+}
+
+.building-header {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+  padding: 1rem;
+  border: none;
+}
+
+.room-header {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #2c3e50;
+  padding: 1rem;
+  text-align: center;
+  border: none;
+}
+
+.building-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  color: #2c3e50;
+}
+
+.building-icon {
+  color: #3498db;
+  font-size: 1rem;
+}
+
+.room-status {
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.room-status.available {
+  background: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+
+.room-status.occupied {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+.status-text {
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.table tr:hover {
+  background: #f8f9fa;
+}
+
+@media (max-width: 768px) {
+  .card-header {
+      flex-direction: column;
+      gap: 1rem;
+  }
+
+  .status-legend {
+      justify-content: center;
+  }
+}
+
+
+/* 
+<div className="status-legend">
+          <span className="legend-item available">
+            <FaCheck className="text-success" /> Trống
+          </span>
+          <span className="legend-item occupied">
+            <FaTimes className="text-danger" /> Đã có người ở
+          </span>
+        </div>
+      </div>
+ */
+ .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.legend-item.available {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+
+.legend-item.occupied {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+.room-status.available {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+}
+
+.room-status.occupied {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+/* Add hover effects */
+.room-status:hover {
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}

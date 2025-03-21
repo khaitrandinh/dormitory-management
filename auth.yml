@@ -1,0 +1,22 @@
+services:
+  auth-service:
+    build:
+      context: ./services/auth-service
+    container_name: auth-service
+    restart: always
+    #depends_on:
+    #  - mysql
+    ports:
+      - "8001:8000"
+    environment:
+      TZ: "Asia/Ho_Chi_Minh"
+    env_file:
+      - ./services/auth-service/.env
+    #volumes:
+    #  - ./services/auth-service:/var/www
+    networks:
+      - dormitory-net
+
+networks:
+  dormitory-net:
+    external: true

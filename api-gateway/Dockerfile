@@ -1,5 +1,5 @@
 # Sử dụng PHP 8.1 FPM với Alpine Linux để tối ưu
-FROM php:8.1-fpm
+FROM php:8.2-fpm
 
 # Thiết lập thư mục làm việc
 WORKDIR /var/www
@@ -19,7 +19,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . .
 
 # Cài đặt các dependencies của Laravel
-RUN composer install
+RUN composer install 
 
 # Gán quyền cho thư mục storage và bootstrap/cache
 RUN chmod -R 777 storage bootstrap/cache
