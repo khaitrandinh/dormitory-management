@@ -1,157 +1,135 @@
-> # 🏠 Dormitory Management System
+# 🏠 Dormitory Management System
 
-Chào mừng đến với **Dormitory Management System** - Hệ thống quản lý ký túc xá được phát triển với kiến trúc microservices.
+Chào mừng đến với **Dormitory Management System** - Hệ thống quản lý ký túc xá, được xây dựng trên nền tảng **Laravel (Backend)** và **ReactJS (Frontend)**.
 
 ---
 
 ## 📚 Mục lục
 
 - [Giới thiệu](#giới-thiệu)
-- [Cấu trúc repo](#cấu-trúc-repo)
+- [Cấu trúc dự án](#cấu-trúc-dự-án)
+- [Hướng dẫn cài đặt](#hướng-dẫn-cài-đặt)
 - [Quy tắc làm việc](#quy-tắc-làm-việc)
-- [Hướng dẫn pull request (PR)](#hướng-dẫn-pull-request-pr)
-- [Thiết lập môi trường](#thiết-lập-môi-trường)
+- [Hướng dẫn Pull Request (PR)](#hướng-dẫn-pull-request-pr)
 - [Liên hệ](#liên-hệ)
 
 ---
 
 ## 🎯 Giới thiệu
 
-Repo này là hệ thống quản lý ký túc xá được phát triển theo mô hình **Microservices**, bao gồm nhiều service riêng biệt: 
-- **Auth Service** (Đăng nhập, đăng ký, phân quyền)
-- **Room Service** (Quản lý phòng)
-- **Payment Service** (Thanh toán)
-- **Notification Service** (Thông báo)
-- **API Gateway**
-- **Frontend** (React App)
+Hệ thống quản lý ký túc xá với các chức năng chính:
+- **Xác thực & Phân quyền** (JWT - Laravel Sanctum)
+- **Quản lý phòng** (CRUD phòng, cập nhật trạng thái)
+- **Quản lý sinh viên** (Danh sách, hợp đồng thuê)
+- **Thanh toán** (Hóa đơn, trạng thái thanh toán)
+- **Quản lý thông báo** (Gửi & nhận thông báo)
+- **Bảng điều khiển** (Dashboard tổng quan)
+- **Quản trị viên** (Quản lý người dùng, phân quyền)
+
+**Công nghệ sử dụng:**
+- **Backend**: Laravel + MySQL
+- **Frontend**: ReactJS (React Router, Bootstrap)
+- **Auth**: JWT (Laravel Sanctum)
+- **Database**: MySQL
 
 ---
 
-## 📁 Cấu trúc repo
+## 📁 Cấu trúc dự án
 
 ```
 dormitory-management/
-├── api-gateway/             # API Gateway cho toàn hệ thống
-├── frontend/                # Giao diện người dùng
-├── services/
-│   ├── auth-service/        # Xác thực và phân quyền (Laravel)
-│   ├── room-service/        # Quản lý phòng (Laravel)
-│   ├── payment-service/     # Quản lý thanh toán (Laravel)
-│   ├── notification-service/ # Quản lý thông báo (Laravel)
-│   └── student-service/     # Quản lý sinh viên (đang phát triển)
-└── README.md                # File hướng dẫn
+├── backend/                  # Code backend Laravel
+│   ├── app/                  # Controllers, Models, Middleware, Services
+│   ├── config/               # Cấu hình Laravel
+│   ├── database/             # Migrations, Seeds
+│   ├── routes/               # API routes
+│   ├── public/               # File tĩnh
+│   ├── storage/              # Log, cache, uploads
+│   ├── .env                  # Biến môi trường
+│   └── composer.json         # Packages PHP
+│
+├── frontend/                 # Code frontend ReactJS
+│   ├── src/                  # Mã nguồn chính
+│   │   ├── components/       # Các component tái sử dụng
+│   │   ├── pages/            # Các trang chính
+│   │   ├── services/         # API services (axios)
+│   │   ├── context/          # Auth & Role Context
+│   │   ├── App.js            # Cấu hình routes
+│   │   ├── index.js          # Khởi chạy app
+│   │   ├── styles/           # File CSS, SCSS
+│   │   ├── utils/            # Các helper function
+│   ├── public/               # File tĩnh
+│   ├── .env                  # Biến môi trường frontend
+│   ├── package.json          # Packages ReactJS
+│   └── README.md             # Hướng dẫn frontend
+│
+├── docs/                     # Tài liệu dự án
+├── .gitignore                # Ignore files khi commit
+└── README.md                 # Hướng dẫn chung dự án
 ```
 
-### 📦 Cấu trúc thư mục Frontend
+---
 
-```
-frontend/
-├── public/                 # File tĩnh
-├── src/                    # Mã nguồn chính
-│   ├── Components/         # Các component tái sử dụng
-│   ├── Pages/              # Các trang (Home, Login, Dashboard)
-│   ├── App.js              # App component, định nghĩa routes
-│   ├── App.css             # CSS cho App component
-│   ├── index.js            # Điểm khởi động app
-│   ├── index.css           # CSS toàn cục
-├── .gitignore              # Bỏ qua thư mục, file không cần commit
-├── Dockerfile              # Docker
-├── package.json            # Quản lý package JS
-├── package-lock.json       # Khóa phiên bản package
-└── README.md               # Hướng dẫn chi tiết frontend
+## ⚙️ Hướng dẫn cài đặt
+
+### 1️⃣ Clone project:
+```bash
+git clone https://github.com/khaitrandinh/dormitory-management.git
+cd dormitory-management
 ```
 
-### ⚙️ Cấu trúc Laravel Service (ví dụ auth-service)
+### 2️⃣ Cài đặt Backend:
+```bash
+cd backend
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
+```
 
+### 3️⃣ Cài đặt Frontend:
+```bash
+cd ../frontend
+npm install
+cp .env.example .env
+npm start
 ```
-services/auth-service/
-├── app/                   # Controllers, Models, Middleware, Services
-├── bootstrap/             # Khởi tạo Laravel
-├── config/                # Cấu hình hệ thống
-├── database/              # Migrations, Seeds
-├── lang/                  # Đa ngôn ngữ
-├── public/                # File tĩnh
-├── resources/             # Views, assets
-├── routes/                # API routes
-├── storage/               # Log, cache, uploads
-├── tests/                 # Test
-├── .env.example           # Mẫu biến môi trường
-├── Dockerfile             # Docker
-└── composer.json          # Packages PHP
-```
+
+> 🚀 **Backend chạy tại:** http://127.0.0.1:8000  
+> 🌍 **Frontend chạy tại:** http://localhost:3000  
 
 ---
 
 ## 🚨 Quy tắc làm việc
 
-> **Lưu ý quan trọng: Không commit trực tiếp vào nhánh `main`!**
+> **❌ Không commit trực tiếp vào nhánh `main`!**  
+> **✅ Luôn làm việc trên branch riêng, gửi Pull Request trước khi merge.**
 
-### ✅ Quy trình làm việc chuẩn:
-
-1. **Fork hoặc clone repo về máy**.
-2. **Tạo branch mới** cho mỗi task/feature/bug fix theo format:
+### 1️⃣ Quy trình chuẩn:
+1. **Tạo branch mới** theo task đang làm:
+   ```bash
+   git checkout -b feature/login-page
    ```
-   feature/<ten-tinh-nang>
-   fix/<ten-loi>
-   hotfix/<xu-ly-khan-cap>
+2. **Viết code & commit theo chuẩn**:
+   ```bash
+   git commit -m "feat: Thêm màn hình đăng nhập"
    ```
-
-3. **Commit message rõ ràng**:
-   ```
-   feat: Thêm màn hình đăng nhập
-   fix: Sửa lỗi thanh toán không thành công
-   refactor: Tối ưu API room-service
-   ```
-
-4. **Đẩy branch lên GitHub**:
+3. **Đẩy branch lên GitHub & tạo PR**:
    ```bash
    git push origin feature/login-page
    ```
-
-5. **Tạo Pull Request (PR) vào nhánh `main` hoặc `develop`**.
-
-6. **Chờ review và được approve trước khi merge vào `main`.**
+4. **Chờ review & merge vào `main`.**
 
 ---
 
 ## 🔀 Hướng dẫn Pull Request (PR)
 
-- Viết title và description rõ ràng.
-- Gán reviewer.
-- Chờ duyệt trước khi merge.
-
----
-
-## ⚙️ Thiết lập môi trường
-
-### 1. Clone project:
-```bash
-git clone https://github.com/khaitrandinh/dormitory-management.git
-```
-
-### 2. Thiết lập file `.env`:
-- Copy các file `.env.example` thành `.env` ở mỗi service và frontend.
-- Điều chỉnh biến môi trường phù hợp hệ thống.
-
-### 3. Build và khởi chạy toàn bộ hệ thống bằng Docker Compose:
-```bash
-docker-compose up --build
-```
-
-### 4. Truy cập các service:
-- **Frontend**: http://localhost:3000
-- **API Gateway**: http://localhost:8000 (hoặc cổng bạn cấu hình)
-- Các service khác sẽ chạy nội bộ theo cấu hình docker-compose.
-
-### 5. Các lệnh hỗ trợ khác:
-- Dừng hệ thống:
-```bash
-docker-compose down
-```
-- Xem log:
-```bash
-docker-compose logs -f
-```
+- **Title PR rõ ràng**, ví dụ:
+  - ✅ `[FEATURE] Thêm chức năng đăng ký sinh viên`
+  - ❌ `Thêm đăng ký`
+- **Gán người review.**
+- **Chỉ merge khi có ít nhất 1 approve.**
 
 ---
 
@@ -168,7 +146,6 @@ docker-compose logs -f
 
 ## 🚀 Góp ý và phát triển
 
-- Fork repo, tạo branch mới, tạo PR.
-- Liên hệ trực tiếp để thảo luận thêm!
+> **Mọi commit & PR phải đảm bảo an toàn, đã qua review.**  
+> **Liên hệ trực tiếp nếu cần hỗ trợ!** 🚀
 
-> **Mọi commit và PR phải đảm bảo an toàn, đã qua review.**
