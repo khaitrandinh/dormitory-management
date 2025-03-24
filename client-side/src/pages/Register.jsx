@@ -25,7 +25,7 @@ const Register = () => {
             await register(formData);
             setSuccess('Sign up successfull! please login your account.');
             setError('');
-            setTimeout(() => navigate('/'), 2000);
+            navigate('/login');
         } catch (err) {
             setError(err.response?.data?.message || 'Có lỗi xảy ra!');
         }

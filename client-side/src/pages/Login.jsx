@@ -16,6 +16,7 @@ const Login = () => {
       const res = await axios.post('/login', { email, password });
       localStorage.setItem('access_token', res.data.token);
       navigate('/');
+      window.location.reload(); // để AuthContext tự gọi lại API
     } catch (error) {
       alert('Đăng nhập thất bại');
     }

@@ -15,5 +15,5 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => true, // 👈 Bắt buộc true nếu bạn có dùng cookie/session
+    'supports_credentials' => true, 
 ];

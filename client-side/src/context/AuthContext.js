@@ -10,16 +10,31 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const data = await getCurrentUser();
-      if (data) {
-        setUser(data);
-        setRole(data.role);
+      try {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+          setLoading(false); // ✅ Không gọi API nếu chưa có token
+          return;
+        }
+  
+        const data = await getCurrentUser();
+        if (data) {
+          setUser(data);
+          setRole(data.role);
+        }
+      } catch (error) {
+        // Nếu token sai → clear và không set user
+        localStorage.removeItem('access_token');
+        setUser(null);
+        setRole(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false); // ✅ Luôn set loading, nhưng chỉ sau khi kiểm tra token
     };
   
     fetchUser();
   }, []);
+  
   
 
   const logout = () => {

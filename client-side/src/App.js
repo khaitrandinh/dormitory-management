@@ -10,7 +10,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import RoomPage from './pages/RoomPage';
 import AdminPage from './pages/AdminPage';
-import ManagerPage from './pages/ManagerPage';
+// import ManagerPage from './pages/ManagerPage';
 import StudentPage from './pages/StudentPage';
 import ContractPage from './pages/ContractPage';
 
@@ -39,7 +39,7 @@ function App() {
               <AdminPage />
             </RoleBasedRoute>
           } />
-          <Route path="/manager" element={
+          {/* <Route path="/manager" element={
             <RoleBasedRoute allowedRoles={['staff']}>
               <ManagerPage />
             </RoleBasedRoute>
@@ -48,7 +48,7 @@ function App() {
             <RoleBasedRoute allowedRoles={['student']}>
               <StudentPage />
             </RoleBasedRoute>
-          } />
+          } /> */}
         </Routes>
       </BrowserRouter>
     </AuthProvider>
