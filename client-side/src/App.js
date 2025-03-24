@@ -12,6 +12,7 @@ import RoomPage from './pages/RoomPage';
 import AdminPage from './pages/AdminPage';
 import ManagerPage from './pages/ManagerPage';
 import StudentPage from './pages/StudentPage';
+import ContractPage from './pages/ContractPage';
 
 
 
@@ -23,7 +24,10 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/room" element={<RoomPage />} />      
+          <Route path="/room" element={<RoomPage  allowedRoles={['admin' || 'staff']}/>} />      
+          <Route path="/student" element={<StudentPage />} />      
+          <Route path="/contract" element={<ContractPage />} />      
+          {/* <Route path="/admin" element={<AdminPage />} />       */}
           
           <Route path="/" element={
             <PrivateRoute>
@@ -36,7 +40,7 @@ function App() {
             </RoleBasedRoute>
           } />
           <Route path="/manager" element={
-            <RoleBasedRoute allowedRoles={['manager']}>
+            <RoleBasedRoute allowedRoles={['staff']}>
               <ManagerPage />
             </RoleBasedRoute>
           } />

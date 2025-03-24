@@ -12,9 +12,11 @@ class ContractController extends Controller
     // ✅ Lấy danh sách tất cả các hợp đồng
     public function index()
     {
-        $contracts = Contract::with(['student', 'room'])->get();
+        $contracts = Contract::with(['student.user', 'room', 'payments'])->get();
         return response()->json($contracts);
+
     }
+
 
     // ✅ Lấy thông tin hợp đồng theo id
     public function show($id)
@@ -40,6 +42,15 @@ class ContractController extends Controller
         ]);
 
         $contract = Contract::create($request->all());
+        // Ở phương thức store(), bạn nên xử lý logic tránh 1 sinh viên thuê nhiều phòng 1 lúc
+        $existing = Contract::where('student_id', $request->student_id)
+        ->where('status', 'active')
+        ->first();
+
+        if ($existing) {
+        return response()->json(['message' => 'Student already has an active contract'], 400);
+        }
+
 
         return response()->json(['message' => 'Hợp đồng đã được tạo', 'data' => $contract], 201);
     }

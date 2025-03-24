@@ -6,15 +6,16 @@ import '../Styles/Navbar.css';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [showNavbar, setShowNavbar] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const handleLogout = () => {
-    logout();
-    navigate('/login');
+    logout(); // gọi hàm logout của bạn
+    window.location.href = '/login'; // điều hướng và refresh trang
   };
+  
 
   useEffect(() => {
     let hoverArea = document.createElement('div');

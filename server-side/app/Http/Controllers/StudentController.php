@@ -12,9 +12,29 @@ class StudentController extends Controller
     // ✅ Lấy danh sách tất cả sinh viên
     public function index()
     {
-        $students = Student::with('user')->get();
-        return response()->json($students);
+        $user = auth()->user();
+
+        // ✅ Nếu là admin hoặc staff → trả về danh sách sinh viên
+        if (in_array($user->role, ['admin', 'staff'])) {
+            $students = Student::with('user')->get();
+            return response()->json($students);
+        }
+
+        // ✅ Nếu là student → chỉ trả về thông tin sinh viên của chính họ
+        if ($user->role === 'student') {
+            $student = Student::with('user')->where('user_id', $user->id)->first();
+
+            if (!$student) {
+                return response()->json(['message' => 'Không tìm thấy thông tin sinh viên của bạn'], 404);
+            }
+
+            return response()->json($student);
+        }
+
+        // ❌ Không có quyền
+        return response()->json(['message' => 'Bạn không có quyền truy cập'], 403);
     }
+
 
     // ✅ Lấy thông tin sinh viên theo id
     public function show($id)
@@ -70,13 +90,20 @@ class StudentController extends Controller
     // ✅ Cập nhật thông tin sinh viên
     public function update(Request $request, $id)
     {
+        $user = auth()->user();
         $student = Student::find($id);
+
         if (!$student) {
             return response()->json(['message' => 'Không tìm thấy sinh viên'], 404);
         }
 
+        // ✅ Nếu là student thì chỉ được sửa thông tin chính mình
+        if ($user->role === 'student' && $student->user_id !== $user->id) {
+            return response()->json(['message' => 'Bạn không thể sửa thông tin sinh viên khác'], 403);
+        }
+
         $request->validate([
-            'student_code' => 'sometimes|string|unique:students,student_code,'.$id,
+            'student_code' => 'sometimes|string|unique:students,student_code,' . $id,
             'gender' => 'sometimes|string',
             'birth_date' => 'sometimes|date',
             'class' => 'sometimes|string',
@@ -89,6 +116,7 @@ class StudentController extends Controller
 
         return response()->json(['message' => 'Thông tin sinh viên đã được cập nhật', 'student' => $student]);
     }
+
 
     // ✅ Xóa sinh viên
     public function destroy($id)

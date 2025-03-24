@@ -4,27 +4,26 @@ import "../Styles/RoomForm.css";
 
 const RoomForm = ({ roomData, onSubmit, onClose }) => {
   const [formData, setFormData] = useState({
-    name: "",
+    room_code: "",
     floor: "",
     building: "",
     bed_count: "",
-    type: "",
+    room_type: "",
     price: "",
-    status: "available",
+    status: "Available", // Default to Available in English
   });
 
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    console.log("👉 Data truyền vào form:", roomData);
     setFormData(roomData || {
-      name: "",
+      room_code: "",
       floor: "",
       building: "",
       bed_count: "",
-      type: "",
+      room_type: "",
       price: "",
-      status: "available",
+      status: "Available",
     });
   }, [roomData]);
 
@@ -34,16 +33,20 @@ const RoomForm = ({ roomData, onSubmit, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const result = await onSubmit(formData);
-    if (result.success) {
+  
+    // No need for status mapping, using English throughout
+    const payload = { ...formData };
+  
+    const result = await onSubmit(payload);
+    if (result?.success) {
       alert(result.message);
       setErrorMessage("");
       onClose();
     } else {
-      setErrorMessage(result.message);
+      setErrorMessage(result?.message || "Save failed. Please try again.");
     }
   };
-
+  
   return (
     <div className="modal-backdrop">
       <div className="modal-dialog">
@@ -51,34 +54,28 @@ const RoomForm = ({ roomData, onSubmit, onClose }) => {
           <div className="modal-header">
             <h2 className="modal-title">
               <FaBuilding className="me-2" />
-              {formData.id ? "Chỉnh sửa phòng" : "Thêm phòng mới"}
+              {roomData?.id ? "Edit Room" : "Add New Room"}
             </h2>
             <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-          {/* {errorMessage && (
-            <div className="alert alert-danger m-3">
-              {errorMessage}
-            </div>
-          )} */}
-
           <div className="modal-body">
-            <form onSubmit={handleSubmit} className="room-form">
+            <form onSubmit={handleSubmit} id="roomForm" className="room-form">
               <div className="row g-3">
                 <div className="col-md-6">
                   <div className="form-floating">
                     <input
                       type="text"
                       className="form-control"
-                      id="name"
-                      name="name"
-                      value={formData.name}
+                      id="room_code"
+                      name="room_code"
+                      value={formData.room_code}
                       onChange={handleChange}
-                      placeholder="Tên phòng"
+                      placeholder="Room Code"
                       required
                     />
-                    <label htmlFor="name">Tên phòng</label>
+                    <label htmlFor="room_code">Room Code</label>
                   </div>
                 </div>
 
@@ -91,10 +88,10 @@ const RoomForm = ({ roomData, onSubmit, onClose }) => {
                       name="floor"
                       value={formData.floor}
                       onChange={handleChange}
-                      placeholder="Tầng"
+                      placeholder="Floor"
                       required
                     />
-                    <label htmlFor="floor">Tầng</label>
+                    <label htmlFor="floor">Floor</label>
                   </div>
                 </div>
 
@@ -107,10 +104,10 @@ const RoomForm = ({ roomData, onSubmit, onClose }) => {
                       name="building"
                       value={formData.building}
                       onChange={handleChange}
-                      placeholder="Tòa nhà"
+                      placeholder="Building"
                       required
                     />
-                    <label htmlFor="building">Tòa nhà</label>
+                    <label htmlFor="building">Building</label>
                   </div>
                 </div>
 
@@ -123,26 +120,28 @@ const RoomForm = ({ roomData, onSubmit, onClose }) => {
                       name="bed_count"
                       value={formData.bed_count}
                       onChange={handleChange}
-                      placeholder="Số giường"
+                      placeholder="Bed Count"
                       required
                     />
-                    <label htmlFor="bed_count">Số giường</label>
+                    <label htmlFor="bed_count">Bed Count</label>
                   </div>
                 </div>
 
                 <div className="col-md-6">
                   <div className="form-floating">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="type"
-                      name="type"
-                      value={formData.type}
+                    <select
+                      className="form-select"
+                      id="room_type"
+                      name="room_type"
+                      value={formData.room_type}
                       onChange={handleChange}
-                      placeholder="Loại phòng"
                       required
-                    />
-                    <label htmlFor="type">Loại phòng</label>
+                    >
+                      <option value="">Select Room Type</option>
+                      <option value="standard">Standard</option>
+                      <option value="vip">VIP</option>
+                    </select>
+                    <label htmlFor="room_type">Room Type</label>
                   </div>
                 </div>
 
@@ -155,10 +154,10 @@ const RoomForm = ({ roomData, onSubmit, onClose }) => {
                       name="price"
                       value={formData.price}
                       onChange={handleChange}
-                      placeholder="Giá thuê"
+                      placeholder="Price"
                       required
                     />
-                    <label htmlFor="price">Giá thuê (VNĐ)</label>
+                    <label htmlFor="price">Price (VND)</label>
                   </div>
                 </div>
 
@@ -170,12 +169,13 @@ const RoomForm = ({ roomData, onSubmit, onClose }) => {
                       name="status"
                       value={formData.status}
                       onChange={handleChange}
+                      required
                     >
-                      <option value="available">Còn trống</option>
-                      <option value="occupied">Đã thuê</option>
-                      <option value="maintenance">Bảo trì</option>
+                      <option value="Available">Available</option>
+                      <option value="Occupied">Occupied</option>
+                      <option value="Maintenance">Maintenance</option>
                     </select>
-                    <label htmlFor="status">Trạng thái</label>
+                    <label htmlFor="status">Status</label>
                   </div>
                 </div>
               </div>
@@ -185,11 +185,11 @@ const RoomForm = ({ roomData, onSubmit, onClose }) => {
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" onClick={onClose}>
               <FaTimes className="me-2" />
-              Hủy
+              Cancel
             </button>
             <button type="submit" className="btn btn-primary" form="roomForm">
               <FaDoorOpen className="me-2" />
-              {formData.id ? "Cập nhật" : "Thêm mới"}
+              {roomData?.id ? "Update" : "Create"}
             </button>
           </div>
         </div>

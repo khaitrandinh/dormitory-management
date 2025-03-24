@@ -1,0 +1,11 @@
+.student-page .form-control {
+    border-radius: 8px;
+  }
+  .student-page .card {
+    max-width: 600px;
+    margin: auto;
+  }
+  .student-page .table th, .student-page .table td {
+    vertical-align: middle;
+  }
+  

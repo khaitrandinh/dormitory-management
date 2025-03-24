@@ -7,8 +7,10 @@ export const getToken = () => {
 
 // ✅ Gọi API để lấy thông tin user
 export async function getCurrentUser() {
+  const token = getToken();
+  if (!token) return null; 
   try {
-    const response = await api.get('/me'); // Laravel route `/api/me`
+    const response = await api.get('/me');
     return response.data;
   } catch (error) {
     console.error('Failed to fetch user:', error);

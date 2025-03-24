@@ -26,4 +26,10 @@ class Contract extends Model
     {
         return $this->belongsTo(Room::class);
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
 }

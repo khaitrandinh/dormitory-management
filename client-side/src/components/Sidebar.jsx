@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaHome, FaUserShield, FaUserGraduate, FaEnvelope, FaCog, FaBars } from 'react-icons/fa';
+import { FaHome, FaUserShield, FaUserGraduate, FaEnvelope, FaBars, FaFileContract,FaHouseUser } from 'react-icons/fa';
 import '../Styles/Sidebar.css';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
+  const { role } = useContext(AuthContext);
 
   const isActiveRoute = (route) => {
     return location.pathname === route ? 'active' : '';
@@ -28,38 +31,59 @@ const Sidebar = () => {
       </div>
 
       <div className="sidebar-content">
-        <ul className="sidebar-menu">
-          <li className={isActiveRoute('/')}>
-            <Link to="/">
-              <FaHome className="menu-icon" />
-              <span className="menu-text">Dashboard</span>
-            </Link>
-          </li>
+      <ul className="sidebar-menu">
+        {/* Dashboard - tất cả roles đều thấy */}
+        <li className={isActiveRoute('/')}>
+          <Link to="/">
+            <FaHome className="menu-icon" />
+            <span className="menu-text">Dashboard</span>
+          </Link>
+        </li>
+
+        {/* Quản lý phòng - chỉ admin và staff */}
+        {(role === 'admin' || role === 'staff') && (
           <li className={isActiveRoute('/room')}>
             <Link to="/room">
               <FaUserShield className="menu-icon" />
-              <span className="menu-text">Phòng</span>
+              <span className="menu-text">Room manage</span>
             </Link>
           </li>
+        )}
+
           <li className={isActiveRoute('/student')}>
             <Link to="/student">
               <FaUserGraduate className="menu-icon" />
-              <span className="menu-text">Sinh viên</span>
+              <span className="menu-text">Student manage</span>
             </Link>
           </li>
-          <li className={isActiveRoute('/messages')}>
-            <Link to="/messages">
-              <FaEnvelope className="menu-icon" />
-              <span className="menu-text">Tin nhắn</span>
+
+          <li className={isActiveRoute('/contract')}>
+            <Link to="/contract">
+              <FaFileContract className="menu-icon" />
+              <span className="menu-text">Contracts</span>
             </Link>
           </li>
-          <li className={isActiveRoute('/settings')}>
-            <Link to="/settings">
-              <FaCog className="menu-icon" />
-              <span className="menu-text">Cài đặt</span>
+        
+
+        {/* Tin nhắn - tất cả roles */}
+        <li className={isActiveRoute('/messages')}>
+          <Link to="/messages">
+            <FaEnvelope className="menu-icon" />
+            <span className="menu-text">Messages</span>
+          </Link>
+        </li>
+
+        {/* Admin Page - chỉ hiển thị cho admin */}
+        {role === 'admin' && (
+          <li className={isActiveRoute('/admin')}>
+            <Link to="/admin">
+              <FaHouseUser className="menu-icon" />
+              <span className="menu-text">admin Manage</span>
             </Link>
           </li>
-        </ul>
+        )}
+      </ul>
+
       </div>
 
       <div className="sidebar-footer">
@@ -70,8 +94,8 @@ const Sidebar = () => {
             className="footer-logo"
           />
           <div className="footer-info">
-            <p className="version">Version 1.0.0</p>
-            <p className="copyright">© 2024 Dormitory</p>
+            <p className="version">Version 2.0.0</p>
+            <p className="copyright">© 2025 Dormitory</p>
           </div>
         </div>
       </div>

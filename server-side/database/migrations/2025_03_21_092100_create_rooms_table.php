@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('building');                      // Ví dụ: Tòa A, Tòa B
             $table->integer('floor');                        // Tầng
             $table->integer('bed_count');                    // Số giường
-            $table->enum('room_type', ['thường', 'vip']);   // Loại phòng
-            $table->enum('status', ['trống', 'đã thuê', 'bảo trì'])->default('trống');
+            $table->enum('room_type', ['standard', 'vip']);   // Loại phòng
+            $table->enum('status', ['Available','Occupied','Maintenance'])->default('Available');
             $table->integer('price');                        // Giá thuê
             $table->timestamps();
         });

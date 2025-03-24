@@ -23,7 +23,7 @@ const Register = () => {
         e.preventDefault();
         try {
             await register(formData);
-            setSuccess('Đăng ký thành công! Vui lòng đăng nhập.');
+            setSuccess('Sign up successfull! please login your account.');
             setError('');
             setTimeout(() => navigate('/'), 2000);
         } catch (err) {

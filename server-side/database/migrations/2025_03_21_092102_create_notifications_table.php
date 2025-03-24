@@ -9,9 +9,16 @@ return new class extends Migration {
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sender_id')->constrained('users')->onDelete('cascade'); // ✅ Người gửi thông báo
+
+            // ✅ Người nhận thông báo (nullable vì có thể là thông báo chung)
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+
+            // ✅ Người gửi thông báo
+            $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
+
             $table->string('title');
             $table->text('message');
+
             $table->timestamps();
         });
     }

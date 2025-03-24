@@ -13,18 +13,22 @@ export const AuthProvider = ({ children }) => {
       const data = await getCurrentUser();
       if (data) {
         setUser(data);
-        setRole(data.role); // Assuming API returns role
+        setRole(data.role);
       }
-      setLoading(false);
+      setLoading(false); // ✅ Luôn set loading, nhưng chỉ sau khi kiểm tra token
     };
+  
     fetchUser();
   }, []);
+  
 
   const logout = () => {
-    localStorage.removeItem('access_token'); // ✅ Đúng với key bạn đang lưu khi login
+    localStorage.removeItem('access_token');
     setUser(null);
     setRole(null);
+    window.location.href = '/login'; // 👉 Điều hướng về trang login
   };
+  
 
   return (
     <AuthContext.Provider value={{ user, role, loading, logout }}>

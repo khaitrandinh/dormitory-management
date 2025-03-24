@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "../services/axios";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import { AuthContext } from "../context/AuthContext"; // Lấy thông tin user đăng nhập
-import "../Styles/AdminPage.css";
+import { AuthContext } from "../context/AuthContext";
+import "../Styles/AdminPage.css"; // Bạn có thể đổi tên file này thành UserManagement.css
 
 const AdminPage = () => {
-  const { role } = useContext(AuthContext); // Lấy role của user
+  const { role } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -25,27 +26,41 @@ const AdminPage = () => {
     }
   };
 
-  // ✅ Cập nhật vai trò hoặc trạng thái người dùng
-  const handleUpdate = async (id, field, value) => {
+  const updateRole = async (id, newRole) => {
+    setLoading(true);
     try {
-      await axios.put(`/admin/users/${id}`, { [field]: value });
+      await axios.put(`/admin/users/${id}`, { role: newRole });
       fetchUsers();
     } catch (err) {
-      setError("Không thể cập nhật người dùng.");
-      console.error("Lỗi cập nhật:", err);
+      setError("Không thể cập nhật vai trò người dùng.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // ✅ Xóa người dùng
+  const updateStatus = async (id, newStatus) => {
+    setLoading(true);
+    try {
+      await axios.put(`/admin/users/${id}`, { status: newStatus });
+      fetchUsers();
+    } catch (err) {
+      setError("Không thể cập nhật trạng thái người dùng.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDelete = async (id) => {
-    if (window.confirm("Bạn có chắc chắn muốn xóa người dùng này?")) {
-      try {
-        await axios.delete(`/admin/users/${id}`);
-        fetchUsers();
-      } catch (err) {
-        setError("Không thể xóa người dùng.");
-        console.error("Lỗi xóa:", err);
-      }
+    if (!window.confirm("Bạn có chắc chắn muốn xóa người dùng này?")) return;
+
+    setLoading(true);
+    try {
+      await axios.delete(`/admin/users/${id}`);
+      fetchUsers();
+    } catch (err) {
+      setError("Không thể xóa người dùng.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,13 +90,13 @@ const AdminPage = () => {
                   <tr key={user.id}>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
-                    
-                    {/* Dropdown Chỉnh Vai Trò */}
+
                     <td>
                       {role === "admin" ? (
                         <select
+                          disabled={loading}
                           value={user.role}
-                          onChange={(e) => handleUpdate(user.id, "role", e.target.value)}
+                          onChange={(e) => updateRole(user.id, e.target.value)}
                           className="form-select"
                         >
                           <option value="admin">Admin</option>
@@ -93,30 +108,32 @@ const AdminPage = () => {
                       )}
                     </td>
 
-                    {/* Dropdown Chỉnh Trạng Thái */}
                     <td>
                       {role === "admin" ? (
                         <select
+                          disabled={loading}
                           value={user.status}
-                          onChange={(e) => handleUpdate(user.id, "status", e.target.value)}
+                          onChange={(e) => updateStatus(user.id, e.target.value)}
                           className={`form-select status-${user.status}`}
                         >
                           <option value="active">Active</option>
                           <option value="banned">Banned</option>
                         </select>
                       ) : (
-                        <span className={`badge status-${user.status}`}>
-                          {user.status}
+                        <span
+                          className={`badge bg-${user.status === "active" ? "success" : "danger"}`}
+                        >
+                          {user.status === "active" ? "Đang hoạt động" : "Bị cấm"}
                         </span>
                       )}
                     </td>
 
-                    {/* Nút Hành Động */}
                     {role === "admin" && (
                       <td>
                         <button
                           className="btn btn-outline-danger btn-sm"
                           onClick={() => handleDelete(user.id)}
+                          disabled={loading}
                         >
                           <FaTrash /> Xóa
                         </button>
@@ -126,6 +143,10 @@ const AdminPage = () => {
                 ))}
               </tbody>
             </table>
+
+            {users.length === 0 && (
+              <p className="text-center text-muted mt-3">Không có người dùng nào.</p>
+            )}
           </div>
         </div>
       </div>
