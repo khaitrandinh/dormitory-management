@@ -9,18 +9,18 @@ use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
 {
-    // ✅ Lấy danh sách tất cả sinh viên
+    
     public function index()
     {
         $user = auth()->user();
 
-        // ✅ Nếu là admin hoặc staff → trả về danh sách sinh viên
+        
         if (in_array($user->role, ['admin', 'staff'])) {
             $students = Student::with('user')->get();
             return response()->json($students);
         }
 
-        // ✅ Nếu là student → chỉ trả về thông tin sinh viên của chính họ
+        
         if ($user->role === 'student') {
             $student = Student::with('user')->where('user_id', $user->id)->first();
 
@@ -31,12 +31,12 @@ class StudentController extends Controller
             return response()->json($student);
         }
 
-        // ❌ Không có quyền
+        
         return response()->json(['message' => 'Bạn không có quyền truy cập'], 403);
     }
 
 
-    // ✅ Lấy thông tin sinh viên theo id
+    
     public function show($id)
     {
         $student = Student::with('user')->find($id);
@@ -48,7 +48,7 @@ class StudentController extends Controller
         return response()->json($student);
     }
 
-    // ✅ Tạo sinh viên mới
+   
     public function store(Request $request)
     {
         $request->validate([
@@ -72,7 +72,7 @@ class StudentController extends Controller
             'role' => 'student',
         ]);
 
-        // Tạo student và liên kết với user
+        
         $student = Student::create([
             'user_id' => $user->id,
             'student_code' => $request->student_code,
@@ -87,7 +87,7 @@ class StudentController extends Controller
         return response()->json(['message' => 'Sinh viên đã được tạo', 'student' => $student], 201);
     }
 
-    // ✅ Cập nhật thông tin sinh viên
+    
     public function update(Request $request, $id)
     {
         $user = auth()->user();
@@ -118,7 +118,7 @@ class StudentController extends Controller
     }
 
 
-    // ✅ Xóa sinh viên
+    
     public function destroy($id)
     {
         $student = Student::find($id);
@@ -126,7 +126,7 @@ class StudentController extends Controller
             return response()->json(['message' => 'Không tìm thấy sinh viên'], 404);
         }
 
-        // Xóa luôn user liên quan
+        
         $student->user()->delete();
         $student->delete();
 

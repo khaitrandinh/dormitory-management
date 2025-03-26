@@ -15,7 +15,7 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
-        // ✅ Nếu là "staff" hoặc "admin" → Trả toàn bộ dữ liệu tổng quan
+        
         if (in_array($user->role, ['staff', 'admin'])) {
             return response()->json([
                 'rooms' => [
@@ -32,7 +32,7 @@ class DashboardController extends Controller
                         'id' => $room->id,
                         'building' => $room->building,
                         'room' => $room->room_code,
-                        'status' => $room->status // ✅ Lấy trực tiếp từ DB
+                        'status' => $room->status 
                     ];
                 }),
 
@@ -40,12 +40,12 @@ class DashboardController extends Controller
                 'notifications' => Notification::orderBy('created_at', 'desc')->take(5)->get(['id', 'message', 'created_at']),
                 'finance' => [
                     'income' => Payment::where('status', 'paid')->whereMonth('payment_date', now()->month)->sum('amount'),
-                    'expenses' => 0 // Giả lập chi phí, sau này có thể thêm bảng "expenses"
+                    'expenses' => 0 
                 ]
             ]);
         }
 
-        // ✅ Nếu là "student" → Trả dữ liệu cá nhân
+        
         if ($user->role === 'student') {
             $student = Student::where('user_id', $user->id)->first();
 

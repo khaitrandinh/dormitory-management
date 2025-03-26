@@ -10,7 +10,7 @@ class Room extends Model
     use HasFactory;
 
     protected $fillable = [
-        'room_code', // ✅ Thêm dòng này để cho phép tạo room_code
+        'room_code', 
         'building',
         'floor',
         'bed_count',

@@ -8,14 +8,14 @@ use App\Models\User;
 
 class NotificationController extends Controller
 {
-    // ✅ Lấy danh sách tất cả thông báo
+    
     public function index()
     {
         $notifications = Notification::with('sender')->get();
         return response()->json($notifications);
     }
 
-    // ✅ Lấy thông tin thông báo theo id
+    
     public function show($id)
     {
         $notification = Notification::with('sender')->find($id);
@@ -27,7 +27,7 @@ class NotificationController extends Controller
         return response()->json($notification);
     }
 
-    // ✅ Tạo thông báo
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -41,7 +41,7 @@ class NotificationController extends Controller
         return response()->json(['message' => 'Thông báo đã được tạo', 'data' => $notification], 201);
     }
 
-    // ✅ Xóa thông báo
+    
     public function destroy($id)
     {
         $notification = Notification::find($id);

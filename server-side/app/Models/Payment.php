@@ -10,10 +10,11 @@ class Payment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'contract_id', // ✅ Gắn với contract_id thay vì user_id
+        'contract_id',
         'amount',
         'payment_date',
         'status',
+        'vnp_transaction_no',
     ];
 
     public function contract()

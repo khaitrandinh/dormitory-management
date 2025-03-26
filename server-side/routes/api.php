@@ -19,11 +19,11 @@ Route::middleware('auth:api')->group(function () {
     Route::post('refresh', [AuthController::class, 'refresh']);
 });
 Route::middleware(['auth:api'])->group(function () {
-    Route::get('/students', [StudentController::class, 'index']); // Lấy danh sách sinh viên
-    Route::get('/students/{id}', [StudentController::class, 'show']); // Lấy chi tiết sinh viên
-    Route::post('/students', [StudentController::class, 'store']); // Tạo sinh viên
-    Route::put('/students/{id}', [StudentController::class, 'update']); // Cập nhật sinh viên
-    Route::delete('/students/{id}', [StudentController::class, 'destroy']); // Xóa sinh viên
+    Route::get('/students', [StudentController::class, 'index']); 
+    Route::get('/students/{id}', [StudentController::class, 'show']); 
+    Route::post('/students', [StudentController::class, 'store']); 
+    Route::put('/students/{id}', [StudentController::class, 'update']); 
+    Route::delete('/students/{id}', [StudentController::class, 'destroy']); 
 });
 
 
@@ -37,21 +37,21 @@ Route::middleware(['auth:api'])->group(function () {
 
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::get('/contracts', [ContractController::class, 'index']); // Lấy danh sách hợp đồng
-    Route::get('/contracts/{id}', [ContractController::class, 'show']); // Lấy chi tiết hợp đồng
-    Route::post('/contracts', [ContractController::class, 'store']); // Tạo hợp đồng
-    Route::put('/contracts/{id}', [ContractController::class, 'update']); // Cập nhật hợp đồng
-    Route::delete('/contracts/{id}', [ContractController::class, 'destroy']); // Xóa hợp đồng
+    Route::get('/contracts', [ContractController::class, 'index']); 
+    Route::get('/contracts/{id}', [ContractController::class, 'show']); 
+    Route::post('/contracts', [ContractController::class, 'store']); 
+    Route::put('/contracts/{id}', [ContractController::class, 'update']); 
+    Route::delete('/contracts/{id}', [ContractController::class, 'destroy']); 
 });
 
 
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::get('/payments', [PaymentController::class, 'index']); // Lấy danh sách thanh toán
-    Route::get('/payments/{id}', [PaymentController::class, 'show']); // Lấy chi tiết thanh toán
-    Route::post('/payments', [PaymentController::class, 'store']); // Tạo thanh toán
-    Route::put('/payments/{id}', [PaymentController::class, 'update']); // Cập nhật thanh toán
-    Route::delete('/payments/{id}', [PaymentController::class, 'destroy']); // Xóa thanh toán
+    Route::get('/payments', [PaymentController::class, 'index']); 
+    Route::get('/payments/{id}', [PaymentController::class, 'show']); 
+    Route::post('/payments', [PaymentController::class, 'store']); 
+    Route::put('/payments/{id}', [PaymentController::class, 'update']); 
+    Route::delete('/payments/{id}', [PaymentController::class, 'destroy']); 
 });
 
 
@@ -83,18 +83,22 @@ Route::middleware(['auth:api'])->group(function () {
 
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index']); // ✅ Đảm bảo gọi đúng method 'index'
+    Route::get('/dashboard', [DashboardController::class, 'index']); 
 });
 
-// ✅ API cho User (Chỉ có thể xem & cập nhật thông tin cá nhân)
+// API cho User (Chỉ có thể xem & cập nhật thông tin cá nhân)
 Route::middleware(['auth:api'])->group(function () {
-    Route::get('/users/{id}', [UserController::class, 'show']);   // Xem thông tin cá nhân
-    Route::put('/users/{id}', [UserController::class, 'update']); // Cập nhật thông tin cá nhân
+    Route::get('/users/{id}', [UserController::class, 'show']);   
+    Route::put('/users/{id}', [UserController::class, 'update']); 
 });
 
-// ✅ API cho Admin (Quản lý người dùng)
+// API cho Admin (Quản lý người dùng)
 Route::middleware(['auth:api'])->group(function () {
     Route::get('/admin/users', [AdminController::class, 'index']);
     Route::put('/admin/users/{id}', [AdminController::class, 'update']);
     Route::delete('/admin/users/{id}', [AdminController::class, 'destroy']);
+});
+Route::middleware(['auth:api'])->group(function () {
+    Route::post('/payos/initiate', [PaymentController::class, 'initiatePayOS']);
+    Route::post('/payos/webhook', [PaymentController::class, 'handlePayOSWebhook']);    
 });

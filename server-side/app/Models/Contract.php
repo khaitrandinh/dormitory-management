@@ -10,8 +10,8 @@ class Contract extends Model
     use HasFactory;
 
     protected $fillable = [
-        'student_id', // ✅ Thêm dòng này
-        'room_id',    // ✅ Thêm dòng này
+        'student_id', 
+        'room_id',    
         'start_date',
         'end_date',
         'status',

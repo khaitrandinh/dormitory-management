@@ -13,13 +13,16 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('contract_id')->constrained('contracts')->onDelete('cascade'); // ✅ Gắn với contract_id
+            $table->foreignId('contract_id')->constrained('contracts')->onDelete('cascade');
             $table->integer('amount');
             $table->date('payment_date');
-            $table->enum('status', ['pending', 'paid', 'canceled']);
+            $table->enum('status', ['pending', 'paid', 'canceled'])->default('pending');
+            $table->string('vnp_transaction_no')->nullable(); // Mã giao dịch từ VNPay
             $table->timestamps();
         });
     }
+
+
 
 
     /**

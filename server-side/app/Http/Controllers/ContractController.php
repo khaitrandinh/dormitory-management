@@ -9,7 +9,7 @@ use App\Models\Room;
 
 class ContractController extends Controller
 {
-    // ✅ Lấy danh sách tất cả các hợp đồng
+    
     public function index()
     {
         $contracts = Contract::with(['student.user', 'room', 'payments'])->get();
@@ -18,7 +18,7 @@ class ContractController extends Controller
     }
 
 
-    // ✅ Lấy thông tin hợp đồng theo id
+    
     public function show($id)
     {
         $contract = Contract::with(['student', 'room'])->find($id);
@@ -30,7 +30,7 @@ class ContractController extends Controller
         return response()->json($contract);
     }
 
-    // ✅ Tạo hợp đồng mới
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -42,7 +42,7 @@ class ContractController extends Controller
         ]);
 
         $contract = Contract::create($request->all());
-        // Ở phương thức store(), bạn nên xử lý logic tránh 1 sinh viên thuê nhiều phòng 1 lúc
+        
         $existing = Contract::where('student_id', $request->student_id)
         ->where('status', 'active')
         ->first();
@@ -55,7 +55,7 @@ class ContractController extends Controller
         return response()->json(['message' => 'Hợp đồng đã được tạo', 'data' => $contract], 201);
     }
 
-    // ✅ Cập nhật hợp đồng
+    
     public function update(Request $request, $id)
     {
         $contract = Contract::find($id);
@@ -73,7 +73,7 @@ class ContractController extends Controller
         return response()->json(['message' => 'Hợp đồng đã được cập nhật', 'data' => $contract]);
     }
 
-    // ✅ Xóa hợp đồng
+    
     public function destroy($id)
     {
         $contract = Contract::find($id);

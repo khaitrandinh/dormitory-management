@@ -10,7 +10,7 @@ class AdminController extends Controller
 {
     public function index()
     {
-        // 🔥 Kiểm tra quyền admin trực tiếp
+        
         if (Auth::user()->role !== 'admin') {
             return response()->json(['message' => 'Bạn không có quyền truy cập'], 403);
         }
