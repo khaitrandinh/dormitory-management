@@ -1,0 +1,13 @@
+.payment-container h3 {
+    font-weight: bold;
+  }
+  
+  .payment-container .btn svg {
+    margin-right: 4px;
+  }
+  
+  .payment-container .table td,
+  .payment-container .table th {
+    vertical-align: middle;
+  }
+  

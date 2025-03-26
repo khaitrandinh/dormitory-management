@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaHome, FaUserShield, FaUserGraduate, FaEnvelope, FaBars, FaFileContract,FaHouseUser } from 'react-icons/fa';
+import { FaHome, FaUserShield, FaUserGraduate, FaEnvelope, FaBars, FaFileContract,FaHouseUser, FaMoneyCheck } from 'react-icons/fa';
 import '../Styles/Sidebar.css';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
@@ -49,6 +49,14 @@ const Sidebar = () => {
             </Link>
           </li>
         )}
+        {role === 'student' && (
+          <li className={isActiveRoute('/roomselect')}>
+            <Link to="/roomselect">
+              <FaUserShield className="menu-icon" />
+              <span className="menu-text">Room</span>
+            </Link>
+          </li>
+        )}
 
           <li className={isActiveRoute('/student')}>
             <Link to="/student">
@@ -63,11 +71,18 @@ const Sidebar = () => {
               <span className="menu-text">Contracts</span>
             </Link>
           </li>
+
+          <li className={isActiveRoute('/payment')}>
+            <Link to="/payment">
+              <FaMoneyCheck className="menu-icon" />
+              <span className="menu-text">Payment</span>
+            </Link>
+          </li>
         
 
         {/* Tin nhắn - tất cả roles */}
-        <li className={isActiveRoute('/messages')}>
-          <Link to="/messages">
+        <li className={isActiveRoute('/notification')}>
+          <Link to="/notification">
             <FaEnvelope className="menu-icon" />
             <span className="menu-text">Messages</span>
           </Link>

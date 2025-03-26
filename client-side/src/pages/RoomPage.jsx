@@ -31,13 +31,13 @@ const RoomPage = () => {
   };
 
   const handleEdit = (room) => {
-    if (role !== "staff" && role !== "admin") return; // ✅ Only staff/admin can edit
+    if (role !== "staff" && role !== "admin") return; 
     setSelectedRoom(room);
     setShowForm(true);
   };
 
   const handleDelete = async (id) => {
-    if (role !== "staff" && role !== "admin") return; // ✅ Only staff/admin can delete
+    if (role !== "staff" && role !== "admin") return; 
     if (window.confirm("Are you sure you want to delete this room?")) {
       try {
         await axios.delete(`${apiEndpoint}/${id}`);

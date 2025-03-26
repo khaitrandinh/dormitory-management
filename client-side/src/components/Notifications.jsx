@@ -1,19 +1,3 @@
-// import React from 'react';
-
-// const Notifications = ({ notifications }) => (
-//     <div className="col-md-12">
-//         <div className="card">
-//             <div className="card-header">Thông Báo Quan Trọng</div>
-//             <ul className="list-group list-group-flush">
-//                 {notifications.map((note, index) => (
-//                     <li key={index} className="list-group-item">{note.message}</li>
-//                 ))}
-//             </ul>
-//         </div>
-//     </div>
-// );
-
-// export default Notifications;
 import React, { useState } from 'react';
 import { FaExpandAlt, FaTimes, FaBell } from 'react-icons/fa';
 import '../Styles/Notifications.css';
@@ -24,7 +8,7 @@ const Notifications = ({ notifications }) => {
   return (
     <div className="notifications-wrapper">
       <div className="notifications-header">
-        <h5 className="header-title">Thông báo mới</h5>
+        <h5 className="header-title">New Notification</h5>
         {notifications.length > 2 && (
           <button 
             className="expand-button"
@@ -48,7 +32,7 @@ const Notifications = ({ notifications }) => {
           <div className="modal-container">
             <div className="modal-header">
               <FaBell className="modal-icon" />
-              <h5>Tất Cả Thông Báo</h5>
+              <h5>All Notification</h5>
               <button 
                 className="close-button"
                 onClick={() => setShowModal(false)}

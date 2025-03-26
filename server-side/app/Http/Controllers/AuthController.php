@@ -19,7 +19,13 @@ class AuthController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6',
+            'gender' => 'required',
+            'birth_date' => 'required|date',
+            'class' => 'required|string',
+            'faculty' => 'required|string',
+            'phone' => 'required|string',
         ]);
+        
 
         $user = User::create([
             'name' => $request->name,
@@ -31,8 +37,14 @@ class AuthController extends Controller
         //Tạo bản ghi student tương ứng
         Student::create([
             'user_id' => $user->id,
-            'student_code' => 'S' . str_pad($user->id, 5, '0', STR_PAD_LEFT), 
+            'student_code' => 'S' . str_pad($user->id, 5, '0', STR_PAD_LEFT),
+            'gender' => $request->gender,
+            'birth_date' => $request->birth_date,
+            'class' => $request->class,
+            'faculty' => $request->faculty,
+            'phone' => $request->phone,
         ]);
+        
 
         $token = JWTAuth::fromUser($user);
 

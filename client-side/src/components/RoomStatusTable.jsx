@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaBuilding, FaCheck, FaTimes, FaTools } from 'react-icons/fa';
+import { FaBuilding, FaCheck, FaTimes, FaTools, FaBed } from 'react-icons/fa';
 import '../Styles/RoomStatusTable.css';
 import axios from '../services/axios';
 
@@ -17,14 +17,12 @@ const RoomStatusTable = ({ data, onRefresh }) => {
       if (response.status === 200) {
         alert("Room status updated");
 
-        // ✅ Cập nhật trực tiếp vào danh sách rooms trong state
         setRooms((prevRooms) =>
           prevRooms.map((room) =>
             room.id === roomId ? { ...room, status: newStatus } : room
           )
         );
 
-        // ✅ Nếu cần, gọi lại API toàn bộ
         if (onRefresh) onRefresh();
       }
     } catch (error) {
@@ -38,6 +36,21 @@ const RoomStatusTable = ({ data, onRefresh }) => {
     { value: 'Occupied', label: 'Occupied', icon: <FaTimes className="text-danger" /> },
     { value: 'Maintenance', label: 'Maintenance', icon: <FaTools className="text-warning" /> }
   ];
+
+  const getDisplayStatus = (room) => {
+    if (room.bed_available === 0) return 'Full';
+    return room.status;
+  };
+
+  const getStatusBadgeClass = (room) => {
+    if (room.bed_available === 0) return 'bg-danger';
+    switch (room.status) {
+      case 'Available': return 'bg-success';
+      case 'Occupied': return 'bg-warning';
+      case 'Maintenance': return 'bg-secondary';
+      default: return 'bg-light';
+    }
+  };
 
   return (
     <div className="room-status-card">
@@ -53,7 +66,9 @@ const RoomStatusTable = ({ data, onRefresh }) => {
             <tr>
               <th>Building</th>
               <th>Room</th>
+              <th>Bed</th>
               <th>Status</th>
+              <th>Update</th>
             </tr>
           </thead>
           <tbody>
@@ -63,8 +78,19 @@ const RoomStatusTable = ({ data, onRefresh }) => {
                   <td>{room.building}</td>
                   <td>{room.room_code || room.room || "N/A"}</td>
                   <td>
+                    <span className="badge bg-info">
+                      <FaBed className="me-1" />
+                      {room.bed_available}/{room.bed_count} available
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`badge ${getStatusBadgeClass(room)}`}>
+                      {getDisplayStatus(room)}
+                    </span>
+                  </td>
+                  <td>
                     <select
-                      className={`form-select status-select ${room.status.toLowerCase()}`}
+                      className={`form-select form-select-sm`}
                       value={room.status}
                       onChange={(e) => handleStatusChange(room.id, e.target.value)}
                     >
@@ -79,7 +105,7 @@ const RoomStatusTable = ({ data, onRefresh }) => {
               ))
             ) : (
               <tr>
-                <td colSpan="3" className="text-center text-muted">
+                <td colSpan="5" className="text-center text-muted">
                   No room data available.
                 </td>
               </tr>

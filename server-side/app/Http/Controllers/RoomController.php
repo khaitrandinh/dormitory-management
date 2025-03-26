@@ -10,10 +10,17 @@ class RoomController extends Controller
     // Get all rooms
     public function index()
     {
-        $rooms = Room::all();
+        $rooms = Room::withCount(['students as occupied_beds'])->get();
+
+        $rooms->transform(function ($room) {
+            $room->bed_available = $room->bed_count - $room->occupied_beds;
+            $room->status_display = $room->bed_available == 0 ? 'Full' : $room->status;
+            return $room;
+        });
+    
         return response()->json($rooms);
     }
-
+    
     // Get room by id
     public function show($id)
     {

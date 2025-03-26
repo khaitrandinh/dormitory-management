@@ -24,9 +24,9 @@ class Room extends Model
     }
     
     public function contracts()
-{
-    return $this->hasMany(Contract::class);
-}
+    {
+        return $this->hasMany(Contract::class);
+    }
 
 
 }

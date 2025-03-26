@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import RoleBasedRoute from './components/RoleBasedRoute';
 
@@ -13,7 +13,10 @@ import AdminPage from './pages/AdminPage';
 // import ManagerPage from './pages/ManagerPage';
 import StudentPage from './pages/StudentPage';
 import ContractPage from './pages/ContractPage';
-
+import PaymentPage from './pages/PaymentPage';
+import PaymentSuccessPage from './pages/PaymentSuccessPage';
+import NotificationPage from './pages/NotificationPage';
+import RoomSelectPage from './pages/RoomselectionPage';
 
 
 function App() {
@@ -27,7 +30,10 @@ function App() {
           <Route path="/room" element={<RoomPage  allowedRoles={['admin' || 'staff']}/>} />      
           <Route path="/student" element={<StudentPage />} />      
           <Route path="/contract" element={<ContractPage />} />      
-          {/* <Route path="/admin" element={<AdminPage />} />       */}
+          <Route path="/payment" element={<PaymentPage />} />      
+          <Route path="/payment-success" element={<PaymentSuccessPage />} />
+          <Route path="/notification" element={<NotificationPage />} />
+          <Route path="/roomselect" element={<RoomSelectPage />} />
           
           <Route path="/" element={
             <PrivateRoute>

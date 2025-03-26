@@ -4,13 +4,14 @@ import { AuthContext } from "../context/AuthContext";
 import axios from "../services/axios";
 import "../Styles/RoomTable.css";
 
+
+
 const RoomTable = ({ rooms, onDelete }) => {
   const { role } = useContext(AuthContext);
   const [editRoomId, setEditRoomId] = useState(null);
   const [editedRooms, setEditedRooms] = useState({});
   const [roomList, setRoomList] = useState([]);
 
-  // ✅ Cập nhật danh sách phòng nếu props.rooms thay đổi
   useEffect(() => {
     setRoomList(rooms);
   }, [rooms]);
@@ -34,15 +35,13 @@ const RoomTable = ({ rooms, onDelete }) => {
     }));
   };
 
-  const handleCancel = () => {
-    setEditRoomId(null);
-  };
+  const handleCancel = () => setEditRoomId(null);
 
   const handleSave = async (roomId) => {
     const edited = editedRooms[roomId];
     const original = roomList.find((r) => r.id === roomId);
-
     const payload = {};
+
     for (const key in edited) {
       if (edited[key] !== original[key]) {
         payload[key] = edited[key];
@@ -69,8 +68,24 @@ const RoomTable = ({ rooms, onDelete }) => {
     }
   };
 
-  const formatStatus = (status) =>
-    status.charAt(0).toUpperCase() + status.slice(1);
+  const formatStatus = (room) => {
+    if (room.bed_available === 0) return "Full";
+    return room.status.charAt(0).toUpperCase() + room.status.slice(1);
+  };
+
+  const statusBadgeClass = (room) => {
+    if (room.bed_available === 0) return "bg-danger";
+    switch (room.status.toLowerCase()) {
+      case "available":
+        return "bg-success";
+      case "occupied":
+        return "bg-warning";
+      case "maintenance":
+        return "bg-secondary";
+      default:
+        return "bg-light";
+    }
+  };
 
   return (
     <div className="table-responsive">
@@ -136,9 +151,9 @@ const RoomTable = ({ rooms, onDelete }) => {
                       onChange={(e) => handleChange(e, room.id, "bed_count")}
                     />
                   ) : (
-                    <>
-                      <FaBed className="icon text-info" /> {room.bed_count}
-                    </>
+                    <span className={`badge ${room.bed_available === 0 ? 'bg-danger' : 'bg-success'}`}>
+                      {room.bed_available}/{room.bed_count} available
+                    </span>
                   )}
                 </td>
                 <td>
@@ -152,7 +167,7 @@ const RoomTable = ({ rooms, onDelete }) => {
                     </select>
                   ) : (
                     <span className="badge bg-secondary">
-                      {formatStatus(room.room_type)}
+                      {formatStatus({ status: room.room_type })}
                     </span>
                   )}
                 </td>
@@ -178,10 +193,8 @@ const RoomTable = ({ rooms, onDelete }) => {
                       <option value="maintenance">Maintenance</option>
                     </select>
                   ) : (
-                    <span
-                      className={`status-badge status-${room.status.toLowerCase()}`}
-                    >
-                      {formatStatus(room.status)}
+                    <span className={`badge ${statusBadgeClass(room)}`}>
+                      {formatStatus(room)}
                     </span>
                   )}
                 </td>
@@ -230,3 +243,5 @@ const RoomTable = ({ rooms, onDelete }) => {
 };
 
 export default RoomTable;
+
+
