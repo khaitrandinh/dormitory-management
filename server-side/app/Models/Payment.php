@@ -14,11 +14,22 @@ class Payment extends Model
         'amount',
         'payment_date',
         'status',
-        'vnp_transaction_no',
+        'type',
+        'description',
+        'payos_transaction_code',
     ];
+    
+    
 
     public function contract()
     {
         return $this->belongsTo(Contract::class);
     }
+
+    public function student()
+    {
+        return $this->hasOneThrough(Student::class, Contract::class, 'id', 'id', 'contract_id', 'student_id');
+    }
+
+    
 }

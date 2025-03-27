@@ -17,6 +17,7 @@ import PaymentPage from './pages/PaymentPage';
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import NotificationPage from './pages/NotificationPage';
 import RoomSelectPage from './pages/RoomselectionPage';
+import RoomApprovalPage from './pages/RoomApprovalPage';
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
           <Route path="/payment-success" element={<PaymentSuccessPage />} />
           <Route path="/notification" element={<NotificationPage />} />
           <Route path="/roomselect" element={<RoomSelectPage />} />
+          <Route path="/roomapproval" element={<RoomApprovalPage  allowedRoles={['admin' || 'staff']}/>} />
           
           <Route path="/" element={
             <PrivateRoute>

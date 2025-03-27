@@ -10,11 +10,13 @@ class Contract extends Model
     use HasFactory;
 
     protected $fillable = [
-        'student_id', 
-        'room_id',    
+        'student_id',
+        'room_id',
         'start_date',
         'end_date',
         'status',
+        'deposit_amount',
+        'notes',
     ];
 
     public function student()
@@ -31,5 +33,4 @@ class Contract extends Model
     {
         return $this->hasMany(Payment::class);
     }
-
 }

@@ -15,14 +15,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('contract_id')->constrained('contracts')->onDelete('cascade');
             $table->integer('amount');
-            $table->date('payment_date');
+            $table->date('payment_date')->nullable(); // để khi chưa thanh toán vẫn tạo bill
             $table->enum('status', ['pending', 'paid', 'canceled'])->default('pending');
-            $table->string('vnp_transaction_no')->nullable(); // Mã giao dịch từ VNPay
+            $table->string('type')->default('room_booking');
+            $table->string('description')->nullable();
+            $table->string('payos_transaction_code')->nullable(); 
             $table->timestamps();
+
         });
     }
-
-
 
 
     /**

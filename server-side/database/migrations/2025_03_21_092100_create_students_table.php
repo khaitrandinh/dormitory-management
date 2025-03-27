@@ -13,20 +13,18 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->unique(); // 1 user chỉ có 1 sinh viên
-            $table->string('student_code')->unique(); // Mã sinh viên
+            $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
+            $table->string('student_code')->unique();
             $table->string('gender');
             $table->date('birth_date');
             $table->string('class');
             $table->string('faculty');
             $table->string('phone');
-            $table->string('room_code')->nullable(); // Mã phòng đang ở
-            $table->boolean('is_paid')->default(false); // Trạng thái thanh toán
+            $table->string('room_code')->nullable();
+            $table->boolean('is_paid')->default(false);
+            $table->enum('room_request_status', ['pending', 'approved', 'rejected'])->nullable(); 
             $table->timestamps();
-        
-            // Khóa ngoại liên kết với bảng users
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });        
+        });            
     }
 
     /**

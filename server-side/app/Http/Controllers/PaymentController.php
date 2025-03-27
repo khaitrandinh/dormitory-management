@@ -35,8 +35,11 @@ class PaymentController extends Controller
         $request->validate([
             'contract_id' => 'required|exists:contracts,id',
             'amount' => 'required|integer',
-            'payment_date' => 'required|date',
+            'payment_date' => 'nullable|date',
             'status' => 'required|in:pending,paid,canceled',
+            'type' => 'nullable|string',
+            'description' => 'nullable|string',
+            'payos_transaction_code' => 'nullable|string',
         ]);
 
         $payment = Payment::create($request->all());
@@ -49,7 +52,7 @@ class PaymentController extends Controller
                 'sender_id' => auth()->id(),
                 'user_id' => $studentUser->id,
                 'title' => 'New Payment Created',
-                'message' => 'A new payment of ' . number_format($payment->amount) . ' VND has been created. Please complete the payment before ' . $payment->payment_date,
+                'message' => 'A new payment of ' . number_format($payment->amount) . ' VND has been created. Please complete it before ' . $payment->payment_date,
             ]);
 
             Mail::to($studentUser->email)->send(new PaymentCreatedMail($payment));
@@ -67,6 +70,9 @@ class PaymentController extends Controller
 
         $request->validate([
             'status' => 'sometimes|in:pending,paid,canceled',
+            'type' => 'sometimes|string',
+            'description' => 'sometimes|string',
+            'payos_transaction_code' => 'sometimes|string',
         ]);
 
         $payment->update($request->all());
@@ -118,13 +124,13 @@ class PaymentController extends Controller
         $result = $payOSService->createPaymentLink($request->amount, $request->contract_id);
 
         if (!isset($result['checkoutUrl'])) {
-            return response()->json(['message' => 'Không thể tạo link thanh toán'], 500);
+            return response()->json(['message' => 'Unable to create payment link'], 500);
         }
+
         return response()->json([
             'payment_url' => $result['checkoutUrl'],
             'message' => 'Payment initiated',
         ]);
-        
     }
 
     public function handlePayOSWebhook(Request $request)
@@ -133,14 +139,16 @@ class PaymentController extends Controller
 
         if ($data['status'] === 'PAID') {
             Payment::create([
-                'contract_id' => $data['description'], // hoặc map contract id từ orderCode nếu có
+                'contract_id' => $data['description'], // Make sure 'description' carries contract_id
                 'amount' => $data['amount'],
                 'payment_date' => now(),
                 'status' => 'paid',
+                'type' => 'payos',
+                'description' => 'Paid via PayOS',
+                'payos_transaction_code' => $data['transactionCode'] ?? null,
             ]);
         }
 
         return response()->json(['message' => 'Webhook received']);
     }
-
 }

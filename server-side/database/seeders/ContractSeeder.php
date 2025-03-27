@@ -6,25 +6,29 @@ use Illuminate\Database\Seeder;
 use App\Models\Contract;
 use App\Models\Student;
 use App\Models\Room;
+use Carbon\Carbon;
 
 class ContractSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        $student = Student::first(); // 🔥 Lấy student đầu tiên trong DB
-        $room = Room::first(); // 🔥 Lấy room đầu tiên trong DB
+        $student = Student::first();
+        $room = Room::first();
 
-        if (!$student || !$room) {
-            echo "Không có student hoặc room nào trong database!";
-            return;
+        if ($student && $room) {
+            Contract::create([
+                'student_id'     => $student->id,
+                'room_id'        => $room->id,
+                'start_date'     => Carbon::now(),
+                'end_date'       => Carbon::now()->addMonths(6),
+                'status'         => 'active',
+                'deposit_amount' => 1000000,
+                'notes'          => 'Initial contract for testing.',
+            ]);
+
+            echo " ContractSeeder đã tạo hợp đồng mẫu thành công.\n";
+        } else {
+            echo "Không tìm thấy sinh viên hoặc phòng để tạo hợp đồng.\n";
         }
-
-        Contract::create([
-            'student_id' => $student->id, // ✅ Chắc chắn lấy ID hợp lệ
-            'room_id' => $room->id,
-            'start_date' => '2025-02-21',
-            'end_date' => '2025-08-21',
-            'status' => 'active',
-        ]);
     }
 }

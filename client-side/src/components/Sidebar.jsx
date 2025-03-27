@@ -45,6 +45,14 @@ const Sidebar = () => {
           <li className={isActiveRoute('/room')}>
             <Link to="/room">
               <FaUserShield className="menu-icon" />
+              <span className="menu-text">Room List</span>
+            </Link>
+          </li>
+        )}
+        {(role === 'admin' || role === 'staff') && (
+          <li className={isActiveRoute('/roomapproval')}>
+            <Link to="/roomapproval">
+              <FaUserShield className="menu-icon" />
               <span className="menu-text">Room manage</span>
             </Link>
           </li>

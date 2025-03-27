@@ -10,18 +10,27 @@ class StudentSeeder extends Seeder
 {
     public function run()
     {
-        $studentUser = User::where('email', 'student@example.com')->first();
+        $studentUser = User::firstOrCreate(
+            ['email' => 'student@example.com'],
+            [
+                'name' => 'John Doe',
+                'password' => bcrypt('password'),
+                'role' => 'student',
+            ]
+        );
 
-        Student::create([
+        Student::firstOrCreate([
             'user_id' => $studentUser->id,
+        ], [
             'student_code' => 'SV001',
-            'gender' => 'Nam',
+            'gender' => 'Male',
             'birth_date' => '2003-12-03',
-            'class' => 'KTPM01',
-            'faculty' => 'Công nghệ thông tin',
+            'class' => 'CS101',
+            'faculty' => 'Computer Science',
             'phone' => '0912345678',
             'room_code' => 'A101',
             'is_paid' => true,
+            'room_request_status' => 'approved'
         ]);
     }
 }
