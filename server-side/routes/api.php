@@ -32,6 +32,9 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/students/{id}', [StudentController::class, 'destroy']);
     Route::put('/students/{id}/approve-room', [StudentController::class, 'approveRoom']);
     Route::put('/students/{id}/reject-room', [StudentController::class, 'rejectRoom']);
+    Route::put('/students/{id}/approve-cancel-room', [StudentController::class, 'approveCancelRoom']);
+    Route::put('/students/{id}/reject-cancel-room', [StudentController::class, 'rejectCancelRoom']);
+
 
     // Rooms
     Route::get('/rooms', [RoomController::class, 'index']);
@@ -57,6 +60,7 @@ Route::middleware('auth:api')->group(function () {
     // PayOS
     Route::post('/payos/initiate', [PaymentController::class, 'initiatePayOS']);
     Route::post('/payos/webhook', [PaymentController::class, 'handlePayOSWebhook']);
+
 
     // Repair Requests
     Route::get('/repair-requests', [RepairRequestController::class, 'index']);

@@ -9,16 +9,28 @@ import Navbar from '../components/Navbar';
 const NotificationPage = () => {
   const { user, role } = useContext(AuthContext);
   const [notifications, setNotifications] = useState([]);
+  const [students, setStudents] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({ title: '', message: '' });
+
+  const [formData, setFormData] = useState({
+    title: '',
+    message: '',
+    user_id: 'all' // default: send to all
+  });
 
   useEffect(() => {
     fetchNotifications();
+    fetchStudents();
   }, []);
 
   const fetchNotifications = async () => {
     const res = await axios.get('/notifications');
     setNotifications(res.data);
+  };
+
+  const fetchStudents = async () => {
+    const res = await axios.get('/users?role=student');
+    setStudents(res.data);
   };
 
   const handleDelete = async (id) => {
@@ -30,29 +42,34 @@ const NotificationPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.post('/notifications', {
+
+    const payload = {
       sender_id: user?.id,
       title: formData.title,
       message: formData.message,
-    });
+      user_id: formData.user_id === 'all' ? null : formData.user_id
+    };
+
+    await axios.post('/notifications', payload);
+
     setShowModal(false);
-    setFormData({ title: '', message: '' });
+    setFormData({ title: '', message: '', user_id: 'all' });
     fetchNotifications();
   };
 
   return (
-  <div className="dashboard-wrapper">
+    <div className="dashboard-wrapper">
       <Sidebar />
       <div className="dashboard-main">
         <Navbar />
         <div className="container mt-4">
           <h3><FaBell /> Notifications</h3>
 
-          {role === 'admin' || role === 'staff' ? (
+          {(role === 'admin' || role === 'staff') && (
             <Button className="mb-3" onClick={() => setShowModal(true)}>
               <FaPlus /> Send Notification
             </Button>
-          ) : null}
+          )}
 
           <Table striped bordered hover>
             <thead>
@@ -89,12 +106,40 @@ const NotificationPage = () => {
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
                   <Form.Label>Title</Form.Label>
-                  <Form.Control type="text" required name="title" value={formData.title} onChange={e => setFormData({ ...formData, title: e.target.value })} />
+                  <Form.Control
+                    type="text"
+                    required
+                    value={formData.title}
+                    onChange={e => setFormData({ ...formData, title: e.target.value })}
+                  />
                 </Form.Group>
+
                 <Form.Group className="mb-3">
                   <Form.Label>Message</Form.Label>
-                  <Form.Control as="textarea" required rows={3} value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} />
+                  <Form.Control
+                    as="textarea"
+                    required
+                    rows={3}
+                    value={formData.message}
+                    onChange={e => setFormData({ ...formData, message: e.target.value })}
+                  />
                 </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Recipient</Form.Label>
+                  <Form.Select
+                    value={formData.user_id}
+                    onChange={e => setFormData({ ...formData, user_id: e.target.value })}
+                  >
+                    <option value="all">All Students</option>
+                    {students.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.name} ({s.email})
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+
                 <Button type="submit" variant="primary">Send</Button>
               </Form>
             </Modal.Body>

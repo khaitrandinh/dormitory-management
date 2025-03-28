@@ -11,12 +11,13 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\PaymentCreatedMail;
 use App\Mail\PaymentReminderMail;
 use App\Services\PayOSService;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
     public function index()
     {
-        $payments = Payment::with(['contract.student.user'])->get();
+        $payments = Payment::with(['contract.student.user', 'contract.room'])->get();
         return response()->json($payments);
     }
 
@@ -134,21 +135,36 @@ class PaymentController extends Controller
     }
 
     public function handlePayOSWebhook(Request $request)
-    {
-        $data = $request->all();
+{
+    $payload = $request->getContent(); // raw JSON
+    $receivedSignature = $request->header('x-signature');
+    $checksumKey = env('PAYOS_CHECKSUM_KEY');
 
-        if ($data['status'] === 'PAID') {
-            Payment::create([
-                'contract_id' => $data['description'], // Make sure 'description' carries contract_id
-                'amount' => $data['amount'],
-                'payment_date' => now(),
-                'status' => 'paid',
-                'type' => 'payos',
-                'description' => 'Paid via PayOS',
-                'payos_transaction_code' => $data['transactionCode'] ?? null,
-            ]);
-        }
+    // Tính lại chữ ký
+    $calculatedSignature = hash_hmac('sha256', $payload, $checksumKey);
 
-        return response()->json(['message' => 'Webhook received']);
+    // Kiểm tra chữ ký
+    if ($calculatedSignature !== $receivedSignature) {
+        Log::warning('Invalid PayOS webhook signature');
+        return response()->json(['message' => 'Invalid signature'], 401);
     }
+
+    // Giải mã payload JSON
+    $data = json_decode($payload, true);
+
+    // Xử lý nếu đã thanh toán
+    if ($data['status'] === 'PAID') {
+        Payment::create([
+            'contract_id' => $data['description'], 
+            'amount' => $data['amount'],
+            'payment_date' => now(),
+            'status' => 'paid',
+            'type' => 'payos',
+            'description' => 'Paid via PayOS',
+            'payos_transaction_code' => $data['transactionCode'] ?? null,
+        ]);
+    }
+
+    return response()->json(['message' => 'Webhook received']);
+}
 }

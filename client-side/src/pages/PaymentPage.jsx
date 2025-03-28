@@ -21,7 +21,15 @@ const PaymentPage = () => {
 
   const fetchPayments = async () => {
     const res = await axios.get('/payments');
-    setPayments(res.data);
+    const all = res.data;
+
+    // Nếu là student thì chỉ hiện payment của user đó
+    if (role === 'student') {
+      const filtered = all.filter(p => p.contract?.student?.user?.id === user?.id);
+      setPayments(filtered);
+    } else {
+      setPayments(all);
+    }
   };
 
   useEffect(() => {
@@ -61,7 +69,7 @@ const PaymentPage = () => {
         p.id,
         p.contract?.student?.user?.name || '',
         p.contract?.room?.room_code || '',
-        p.amount + ' VND',
+        p.amount?.toLocaleString() + ' VND',
         p.status,
         p.payment_date,
       ]),
@@ -106,7 +114,7 @@ const PaymentPage = () => {
                   <td>{p.id}</td>
                   <td>{p.contract?.student?.user?.name}</td>
                   <td>{p.contract?.room?.room_code}</td>
-                  <td>{p.amount.toLocaleString()} VND</td>
+                  <td>{p.amount?.toLocaleString()} VND</td>
                   <td>{p.status}</td>
                   <td>{p.payment_date}</td>
                   <td>Monthly rent (contract #{p.contract_id})</td>
@@ -130,32 +138,31 @@ const PaymentPage = () => {
             </tbody>
           </Table>
 
-          {/* Modal */}
           <Modal show={showModal} onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
               <Modal.Title>Create New Payment</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form onSubmit={handleCreate}>
-                <Form.Group>
+                <Form.Group className="mb-3">
                   <Form.Label>Contract ID</Form.Label>
                   <Form.Control name="contract_id" type="number" onChange={handleChange} required />
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className="mb-3">
                   <Form.Label>Amount (VND)</Form.Label>
                   <Form.Control name="amount" type="number" onChange={handleChange} required />
                 </Form.Group>
-                <Form.Group>
+                <Form.Group className="mb-3">
                   <Form.Label>Payment Date</Form.Label>
                   <Form.Control name="payment_date" type="date" onChange={handleChange} required />
                 </Form.Group>
-                <Button type="submit" className="mt-3" variant="primary">Create</Button>
+                <Button type="submit" variant="primary">Create</Button>
               </Form>
             </Modal.Body>
           </Modal>
         </div>
       </div>
-    </div>        
+    </div>
   );
 };
 

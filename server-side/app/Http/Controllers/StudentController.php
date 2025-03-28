@@ -102,6 +102,15 @@ class StudentController extends Controller
                 $student->room_request_status = null;
             }
         }
+        if ($request->has('cancel_request') && $request->cancel_request) {
+            if ($student->room_code && $student->room_request_status === 'approved') {
+                $student->room_cancel_status = 'pending';
+            } else {
+                return response()->json(['message' => 'No room to cancel'], 400);
+            }
+        }
+        
+        
 
         $student->fill($validated)->save();
 
@@ -176,4 +185,38 @@ class StudentController extends Controller
 
         return response()->json(['message' => 'Student deleted']);
     }
+    public function approveCancelRoom($id)
+    {
+
+        $student = Student::find($id);
+        if (!$student || $student->room_cancel_status !== 'pending') {
+            return response()->json(['message' => 'No cancel request pending'], 400);
+        }
+
+        Contract::where('student_id', $student->id)->update(['status' => 'canceled']);
+
+        $student->room_code = null;
+        $student->room_request_status = null;
+        $student->room_cancel_status = null;
+        $student->save();
+
+
+        return response()->json(['message' => 'Room cancellation approved']);
+    }
+
+    public function rejectCancelRoom($id)
+    {
+        $student = Student::find($id);
+        if (!$student || $student->room_cancel_status !== 'pending') {
+            return response()->json(['message' => 'No cancel request pending'], 400);
+        }
+
+        $student->update([
+            'room_cancel_status' => 'rejected'
+        ]);
+
+        return response()->json(['message' => 'Room cancellation rejected']);
+    }
+
+
 }

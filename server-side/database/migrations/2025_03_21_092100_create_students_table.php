@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('students', function (Blueprint $table) {
@@ -21,15 +18,15 @@ return new class extends Migration
             $table->string('faculty');
             $table->string('phone');
             $table->string('room_code')->nullable();
+
             $table->boolean('is_paid')->default(false);
-            $table->enum('room_request_status', ['pending', 'approved', 'rejected'])->nullable(); 
+            $table->enum('room_request_status', ['pending', 'approved', 'rejected'])->nullable();
+            $table->enum('room_cancel_status', ['pending', 'approved', 'rejected'])->nullable();
+
             $table->timestamps();
-        });            
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('students');

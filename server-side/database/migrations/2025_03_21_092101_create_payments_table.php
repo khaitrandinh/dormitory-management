@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('contract_id')->constrained('contracts')->onDelete('cascade');
             $table->integer('amount');
-            $table->date('payment_date')->nullable(); // để khi chưa thanh toán vẫn tạo bill
+            $table->date('payment_date')->nullable(); 
             $table->enum('status', ['pending', 'paid', 'canceled'])->default('pending');
             $table->string('type')->default('room_booking');
             $table->string('description')->nullable();

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useContext } from "react";
 import axios from "../services/axios";
 import { AuthContext } from "../context/AuthContext";
@@ -15,26 +16,37 @@ const RoomSelectionPage = () => {
 
   useEffect(() => {
     fetchStudentInfo();
+
+    const interval = setInterval(() => {
+      fetchStudentInfo();
+    }, 10000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const fetchStudentInfo = async () => {
     try {
-      const res = await axios.get(`/students`);
+      const res = await axios.get("/students");
       const student = res.data;
 
       if (student) {
         setStudentId(student.id);
         setStudentData(student);
 
-        if (student.room_code && student.room_request_status === "approved") {
+        if (student.room_cancel_status === "pending") {
+          setRooms([]);
+        } else if (!student.room_code && student.room_cancel_status === null) {
+          fetchAvailableRooms(); // ✅ chỉ gọi khi đã được duyệt
+        } else if (student.room_code) {
+          // Nếu vẫn còn room_code và không đang pending huỷ thì hiển thị phòng
           const roomRes = await axios.get(`/rooms`);
           const matchedRoom = roomRes.data.find(
             (room) => room.room_code === student.room_code
           );
           setRooms([matchedRoom]);
-        } else {
-          fetchAvailableRooms();
         }
+        
+        
       }
     } catch (error) {
       console.error("Failed to fetch student info:", error);
@@ -45,13 +57,14 @@ const RoomSelectionPage = () => {
     try {
       const res = await axios.get("/rooms");
       const available = res.data.filter(
-        (room) => room.status !== "Maintenance" && room.bed_available > 0
+        (room) => room.status_display !== "Maintenance" && room.bed_available > 0
       );
       setRooms(available);
     } catch (error) {
       console.error("Failed to fetch rooms:", error);
     }
   };
+  
 
   const handleSelectRoom = async (roomCode) => {
     if (!studentId) {
@@ -63,7 +76,7 @@ const RoomSelectionPage = () => {
       await axios.put(`/students/${studentId}`, {
         room_code: roomCode,
       });
-      setMessage("✅ Room selection request submitted successfully!");
+      setMessage("Room selection request submitted successfully!");
       fetchStudentInfo();
     } catch (error) {
       console.error("Room selection failed:", error);
@@ -76,13 +89,13 @@ const RoomSelectionPage = () => {
 
     try {
       await axios.put(`/students/${studentId}`, {
-        room_code: null,
+        cancel_request: true,
       });
-      setMessage("❌ Room selection request cancelled.");
+      setMessage("❌ Room cancellation request submitted. Waiting for admin approval.");
       fetchStudentInfo();
     } catch (error) {
       console.error("Cancel request failed:", error);
-      setMessage("❌ Cancel failed.");
+      setMessage("❌ Cancel request failed.");
     }
   };
 
@@ -113,23 +126,27 @@ const RoomSelectionPage = () => {
                   </span>
                 </p>
                 <p><strong>Price:</strong> {rooms[0]?.price?.toLocaleString()} VND</p>
-                <div className="text-success mt-2">
+                <div className="text-success mt-2 mb-2">
                   <FaCheckCircle className="me-1" />
                   You have already selected this room.
                 </div>
+                <button className="btn btn-outline-danger btn-sm" onClick={handleCancelRequest}>
+                  <FaTimesCircle /> Request Cancel Room
+                </button>
               </div>
             </div>
           ) : studentData?.room_code && studentData.room_request_status === "pending" ? (
             <div className="alert alert-warning d-flex align-items-center justify-content-between">
               <span>
-                🕒 You have a pending room request for: <strong>{studentData.room_code}</strong>
+                You have a pending room request for: <strong>{studentData.room_code}</strong>
               </span>
-              <button
-                className="btn btn-outline-danger btn-sm"
-                onClick={handleCancelRequest}
-              >
+              <button className="btn btn-outline-danger btn-sm" onClick={handleCancelRequest}>
                 <FaTimesCircle /> Cancel Request
               </button>
+            </div>
+          ) : studentData?.room_cancel_status === "pending" ? (
+            <div className="alert alert-info">
+              Your request to cancel the room is being reviewed by admin/staff.
             </div>
           ) : (
             <div className="row">

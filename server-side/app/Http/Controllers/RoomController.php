@@ -9,17 +9,44 @@ class RoomController extends Controller
 {
     // Get all rooms
     public function index()
-    {
-        $rooms = Room::withCount(['students as occupied_beds'])->get();
+{
+    $rooms = Room::with(['contracts' => function ($query) {
+        $query->where('status', 'active');
+    }])->get();
 
-        $rooms->transform(function ($room) {
-            $room->bed_available = $room->bed_count - $room->occupied_beds;
-            $room->status_display = $room->bed_available == 0 ? 'Full' : $room->status;
-            return $room;
-        });
-    
-        return response()->json($rooms);
+    $updatedRooms = [];
+
+    foreach ($rooms as $room) {
+        $occupiedBeds = $room->contracts->count();
+        $bedAvailable = $room->bed_count - $occupiedBeds;
+
+        if ($room->status === 'Maintenance') {
+            $statusDisplay = 'Maintenance';
+        } elseif ($bedAvailable <= 0) {
+            $statusDisplay = 'Full';
+        } elseif ($occupiedBeds === 0) {
+            $statusDisplay = 'Available';
+        } else {
+            $statusDisplay = 'Occupied';
+        }
+
+        // Cập nhật DB nếu cần
+        if ($room->status !== $statusDisplay) {
+            $room->status = $statusDisplay;
+            $room->save();
+        }
+
+        // Add trường hiển thị
+        $room->bed_available = $bedAvailable;
+        $room->status_display = $statusDisplay;
+
+        $updatedRooms[] = $room;
     }
+
+    return response()->json($updatedRooms);
+}
+
+
     
     // Get room by id
     public function show($id)
