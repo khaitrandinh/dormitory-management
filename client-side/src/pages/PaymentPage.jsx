@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from '../services/axios';
 import { AuthContext } from '../context/AuthContext';
 import { Button, Table, Modal, Form } from 'react-bootstrap';
-import { FaFileInvoice, FaMoneyBill, FaTrash } from 'react-icons/fa';
+import { FaFileInvoice, FaMoneyBill, FaTrash, FaBell } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import Sidebar from '../components/Sidebar';
@@ -12,18 +12,20 @@ const PaymentPage = () => {
   const { role, user } = useContext(AuthContext);
   const [payments, setPayments] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
     contract_id: '',
     amount: '',
     payment_date: '',
     status: 'pending',
+    description: '',
+    user_id: '', // optional
   });
 
   const fetchPayments = async () => {
     const res = await axios.get('/payments');
     const all = res.data;
 
-    // Nếu là student thì chỉ hiện payment của user đó
     if (role === 'student') {
       const filtered = all.filter(p => p.contract?.student?.user?.id === user?.id);
       setPayments(filtered);
@@ -32,8 +34,16 @@ const PaymentPage = () => {
     }
   };
 
+  const fetchUsers = async () => {
+    const res = await axios.get('/users');
+    setUsers(res.data);
+  };
+
   useEffect(() => {
     fetchPayments();
+    if (role === 'admin' || role === 'staff') {
+      fetchUsers();
+    }
   }, []);
 
   const handleChange = (e) => {
@@ -44,6 +54,14 @@ const PaymentPage = () => {
     e.preventDefault();
     await axios.post('/payments', formData);
     setShowModal(false);
+    setFormData({
+      contract_id: '',
+      amount: '',
+      payment_date: '',
+      status: 'pending',
+      description: '',
+      user_id: '',
+    });
     fetchPayments();
   };
 
@@ -57,6 +75,19 @@ const PaymentPage = () => {
       window.open(res.data.payment_url, '_blank');
     } else {
       alert('Không thể tạo link thanh toán');
+    }
+  };
+
+  const handleRemind = async (payment) => {
+    const confirm = window.confirm(`Gửi nhắc nhở sinh viên thanh toán hóa đơn #${payment.id}?`);
+    if (!confirm) return;
+
+    try {
+      const res = await axios.post(`/payments/${payment.id}/remind`);
+      alert(res.data.message || 'Đã gửi nhắc nhở thành công');
+    } catch (err) {
+      alert('Gửi nhắc nhở thất bại!');
+      console.error(err);
     }
   };
 
@@ -105,7 +136,7 @@ const PaymentPage = () => {
                 <th>Status</th>
                 <th>Pay Date</th>
                 <th>Description</th>
-                {role !== 'student' && <th>Actions</th>}
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -117,22 +148,27 @@ const PaymentPage = () => {
                   <td>{p.amount?.toLocaleString()} VND</td>
                   <td>{p.status}</td>
                   <td>{p.payment_date}</td>
-                  <td>Monthly rent (contract #{p.contract_id})</td>
-                  {role !== 'student' ? (
-                    <td>
-                      <Button size="sm" variant="danger">
-                        <FaTrash />
+                  <td>{p.description || `Monthly rent (contract #${p.contract_id})`}</td>
+                  <td>
+                    {role === 'student' && p.status === 'pending' && (
+                      <Button size="sm" variant="success" onClick={() => handlePayNow(p)}>
+                        <FaMoneyBill /> Pay
                       </Button>
-                    </td>
-                  ) : (
-                    <td>
-                      {p.status === 'pending' && (
-                        <Button size="sm" variant="success" onClick={() => handlePayNow(p)}>
-                          <FaMoneyBill /> Pay
+                    )}
+
+                    {(role === 'admin' || role === 'staff') && (
+                      <>
+                        <Button size="sm" variant="danger" className="me-2">
+                          <FaTrash />
                         </Button>
-                      )}
-                    </td>
-                  )}
+                        {p.status === 'pending' && (
+                          <Button size="sm" variant="warning" onClick={() => handleRemind(p)}>
+                            <FaBell /> Remind
+                          </Button>
+                        )}
+                      </>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -155,6 +191,19 @@ const PaymentPage = () => {
                 <Form.Group className="mb-3">
                   <Form.Label>Payment Date</Form.Label>
                   <Form.Control name="payment_date" type="date" onChange={handleChange} required />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control name="description" type="text" onChange={handleChange} />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label>Assign to Student (optional)</Form.Label>
+                  <Form.Select name="user_id" value={formData.user_id} onChange={handleChange}>
+                    <option value="">-- No specific user --</option>
+                    {users.map(u => (
+                      <option key={u.id} value={u.id}>{u.name} ({u.email})</option>
+                    ))}
+                  </Form.Select>
                 </Form.Group>
                 <Button type="submit" variant="primary">Create</Button>
               </Form>

@@ -37,7 +37,6 @@ class UserController extends Controller
         $user = User::find($id);
         if (!$user) return response()->json(['message' => 'Không tìm thấy người dùng'], 404);
 
-        //Chỉ cho phép User cập nhật chính họ hoặc Admin cập nhật mọi người
         if (auth()->user()->id !== $user->id && auth()->user()->role !== 'admin') {
             return response()->json(['message' => 'Bạn không có quyền cập nhật thông tin này'], 403);
         }
@@ -46,17 +45,20 @@ class UserController extends Controller
             'name' => 'sometimes|string',
             'email' => 'sometimes|email|unique:users,email,' . $id,
             'password' => 'nullable|string|min:6',
-            'role' => 'sometimes|in:admin,student,staff' // ⚠️ Chỉ admin mới được thay đổi role
+            'role' => 'sometimes|in:admin,student,staff'
         ]);
 
+        $data = $request->only(['name', 'email', 'role']); // KHÔNG lấy password nếu để trống
+
         if ($request->filled('password')) {
-            $request->merge(['password' => Hash::make($request->password)]);
+            $data['password'] = Hash::make($request->password);
         }
 
-        $user->update($request->all());
+        $user->update($data);
 
         return response()->json(['message' => 'Cập nhật người dùng thành công', 'data' => $user]);
     }
+
 
     
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FaHome, FaUserShield, FaUserGraduate, FaEnvelope, FaBars, FaFileContract,FaHouseUser, FaMoneyCheck } from 'react-icons/fa';
+import { FaHome, FaUserShield, FaUserGraduate, FaEnvelope, FaBars, FaFileContract,FaWrench,FaHouseUser, FaMoneyCheck } from 'react-icons/fa';
 import '../Styles/Sidebar.css';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
@@ -86,15 +86,32 @@ const Sidebar = () => {
               <span className="menu-text">Payment</span>
             </Link>
           </li>
-        
+          
+          {role === 'student' && (
+          <li>
+            <Link to="/my-repair-requests">
+              <FaWrench /> Request Repair
+            </Link>
+          </li>
+          )}
 
-        {/* Tin nhắn - tất cả roles */}
+          {(role === 'admin' || role === 'staff') && (
+          <li>
+            <Link to="/repair-requests">
+              <FaWrench /> Repair Requests
+            </Link>
+          </li>
+          )}
+
+          
+        {/* {(role === 'admin' || role === 'staff') && ( */}
         <li className={isActiveRoute('/notification')}>
           <Link to="/notification">
             <FaEnvelope className="menu-icon" />
             <span className="menu-text">Messages</span>
           </Link>
         </li>
+        {/* )} */}
 
         {/* Admin Page - chỉ hiển thị cho admin */}
         {role === 'admin' && (

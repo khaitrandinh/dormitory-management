@@ -18,6 +18,9 @@ import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import NotificationPage from './pages/NotificationPage';
 import RoomSelectPage from './pages/RoomselectionPage';
 import RoomApprovalPage from './pages/RoomApprovalPage';
+import RepairResPage from './pages/RepairRequestPage';
+import MyRepairRequests from './pages/MyRepairRequests';
+import ProfilePage from './pages/ProfilePage';
 
 
 function App() {
@@ -36,7 +39,11 @@ function App() {
           <Route path="/notification" element={<NotificationPage />} />
           <Route path="/roomselect" element={<RoomSelectPage />} />
           <Route path="/roomapproval" element={<RoomApprovalPage  allowedRoles={['admin' || 'staff']}/>} />
-          
+          <Route path="/repair-requests" element={<RepairResPage allowedRoles={['admin' || 'staff']} />}  />
+          <Route path="/my-repair-requests" element={<MyRepairRequests />} />
+          <Route path="/profile" element={<ProfilePage />} />
+
+
           <Route path="/" element={
             <PrivateRoute>
               <Dashboard />

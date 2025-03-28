@@ -20,17 +20,29 @@ const NotificationPage = () => {
 
   useEffect(() => {
     fetchNotifications();
-    fetchStudents();
+
+    // Chỉ gọi khi là admin hoặc staff
+    if (role === 'admin' || role === 'staff') {
+      fetchStudents();
+    }
   }, []);
 
   const fetchNotifications = async () => {
-    const res = await axios.get('/notifications');
-    setNotifications(res.data);
+    try {
+      const res = await axios.get('/notifications');
+      setNotifications(res.data);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+    }
   };
 
   const fetchStudents = async () => {
-    const res = await axios.get('/users?role=student');
-    setStudents(res.data);
+    try {
+      const res = await axios.get('/users?role=student');
+      setStudents(res.data);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    }
   };
 
   const handleDelete = async (id) => {

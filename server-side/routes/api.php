@@ -56,6 +56,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/payments', [PaymentController::class, 'store']);
     Route::put('/payments/{id}', [PaymentController::class, 'update']);
     Route::delete('/payments/{id}', [PaymentController::class, 'destroy']);
+    Route::post('/payments/{id}/remind', [PaymentController::class, 'remind']);
 
     // PayOS
     Route::post('/payos/initiate', [PaymentController::class, 'initiatePayOS']);

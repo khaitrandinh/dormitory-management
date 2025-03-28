@@ -38,12 +38,13 @@ class PaymentController extends Controller
             'amount' => 'required|integer',
             'payment_date' => 'nullable|date',
             'status' => 'required|in:pending,paid,canceled',
-            'type' => 'nullable|string',
             'description' => 'nullable|string',
-            'payos_transaction_code' => 'nullable|string',
+            'user_id' => 'nullable|exists:users,id',
         ]);
 
-        $payment = Payment::create($request->all());
+        $payment = Payment::create($request->only([
+            'contract_id', 'amount', 'payment_date', 'status', 'description'
+        ]));
 
         $contract = Contract::with('student.user')->find($request->contract_id);
         $studentUser = $contract->student->user ?? null;
@@ -61,6 +62,7 @@ class PaymentController extends Controller
 
         return response()->json(['message' => 'Payment created successfully', 'data' => $payment], 201);
     }
+
 
     public function update(Request $request, $id)
     {

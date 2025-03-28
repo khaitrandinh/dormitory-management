@@ -12,9 +12,27 @@ class NotificationController extends Controller
     
     public function index()
     {
-        $notifications = Notification::with('sender')->get();
+        $user = auth()->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        if (in_array($user->role, ['admin', 'staff'])) {
+            // Admin và staff thấy tất cả thông báo
+            $notifications = Notification::with('sender')->orderByDesc('created_at')->get();
+        } else {
+            // Student chỉ thấy thông báo gửi riêng cho mình hoặc toàn hệ thống
+            $notifications = Notification::with('sender')
+                ->whereNull('user_id')
+                ->orWhere('user_id', $user->id)
+                ->orderByDesc('created_at')
+                ->get();
+        }
+
         return response()->json($notifications);
     }
+
 
     
     public function show($id)
