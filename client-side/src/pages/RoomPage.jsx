@@ -84,7 +84,7 @@ const RoomPage = () => {
                   </h1>
                   <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
-                      <li className="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
+                      <li className="breadcrumb-item"><a href="/">Dashboard</a></li>
                       <li className="breadcrumb-item active">Room Management</li>
                     </ol>
                   </nav>

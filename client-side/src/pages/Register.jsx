@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
 import { register } from '../services/authServices';
 import { useNavigate, Link } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaLock, FaPhone, FaBuilding, FaTransgender, FaCalendar, FaUniversity } from 'react-icons/fa';
+import { 
+  FaUser, 
+  FaEnvelope, 
+  FaLock, 
+  FaPhone, 
+  FaBuilding, 
+  FaTransgender, 
+  FaCalendar, 
+  FaUniversity,
+  FaArrowLeft 
+} from 'react-icons/fa';
 import '../Styles/Register.css';
 
 const Register = () => {
@@ -52,35 +62,58 @@ const Register = () => {
                 <div className="register-form-container">
                     <div className="register-form-wrapper">
                         <div className="register-header">
-                            <h1>Register</h1>
-                            <p>Fill the form to create your account</p>
+                            <Link to="/login" className="back-button">
+                                <FaArrowLeft /> Back to Login
+                            </Link>
+                            {/* xuống dòng đỡ bị che mất nút */}
+                            <br /> 
+                            <h1>Register Account</h1>
+                            <p>Fill in your information to create an account</p>
                         </div>
 
                         {error && <div className="alert alert-danger">{error}</div>}
                         {success && <div className="alert alert-success">{success}</div>}
 
                         <form onSubmit={handleSubmit} className="register-form">
+                            <div className="form-grid">
+                                {/* Account Information */}
+                                <div className="form-section">
+                                    <h3>Account Information</h3>
+                                    <InputField icon={<FaUser />} name="name" placeholder="Full Name" handleChange={handleChange} />
+                                    <InputField icon={<FaEnvelope />} type="email" name="email" placeholder="Email" handleChange={handleChange} />
+                                    <InputField icon={<FaLock />} type="password" name="password" placeholder="Password" handleChange={handleChange} />
+                                    <InputField icon={<FaLock />} type="password" name="password_confirmation" placeholder="Confirm Password" handleChange={handleChange} />
+                                </div>
 
-                            {/* Basic Info */}
-                            <InputField icon={<FaUser />} name="name" placeholder="Full Name" handleChange={handleChange} />
-                            <InputField icon={<FaEnvelope />} type="email" name="email" placeholder="Email" handleChange={handleChange} />
-                            <InputField icon={<FaLock />} type="password" name="password" placeholder="Password" handleChange={handleChange} />
-                            <InputField icon={<FaLock />} type="password" name="password_confirmation" placeholder="Confirm Password" handleChange={handleChange} />
+                                {/* Personal Information */}
+                                <div className="form-section">
+                                    <h3>Personal Information</h3>
+                                    <InputField icon={<FaUser />} name="student_code" placeholder="Student Code" handleChange={handleChange} />
+                                    <div className="form-row">
+                                        <InputField icon={<FaTransgender />} name="gender" placeholder="Gender" handleChange={handleChange} />
+                                        <InputField icon={<FaCalendar />} type="date" name="birth_date" placeholder="Birth Date" handleChange={handleChange} />
+                                    </div>
+                                    <InputField icon={<FaPhone />} name="phone" placeholder="Phone" handleChange={handleChange} />
+                                </div>
 
-                            {/* Student Info */}
-                            <InputField icon={<FaUser />} name="student_code" placeholder="Student Code" handleChange={handleChange} />
-                            <InputField icon={<FaTransgender />} name="gender" placeholder="Gender (Male/Female)" handleChange={handleChange} />
-                            <InputField icon={<FaCalendar />} type="date" name="birth_date" placeholder="Birth Date" handleChange={handleChange} />
-                            <InputField icon={<FaBuilding />} name="class" placeholder="Class" handleChange={handleChange} />
-                            <InputField icon={<FaUniversity />} name="faculty" placeholder="Faculty" handleChange={handleChange} />
-                            <InputField icon={<FaPhone />} name="phone" placeholder="Phone" handleChange={handleChange} />
-                            <InputField icon={<FaBuilding />} name="room_code" placeholder="Room Code (optional)" handleChange={handleChange} />
+                                {/* Academic Information */}
+                                <div className="form-section">
+                                    <h3>Academic Information</h3>
+                                    <div className="form-row">
+                                        <InputField icon={<FaBuilding />} name="class" placeholder="Class" handleChange={handleChange} />
+                                        <InputField icon={<FaUniversity />} name="faculty" placeholder="Faculty" handleChange={handleChange} />
+                                    </div>
+                                    <InputField icon={<FaBuilding />} name="room_code" placeholder="Room Code (optional)" handleChange={handleChange} />
+                                </div>
+                            </div>
 
-                            <button type="submit" className="btn btn-primary register-btn">Register</button>
+                            <button type="submit" className="register-btn">
+                                Create Account
+                            </button>
 
                             <div className="form-footer">
                                 <p>
-                                    Already have an account? <Link to="/" className="login-link">Login</Link>
+                                    Already have an account? <Link to="/login" className="login-link">Login here</Link>
                                 </p>
                             </div>
                         </form>

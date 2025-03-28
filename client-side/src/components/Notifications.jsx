@@ -9,7 +9,7 @@ const Notifications = ({ notifications }) => {
     <div className="notifications-wrapper">
       <div className="notifications-header">
         <h5 className="header-title">New Notification</h5>
-        {notifications.length > 2 && (
+        {notifications.length > 0 && (
           <button 
             className="expand-button"
             onClick={() => setShowModal(true)}
