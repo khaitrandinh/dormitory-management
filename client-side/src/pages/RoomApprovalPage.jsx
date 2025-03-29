@@ -19,7 +19,7 @@ const RoomApprovalPage = () => {
       const res = await axios.get("/students");
       const all = res.data;
       setRequests(all.filter(s => s.room_request_status === "pending"));
-      setCancelRequests(all.filter(s => s.room_cancel_status === "pending")); // ✅ Sửa đúng chỗ này
+      setCancelRequests(all.filter(s => s.room_cancel_status === "pending")); 
     } catch (err) {
       console.error("Failed to fetch room requests", err);
     }

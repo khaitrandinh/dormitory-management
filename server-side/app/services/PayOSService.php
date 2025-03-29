@@ -103,7 +103,7 @@ class PayOSService
             // Nếu tài khoản của bạn có giới hạn description tối đa 9 ký tự, sử dụng chuỗi ngắn (ví dụ: "HopDong2")
             $description = "HopDong" . $contractId;
             $item = [
-                "name"     => "Hợp đồng " . $contractId,
+                "name"     => "conct" . $contractId,
                 "quantity" => 1,
                 "price"    => $amount,
             ];

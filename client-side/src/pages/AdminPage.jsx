@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import { AuthContext } from "../context/AuthContext";
 import "../Styles/AdminPage.css";
 
+
 const AdminPage = () => {
   const { role } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
@@ -22,7 +23,7 @@ const AdminPage = () => {
       const response = await axios.get("/admin/users");
       setUsers(response.data);
     } catch (err) {
-      setError("Error loading user list."); //Lỗi khi tải danh sách người dùng.
+      setError("Failed to load user list.");
       console.error("Error:", err);
     }
   };
@@ -38,7 +39,7 @@ const AdminPage = () => {
       await axios.put(`/admin/users/${id}`, { role: newRole });
       fetchUsers();
     } catch (err) {
-      setError("Unable to update user role."); //Không thể cập nhật vai trò người dùng.
+      setError("Failed to update user role.");
     } finally {
       setLoading(false);
     }
@@ -50,21 +51,20 @@ const AdminPage = () => {
       await axios.put(`/admin/users/${id}`, { status: newStatus });
       fetchUsers();
     } catch (err) {
-      setError("Unable to update user status."); //Không thể cập nhật trạng thái người dùng.
+      setError("Failed to update user status.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this user?")) return; //Bạn có chắc chắn muốn xóa người dùng này?
-
+    if (!window.confirm("Are you sure you want to delete this user?")) return;
     setLoading(true);
     try {
       await axios.delete(`/admin/users/${id}`);
       fetchUsers();
     } catch (err) {
-      setError("Can't delete user.");//Không thể xóa người dùng.
+      setError("Failed to delete user.");
     } finally {
       setLoading(false);
     }
@@ -94,7 +94,6 @@ const AdminPage = () => {
               </div>
             </div>
           </div>
-
           <div className="content-body">
             <div className="container-fluid">
               <div className="card shadow-sm">
@@ -113,7 +112,6 @@ const AdminPage = () => {
                       />
                     </div>
                   </div>
-
                   {error && (
                     <div className="alert alert-danger alert-dismissible fade show" role="alert">
                       {error}
