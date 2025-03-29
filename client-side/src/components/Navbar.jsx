@@ -56,7 +56,7 @@ const Navbar = () => {
                 <li>
                   <Link to="/profile" className="dropdown-item">
                     <FaUserCircle className="dropdown-icon" />
-                    <span>Profile <strong style={{ color: 'red' }}>(Updating)</strong></span>
+                    <span>Profile </span>
                   </Link>
                 </li>
                 <li>

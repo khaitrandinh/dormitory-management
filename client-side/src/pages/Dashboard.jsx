@@ -156,7 +156,7 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </div>
-                  </div> */}
+                  </div> 
                   <div className="col-md-6">
                     <div className="content-card mb-4">
                       <Notifications notifications={data.notifications || []} />

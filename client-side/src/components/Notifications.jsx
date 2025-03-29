@@ -11,48 +11,39 @@ const Notifications = ({ notifications }) => {
         <h5 className="header-title">New Notification</h5>
         {notifications.length > 0 && (
           <button 
-            className="expand-button btn btn-sm btn-outline-primary"
+            className="expand-button"
             onClick={() => setShowModal(true)}
             title="Xem tất cả"
           >
-            <FaExpandAlt />View All
+            <FaExpandAlt /> Xem tất cả
           </button>
         )}
       </div>
-
-      <div className="notification-list mt-2">
+      <div className="notification-list">
         {notifications.slice(0, 2).map((note, index) => (
-          <div key={note.id || index} className="notification-item border rounded p-2 mb-2 bg-light shadow-sm">
-            <strong className="d-block">{note.title || 'Thông báo'}</strong>
-            <span>{note.message}</span>
+          <div key={note.id || index} className="notification-item">
+            <div className="notification-content">{note.message}</div>
           </div>
         ))}
       </div>
 
-      {/* Modal full list */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-container">
-            <div className="modal-header d-flex justify-content-between align-items-center">
-              <div className="d-flex align-items-center gap-2">
-                <FaBell className="modal-icon" />
-                <h5 className="mb-0">All Notifications</h5>
-              </div>
+            <div className="modal-header">
+              <FaBell className="modal-icon" />
+              <h5>All Notification</h5>
               <button 
-                className="close-button btn btn-sm btn-danger"
+                className="close-button"
                 onClick={() => setShowModal(false)}
               >
                 <FaTimes />
               </button>
             </div>
-            <div className="modal-body mt-3">
+            <div className="modal-body">
               {notifications.map((note, index) => (
-                <div key={note.id || index} className="modal-item border-bottom pb-2 mb-2">
-                  <strong className="d-block">{note.title || 'Thông báo'}</strong>
-                  <span>{note.message}</span>
-                  <div className="text-muted small mt-1">
-                    {new Date(note.created_at).toLocaleString()}
-                  </div>
+                <div key={note.id || index} className="modal-item">
+                  {note.message}
                 </div>
               ))}
             </div>
