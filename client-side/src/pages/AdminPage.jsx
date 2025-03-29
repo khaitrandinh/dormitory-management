@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "../services/axios";
-import { FaUsers, FaTrash, FaEdit, FaSearch } from "react-icons/fa";
+import { FaUsers, FaTrash, FaSearch } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../context/AuthContext";
