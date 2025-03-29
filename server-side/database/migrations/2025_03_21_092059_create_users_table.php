@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('role', ['admin', 'student', 'staff'])->default('student'); // Chỉ 1 role duy nhất
+            $table->string('status')->default('active');
             $table->rememberToken();
             $table->timestamps();
         });  

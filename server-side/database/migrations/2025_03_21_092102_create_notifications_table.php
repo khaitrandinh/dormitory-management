@@ -9,9 +9,15 @@ return new class extends Migration {
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('sender_id')->constrained('users')->onDelete('cascade'); // ✅ Người gửi thông báo
+
+            
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+
+            $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
+
             $table->string('title');
             $table->text('message');
+            $table->timestamp('scheduled_at')->nullable(); 
             $table->timestamps();
         });
     }

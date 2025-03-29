@@ -15,8 +15,8 @@ class RoomSeeder extends Seeder
             'building' => 'Tòa A',
             'floor' => 1,
             'bed_count' => 4,
-            'room_type' => 'thường',
-            'status' => 'đã thuê',
+            'room_type' => 'standard',
+            'status' => 'Occupied',
             'price' => 800000,
         ]);
 
@@ -26,7 +26,7 @@ class RoomSeeder extends Seeder
             'floor' => 2,
             'bed_count' => 3,
             'room_type' => 'vip',
-            'status' => 'trống',
+            'status' => 'Available',
             'price' => 1500000,
         ]);
     }

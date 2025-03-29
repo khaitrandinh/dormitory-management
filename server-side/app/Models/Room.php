@@ -10,7 +10,7 @@ class Room extends Model
     use HasFactory;
 
     protected $fillable = [
-        'room_code', // ✅ Thêm dòng này để cho phép tạo room_code
+        'room_code', 
         'building',
         'floor',
         'bed_count',
@@ -20,13 +20,18 @@ class Room extends Model
     ];
     public function students()
     {
-        return $this->hasMany(Student::class, 'room_code', 'room_code');
+        return $this->hasManyThrough(Student::class, Contract::class);
     }
+
     
     public function contracts()
-{
-    return $this->hasMany(Contract::class);
-}
+    {
+        return $this->hasMany(Contract::class);
+    }
 
-
+    public function activeContracts()
+    {
+        return $this->hasMany(Contract::class)->where('status', 'active');
+    }
+    
 }

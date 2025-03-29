@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('contract_id')->constrained('contracts')->onDelete('cascade'); // ✅ Gắn với contract_id
+            $table->foreignId('contract_id')->constrained('contracts')->onDelete('cascade');
             $table->integer('amount');
-            $table->date('payment_date');
-            $table->enum('status', ['pending', 'paid', 'canceled']);
+            $table->date('payment_date')->nullable(); 
+            $table->enum('status', ['pending', 'paid', 'canceled'])->default('pending');
+            $table->string('type')->default('room_booking');
+            $table->string('description')->nullable();
+            $table->string('payos_transaction_code')->nullable(); 
             $table->timestamps();
+
         });
     }
 

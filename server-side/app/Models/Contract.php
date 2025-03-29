@@ -10,11 +10,13 @@ class Contract extends Model
     use HasFactory;
 
     protected $fillable = [
-        'student_id', // ✅ Thêm dòng này
-        'room_id',    // ✅ Thêm dòng này
+        'student_id',
+        'room_id',
         'start_date',
         'end_date',
         'status',
+        'deposit_amount',
+        'notes',
     ];
 
     public function student()
@@ -25,5 +27,10 @@ class Contract extends Model
     public function room()
     {
         return $this->belongsTo(Room::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 }

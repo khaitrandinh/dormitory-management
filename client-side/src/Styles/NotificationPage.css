@@ -1,0 +1,123 @@
+/* Layout */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.content-wrapper {
+  padding: 1.5rem;
+  flex: 1;
+}
+
+/* Header Styling */
+.content-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.page-icon {
+  color: var(--primary-color);
+}
+
+/* Search Box */
+.search-box .input-group {
+  max-width: 400px;
+}
+
+.search-box .input-group-text {
+  background: transparent;
+  border-right: none;
+}
+
+.search-box .form-control {
+  border-left: none;
+}
+
+/* Table Styling */
+.table td {
+  vertical-align: middle;
+}
+
+/* Button Styles */
+.btn-soft-danger {
+  color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.1);
+  border: none;
+}
+
+.btn-soft-danger:hover {
+  color: #fff;
+  background-color: #dc3545;
+}
+
+/* Modal Styling */
+.notification-modal .modal-content {
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.modal-strip {
+  height: 4px;
+  background: linear-gradient(to right, #4c5ac0, #676b97);
+  margin: -1rem -1rem 1.5rem -1rem;
+  border-radius: 4px;
+}
+
+/* Form Styling */
+.form-section {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  color: #495057;
+  font-size: 1.1rem;
+  margin-bottom: 1.25rem;
+  font-weight: 600;
+}
+
+.section-icon {
+  font-size: 1.25rem;
+  margin-right: 0.75rem;
+}
+
+.form-control-lg {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.5rem;
+}
+
+/* Card Styling */
+.card {
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 1rem;
+  }
+  
+  .modal-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .modal-footer .btn {
+    width: 100%;
+  }
+}

@@ -9,26 +9,23 @@ use App\Models\Room;
 
 class ContractController extends Controller
 {
-    // ✅ Lấy danh sách tất cả các hợp đồng
     public function index()
     {
-        $contracts = Contract::with(['student', 'room'])->get();
+        $contracts = Contract::with(['student.user', 'room', 'payments'])->get();
         return response()->json($contracts);
     }
 
-    // ✅ Lấy thông tin hợp đồng theo id
     public function show($id)
     {
         $contract = Contract::with(['student', 'room'])->find($id);
 
         if (!$contract) {
-            return response()->json(['message' => 'Không tìm thấy hợp đồng'], 404);
+            return response()->json(['message' => 'Contract not found'], 404);
         }
 
         return response()->json($contract);
     }
 
-    // ✅ Tạo hợp đồng mới
     public function store(Request $request)
     {
         $request->validate([
@@ -37,41 +34,52 @@ class ContractController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'status' => 'required|in:active,expired,canceled',
+            'deposit_amount' => 'nullable|integer',
+            'notes' => 'nullable|string',
         ]);
+
+        // Check if student already has active contract
+        $existing = Contract::where('student_id', $request->student_id)
+            ->where('status', 'active')
+            ->first();
+
+        if ($existing) {
+            return response()->json(['message' => 'Student already has an active contract'], 400);
+        }
 
         $contract = Contract::create($request->all());
 
-        return response()->json(['message' => 'Hợp đồng đã được tạo', 'data' => $contract], 201);
+        return response()->json(['message' => 'Contract created successfully', 'data' => $contract], 201);
     }
 
-    // ✅ Cập nhật hợp đồng
     public function update(Request $request, $id)
     {
         $contract = Contract::find($id);
         if (!$contract) {
-            return response()->json(['message' => 'Không tìm thấy hợp đồng'], 404);
+            return response()->json(['message' => 'Contract not found'], 404);
         }
 
         $request->validate([
             'status' => 'sometimes|in:active,expired,canceled',
             'end_date' => 'sometimes|date|after:start_date',
+            'deposit_amount' => 'sometimes|integer',
+            'notes' => 'sometimes|string',
         ]);
 
         $contract->update($request->all());
 
-        return response()->json(['message' => 'Hợp đồng đã được cập nhật', 'data' => $contract]);
+        return response()->json(['message' => 'Contract updated successfully', 'data' => $contract]);
     }
 
-    // ✅ Xóa hợp đồng
     public function destroy($id)
     {
         $contract = Contract::find($id);
         if (!$contract) {
-            return response()->json(['message' => 'Không tìm thấy hợp đồng'], 404);
+            return response()->json(['message' => 'Contract not found'], 404);
         }
 
         $contract->delete();
 
-        return response()->json(['message' => 'Hợp đồng đã bị xóa']);
+        return response()->json(['message' => 'Contract deleted successfully']);
     }
 }

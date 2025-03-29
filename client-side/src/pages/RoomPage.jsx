@@ -2,16 +2,16 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "../services/axios";
 import RoomTable from "../components/RoomTable";
 import RoomForm from "../components/ARoomForm";
-import Sidebar from '../components/Sidebar';
-import Navbar from '../components/Navbar';
-import { FaPlus, FaBuilding } from 'react-icons/fa';
-import { AuthContext } from '../context/AuthContext'; // ✅ Import AuthContext
+import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
+import { FaPlus, FaBuilding } from "react-icons/fa";
+import { AuthContext } from "../context/AuthContext";
 import "../Styles/RoomPage.css";
 
 const apiEndpoint = "/rooms";
 
 const RoomPage = () => {
-  const { role } = useContext(AuthContext); // ✅ Lấy role từ AuthContext
+  const { role } = useContext(AuthContext);
   const [rooms, setRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -26,25 +26,45 @@ const RoomPage = () => {
       const response = await axios.get(apiEndpoint);
       setRooms(response.data);
     } catch (error) {
-      console.error("Lỗi khi lấy danh sách phòng:", error);
+      console.error("Failed to fetch rooms:", error);
     }
   };
 
   const handleEdit = (room) => {
-    if (role !== "manager") return; // ✅ Chặn student chỉnh sửa phòng
+    if (role !== "staff" && role !== "admin") return; 
     setSelectedRoom(room);
     setShowForm(true);
   };
 
   const handleDelete = async (id) => {
-    if (role !== "manager") return; // ✅ Chặn student xóa phòng
-    if (window.confirm("Bạn có chắc chắn muốn xóa phòng này?")) {
+    if (role !== "staff" && role !== "admin") return; 
+    if (window.confirm("Are you sure you want to delete this room?")) {
       try {
         await axios.delete(`${apiEndpoint}/${id}`);
         fetchRooms();
       } catch (error) {
-        console.error("Lỗi khi xóa phòng:", error);
+        console.error("Failed to delete room:", error);
+        alert("Failed to delete the room.");
       }
+    }
+  };
+
+  const handleSubmit = async (data) => {
+    try {
+      let response;
+      if (data.id) {
+        response = await axios.put(`${apiEndpoint}/${data.id}`, data);
+      } else {
+        response = await axios.post(apiEndpoint, data);
+      }
+      await fetchRooms();
+      return { success: true, message: "Room saved successfully." };
+    } catch (error) {
+      console.error("Room save error:", error);
+      return {
+        success: false,
+        message: error.response?.data?.message || "An error occurred.",
+      };
     }
   };
 
@@ -60,18 +80,17 @@ const RoomPage = () => {
                 <div>
                   <h1 className="content-title">
                     <FaBuilding className="page-icon" />
-                    Quản Lý Phòng
+                    Room Management
                   </h1>
                   <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
-                      <li className="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-                      <li className="breadcrumb-item active">Quản lý phòng</li>
+                      <li className="breadcrumb-item"><a href="/">Dashboard</a></li>
+                      <li className="breadcrumb-item active">Room Management</li>
                     </ol>
                   </nav>
                 </div>
-                
-                {/* ✅ Ẩn nút "Thêm phòng" nếu không phải Manager */}
-                {role === "manager" && (
+
+                {(role === "staff" || role === "admin") && (
                   <button
                     className="btn btn-primary d-flex align-items-center"
                     onClick={() => {
@@ -80,7 +99,7 @@ const RoomPage = () => {
                     }}
                   >
                     <FaPlus className="me-2" />
-                    Thêm Phòng
+                    Add Room
                   </button>
                 )}
               </div>
@@ -97,7 +116,12 @@ const RoomPage = () => {
                       <button type="button" className="btn-close" onClick={() => setErrorMessage("")}></button>
                     </div>
                   )}
-                  <RoomTable rooms={rooms} onEdit={handleEdit} onDelete={handleDelete} role={role} />
+                  <RoomTable
+                    rooms={rooms}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    role={role}
+                  />
                 </div>
               </div>
             </div>
@@ -109,7 +133,7 @@ const RoomPage = () => {
                 <div className="modal-content">
                   <RoomForm
                     roomData={selectedRoom || {}}
-                    onSubmit={() => {}}
+                    onSubmit={handleSubmit}
                     onClose={() => setShowForm(false)}
                   />
                 </div>

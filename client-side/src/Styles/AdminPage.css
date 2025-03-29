@@ -1,49 +1,101 @@
-.admin-container {
-    display: flex;
-  }
-  
-  .main-content {
-    flex-grow: 1;
-    padding: 20px;
-  }
-  
-  .page-title {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 20px;
+/* Layout */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.content-wrapper {
+  padding: 1.5rem;
+  flex: 1;
+}
+
+/* Header Styling */
+.content-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.page-icon {
+  color: var(--primary-color);
+}
+
+/* Search Box */
+.search-box .input-group {
+  max-width: 400px;
+}
+
+.search-box .input-group-text {
+  background: transparent;
+  border-right: none;
+}
+
+.search-box .form-control {
+  border-left: none;
+}
+
+/* Table Styling */
+.table td {
+  vertical-align: middle;
+}
+
+/* Status Badge Styles */
+.badge {
+  padding: 0.5em 0.75em;
+  font-size: 0.85em;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+/* Select Styling */
+.form-select-sm {
+  padding: 0.25rem 2rem 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Button Styles */
+.btn-soft-danger {
+  color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.1);
+  border: none;
+}
+
+.btn-soft-danger:hover {
+  color: #fff;
+  background-color: #dc3545;
+}
+
+/* Card Styling */
+.card {
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Alert Styling */
+.alert {
+  border: none;
+  border-radius: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 1rem;
   }
   
   .table-responsive {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+    margin: 0 -1rem;
   }
   
-  .user-table {
+  .form-select-sm {
     width: 100%;
-    border-collapse: collapse;
   }
-  
-  .user-table th {
-    background: #007bff;
-    color: white;
-    text-align: left;
-    padding: 10px;
-  }
-  
-  .user-table td {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .status-active {
-    color: green;
-    font-weight: bold;
-  }
-  
-  .status-banned {
-    color: red;
-    font-weight: bold;
-  }
-  
+}

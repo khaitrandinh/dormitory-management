@@ -4,27 +4,23 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Notification;
-use App\Models\User;
 
 class NotificationSeeder extends Seeder
 {
     public function run()
     {
-        $users = User::all();
+        Notification::create([
+            'user_id' => null, // Thông báo chung
+            'sender_id' => 1, // Giả sử admin có ID = 1
+            'title' => 'Chào mừng đến với hệ thống!',
+            'message' => 'Hệ thống ký túc xá đã sẵn sàng hoạt động. Hãy kiểm tra phòng của bạn!'
+        ]);
 
-        if ($users->isEmpty()) {
-            echo "⚠️ Không có User nào để tạo thông báo!\n";
-            return;
-        }
-
-        foreach ($users as $user) {
-            Notification::create([
-                'sender_id' => $user->id,
-                'title' => 'Thông báo quan trọng',
-                'message' => 'Hãy kiểm tra thông tin mới trong hệ thống.',
-            ]);
-        }
-
-        echo "✅ Seeder `NotificationSeeder` đã tạo dữ liệu thành công!\n";
+        Notification::create([
+            'user_id' => 2, // Thông báo riêng cho user_id = 2
+            'sender_id' => 1,
+            'title' => 'Thanh toán tháng 3',
+            'message' => 'Bạn có hoá đơn chưa thanh toán tháng này, vui lòng kiểm tra sớm.'
+        ]);
     }
 }

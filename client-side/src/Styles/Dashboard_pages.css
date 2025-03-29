@@ -67,7 +67,8 @@
 }
 
 .notification-list {
-  max-height: 300px;
+  /* max-height: 300px; */
+  height: 107px; /* chiều cao của danh sách thông báo */
   overflow-y: auto;
 }
 
@@ -83,6 +84,7 @@
 .finance-summary {
   display: flex;
   flex-direction: column;
+  height: 119px; /* chiều cao của phần tổng quan tài chính */
   gap: 1rem;
 }
 
