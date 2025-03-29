@@ -30,7 +30,7 @@ const Login = () => {
       const res = await axios.post('/login', { email, password });
       localStorage.setItem('access_token', res.data.token);
       navigate('/');
-      window.location.reload(); 
+      window.location.reload();
     } catch (error) {
       alert('Login failed');
     }
@@ -120,4 +120,3 @@ const Login = () => {
 };
 
 export default Login;
- 
