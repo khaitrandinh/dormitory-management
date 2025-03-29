@@ -1,10 +1,15 @@
-
 import React, { useEffect, useState, useContext } from "react";
 import axios from "../services/axios";
 import { AuthContext } from "../context/AuthContext";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import { FaBed, FaBuilding, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { 
+  FaBed, 
+  FaBuilding, 
+  FaCheckCircle, 
+  FaTimesCircle,
+  FaDoorOpen 
+} from "react-icons/fa";
 import "../Styles/RoomSelection.css";
 
 const RoomSelectionPage = () => {
@@ -100,90 +105,196 @@ const RoomSelectionPage = () => {
   };
 
   return (
-    <div className="room-selection-container">
+    <div className="app-container">
       <Sidebar />
       <div className="main-content">
         <Navbar />
         <div className="content-wrapper">
-          <h2 className="page-title">Select Your Room</h2>
-          {message && <div className="alert alert-info">{message}</div>}
-
-          {studentData?.room_code && studentData.room_request_status === "approved" ? (
-            <div className="card room-card shadow-sm">
-              <div className="card-body">
-                <h5 className="card-title">
-                  <FaBuilding className="text-primary me-2" />
-                  {rooms[0]?.room_code}
-                </h5>
-                <p><strong>Building:</strong> {rooms[0]?.building}</p>
-                <p><strong>Floor:</strong> {rooms[0]?.floor}</p>
-                <p><strong>Type:</strong> {rooms[0]?.room_type}</p>
-                <p>
-                  <strong>Beds:</strong>{" "}
-                  <span className={`badge ${rooms[0]?.bed_available === 0 ? "bg-danger" : "bg-success"}`}>
-                    <FaBed className="me-1" />
-                    {rooms[0]?.bed_available}/{rooms[0]?.bed_count} available
-                  </span>
-                </p>
-                <p><strong>Price:</strong> {rooms[0]?.price?.toLocaleString()} VND</p>
-                <div className="text-success mt-2 mb-2">
-                  <FaCheckCircle className="me-1" />
-                  You have already selected this room.
+          <div className="content-header">
+            <div className="container-fluid">
+              <div className="d-flex justify-content-between align-items-center">
+                <div>
+                  <h1 className="content-title">
+                    <FaDoorOpen className="page-icon" />
+                    Room Selection
+                  </h1>
+                  <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item"><a href="/">Dashboard</a></li>
+                      <li className="breadcrumb-item active">Room Selection</li>
+                    </ol>
+                  </nav>
                 </div>
-                <button className="btn btn-outline-danger btn-sm" onClick={handleCancelRequest}>
-                  <FaTimesCircle /> Request Cancel Room
-                </button>
               </div>
             </div>
-          ) : studentData?.room_code && studentData.room_request_status === "pending" ? (
-            <div className="alert alert-warning d-flex align-items-center justify-content-between">
-              <span>
-                You have a pending room request for: <strong>{studentData.room_code}</strong>
-              </span>
-              <button className="btn btn-outline-danger btn-sm" onClick={handleCancelRequest}>
-                <FaTimesCircle /> Cancel Request
-              </button>
-            </div>
-          ) : studentData?.room_cancel_status === "pending" ? (
-            <div className="alert alert-info">
-              Your request to cancel the room is being reviewed by admin/staff.
-            </div>
-          ) : (
-            <div className="row">
-              {rooms.map((room) => (
-                <div className="col-md-4" key={room.id}>
-                  <div className="card room-card shadow-sm">
-                    <div className="card-body">
-                      <h5 className="card-title">
-                        <FaBuilding className="text-primary me-2" />
-                        {room.room_code}
-                      </h5>
-                      <p><strong>Building:</strong> {room.building}</p>
-                      <p><strong>Floor:</strong> {room.floor}</p>
-                      <p><strong>Type:</strong> {room.room_type}</p>
-                      <p>
-                        <strong>Beds:</strong>{" "}
+          </div>
+
+          <div className="content-body">
+            <div className="container-fluid">
+              {message && (
+                <div className={`alert ${message.includes('❌') ? 'alert-danger' : 'alert-success'} alert-dismissible fade show`}>
+                  {message}
+                  <button type="button" className="btn-close" onClick={() => setMessage("")}></button>
+                </div>
+              )}
+
+              {studentData?.room_code && studentData.room_request_status === "approved" ? (
+                <div className="card shadow-sm">
+                  <div className="card-body">
+                    <div className="current-room">
+                      <div className="room-header">
+                        <h5 className="room-title">
+                          <FaBuilding className="text-primary me-2" />
+                          Current Room Assignment
+                        </h5>
                         <span className="badge bg-success">
-                          <FaBed className="me-1" />
-                          {room.bed_available}/{room.bed_count} available
+                          <FaCheckCircle className="me-1" />
+                          Approved
                         </span>
-                      </p>
-                      <p><strong>Price:</strong> {room.price?.toLocaleString()} VND</p>
-                      <button
-                        className="btn btn-success w-100"
-                        onClick={() => handleSelectRoom(room.room_code)}
-                      >
-                        Select Room
-                      </button>
+                      </div>
+                      
+                      <div className="room-details mt-4">
+                        <div className="row">
+                          <div className="col-md-6">
+                            <div className="info-group">
+                              <label>Room Code</label>
+                              <p className="h5">{rooms[0]?.room_code}</p>
+                            </div>
+                            <div className="info-group">
+                              <label>Building</label>
+                              <p>{rooms[0]?.building}</p>
+                            </div>
+                            <div className="info-group">
+                              <label>Floor</label>
+                              <p>{rooms[0]?.floor}</p>
+                            </div>
+                          </div>
+                          <div className="col-md-6">
+                            <div className="info-group">
+                              <label>Room Type</label>
+                              <p>{rooms[0]?.room_type}</p>
+                            </div>
+                            <div className="info-group">
+                              <label>Availability</label>
+                              <p>
+                                <span className={`badge ${rooms[0]?.bed_available === 0 ? "bg-danger" : "bg-success"}`}>
+                                  <FaBed className="me-1" />
+                                  {rooms[0]?.bed_available}/{rooms[0]?.bed_count} beds available
+                                </span>
+                              </p>
+                            </div>
+                            <div className="info-group">
+                              <label>Price</label>
+                              <p className="text-primary fw-bold">
+                                {rooms[0]?.price?.toLocaleString()} VND
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="room-actions mt-4">
+                        <button 
+                          className="btn btn-outline-danger"
+                          onClick={handleCancelRequest}
+                        >
+                          <FaTimesCircle className="me-2" />
+                          Request Room Cancellation
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              ))}
-              {rooms.length === 0 && (
-                <p className="text-muted">No available rooms at the moment.</p>
+              ) : studentData?.room_code && studentData.room_request_status === "pending" ? (
+                <div className="card shadow-sm">
+                  <div className="card-body">
+                    <div className="pending-request">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h5 className="text-warning mb-0">
+                            <FaBuilding className="me-2" />
+                            Pending Room Request
+                          </h5>
+                          <p className="text-muted mb-0 mt-2">
+                            Room Code: <strong>{studentData.room_code}</strong>
+                          </p>
+                        </div>
+                        <button 
+                          className="btn btn-outline-danger"
+                          onClick={handleCancelRequest}
+                        >
+                          <FaTimesCircle className="me-2" />
+                          Cancel Request
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : studentData?.room_cancel_status === "pending" ? (
+                <div className="card shadow-sm">
+                  <div className="card-body">
+                    <div className="alert alert-info mb-0">
+                      <FaTimesCircle className="me-2" />
+                      Your room cancellation request is being reviewed by admin/staff.
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="card shadow-sm">
+                  <div className="card-body">
+                    <h5 className="card-title mb-4">
+                      <FaBed className="me-2" />
+                      Available Rooms
+                    </h5>
+                    
+                    <div className="row g-4">
+                      {rooms.map((room) => (
+                        <div className="col-md-4" key={room.id}>
+                          <div className="room-card">
+                            <div className="room-card-header">
+                              <h6 className="room-code">{room.room_code}</h6>
+                              <span className="badge bg-success">
+                                <FaBed className="me-1" />
+                                {room.bed_available}/{room.bed_count}
+                              </span>
+                            </div>
+                            
+                            <div className="room-info">
+                              <p><strong>Building:</strong> {room.building}</p>
+                              <p><strong>Floor:</strong> {room.floor}</p>
+                              <p><strong>Type:</strong> {room.room_type}</p>
+                              <p className="price">
+                                <strong>Price:</strong> 
+                                <span className="text-primary">
+                                  {room.price?.toLocaleString()} VND
+                                </span>
+                              </p>
+                            </div>
+
+                            <button
+                              className="btn btn-primary w-100"
+                              onClick={() => handleSelectRoom(room.room_code)}
+                            >
+                              Select Room
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                      
+                      {rooms.length === 0 && (
+                        <div className="col-12">
+                          <div className="text-center text-muted py-5">
+                            <FaBed className="mb-3" size={32} />
+                            <p className="mb-0">No rooms available at the moment.</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

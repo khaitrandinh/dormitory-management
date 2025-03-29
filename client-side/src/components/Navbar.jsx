@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import { FaBuilding, FaUserCircle, FaSignOutAlt, FaCaretDown } from 'react-icons/fa';
@@ -6,52 +6,16 @@ import '../Styles/Navbar.css';
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
-  // const navigate = useNavigate();
-  const [showNavbar, setShowNavbar] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const handleLogout = () => {
-    logout(); // gọi hàm logout của bạn
-    window.location.href = '/login'; // điều hướng và refresh trang
+    logout();
+    window.location.href = '/login';
   };
-  
 
-  useEffect(() => {
-    let hoverArea = document.createElement('div');
-    hoverArea.style.position = 'fixed';
-    hoverArea.style.top = '0';
-    hoverArea.style.left = '0';
-    hoverArea.style.width = '100%';
-    hoverArea.style.height = '10px';
-    hoverArea.style.zIndex = '9999';
-
-    const handleMouseEnter = () => setShowNavbar(true);
-    const handleMouseLeave = (e) => {
-      if (!document.getElementById('navbar')?.contains(e.relatedTarget)) {
-        setShowNavbar(false);
-      }
-    };
-
-    hoverArea.addEventListener('mouseenter', handleMouseEnter);
-    hoverArea.addEventListener('mouseleave', handleMouseLeave);
-    
-    document.getElementById('navbar')?.addEventListener('mouseleave', handleMouseLeave);
-    document.getElementById('navbar')?.addEventListener('mouseenter', handleMouseEnter);
-
-    document.body.appendChild(hoverArea);
-
-    return () => {
-      hoverArea.removeEventListener('mouseenter', handleMouseEnter);
-      hoverArea.removeEventListener('mouseleave', handleMouseLeave);
-      document.getElementById('navbar')?.removeEventListener('mouseleave', handleMouseLeave);
-      document.getElementById('navbar')?.removeEventListener('mouseenter', handleMouseEnter);
-      document.body.removeChild(hoverArea);
-    };
-  }, []);
-
-  // Đóng dropdown khi click ra ngoài
-  useEffect(() => {
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
@@ -64,7 +28,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav id="navbar" className={`navbar navbar-expand-lg fixed-top ${showNavbar ? 'show-navbar' : ''}`}>
+    <nav id="navbar" className="navbar navbar-expand-lg fixed-top navbar-light bg-light shadow">
       <div className="container">
         <Link to="/dashboard" className="navbar-brand">
           <FaBuilding className="nav-icon" />
@@ -73,10 +37,10 @@ const Navbar = () => {
 
         <div className="nav-user-section">
           <div className="dropdown" ref={dropdownRef}>
-            <button 
-              className="user-dropdown-toggle" 
-              type="button" 
-              id="userDropdown" 
+            <button
+              className="user-dropdown-toggle"
+              type="button"
+              id="userDropdown"
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <FaUserCircle className="nav-icon" />
@@ -84,20 +48,24 @@ const Navbar = () => {
               <FaCaretDown className="ms-1" />
             </button>
             {isDropdownOpen && (
-              <ul className="dropdown-menu dropdown-menu-end shadow show" 
-                  aria-labelledby="userDropdown" 
-                  style={{ position: 'absolute', right: 0, top: '100%', zIndex: 1050 }}>
+              <ul
+                className="dropdown-menu dropdown-menu-end shadow show"
+                aria-labelledby="userDropdown"
+                style={{ position: 'absolute', right: 0, top: '100%', zIndex: 1050 }}
+              >
                 <li>
                   <Link to="/profile" className="dropdown-item">
                     <FaUserCircle className="dropdown-icon" />
-                    <span>profile</span>
+                    <span>Profile <strong style={{ color: 'red' }}>(Updating)</strong></span>
                   </Link>
                 </li>
-                <li><hr className="dropdown-divider" /></li>
+                <li>
+                  <hr className="dropdown-divider" />
+                </li>
                 <li>
                   <button className="dropdown-item text-danger" onClick={handleLogout}>
                     <FaSignOutAlt className="dropdown-icon" />
-                    <span>Log Out</span>
+                    <span>Logout</span>
                   </button>
                 </li>
               </ul>

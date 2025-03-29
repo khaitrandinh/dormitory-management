@@ -101,3 +101,43 @@
         width: 100%;
     }
 }
+
+/* phần edit */
+.editing-row {
+    background-color: rgba(0, 123, 255, 0.05) !important;
+  }
+  
+  .editing-row td {
+    padding: 0.5rem !important;
+  }
+  
+  .form-control-sm, .form-select-sm {
+    height: 31px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .input-group-sm > .form-control,
+  .input-group-sm > .input-group-text {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .btn-group {
+    display: flex;
+    gap: 0.25rem;
+  }
+  
+  .btn-group .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  
+  .btn-sm svg {
+    font-size: 0.875rem;
+  }
+  
+  .form-group {
+    margin-bottom: 0;
+  }

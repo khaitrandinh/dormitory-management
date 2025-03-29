@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
-import { FaEdit, FaTrash, FaBuilding } from "react-icons/fa";
+// import { FaEdit, FaTrash, FaBed, FaBuilding } from "react-icons/fa";
+import { FaEdit, FaTrash, FaBed, FaBuilding, FaSave, FaTimes } from "react-icons/fa";
 import { AuthContext } from "../context/AuthContext";
 import axios from "../services/axios";
 import "../Styles/RoomTable.css";
@@ -110,24 +111,161 @@ const RoomTable = ({ rooms, onDelete }) => {
             const edited = editedRooms[room.id] || room;
 
             return (
-              <tr key={room.id}>
+              // <tr key={room.id}>
+              //   <td>
+              //     <FaBuilding className="icon text-primary" />
+              //     {isEditing ? (
+              //       <input
+              //         value={edited.room_code}
+              //         onChange={(e) => handleChange(e, room.id, "room_code")}
+              //       />
+              //     ) : (
+              //       room.room_code
+              //     )}
+              //   </td>
+              //   <td>
+              //     {isEditing ? (
+              //       <input
+              //         type="number"
+              //         value={edited.floor}
+              //         onChange={(e) => handleChange(e, room.id, "floor")}
+              //       />
+              //     ) : (
+              //       room.floor
+              //     )}
+              //   </td>
+              //   <td>
+              //     {isEditing ? (
+              //       <input
+              //         value={edited.building}
+              //         onChange={(e) => handleChange(e, room.id, "building")}
+              //       />
+              //     ) : (
+              //       room.building
+              //     )}
+              //   </td>
+              //   <td>
+              //     {isEditing ? (
+              //       <input
+              //         type="number"
+              //         value={edited.bed_count}
+              //         onChange={(e) => handleChange(e, room.id, "bed_count")}
+              //       />
+              //     ) : (
+              //       <span className={`badge ${room.bed_available === 0 ? 'bg-danger' : 'bg-success'}`}>
+              //         {room.bed_available}/{room.bed_count} available
+              //       </span>
+              //     )}
+              //   </td>
+              //   <td>
+              //     {isEditing ? (
+              //       <select
+              //         value={edited.room_type}
+              //         onChange={(e) => handleChange(e, room.id, "room_type")}
+              //       >
+              //         <option value="standard">Standard</option>
+              //         <option value="vip">VIP</option>
+              //       </select>
+              //     ) : (
+              //       <span className="badge bg-secondary">
+              //         {formatStatus({ status: room.room_type })}
+              //       </span>
+              //     )}
+              //   </td>
+              //   <td>
+              //     {isEditing ? (
+              //       <input
+              //         type="number"
+              //         value={edited.price}
+              //         onChange={(e) => handleChange(e, room.id, "price")}
+              //       />
+              //     ) : (
+              //       `${room.price?.toLocaleString() || 0} đ`
+              //     )}
+              //   </td>
+              //   <td>
+              //     {isEditing ? (
+              //       <select
+              //         value={edited.status}
+              //         onChange={(e) => handleChange(e, room.id, "status")}
+              //       >
+              //         <option value="available">Available</option>
+              //         <option value="occupied">Occupied</option>
+              //         <option value="maintenance">Maintenance</option>
+              //       </select>
+              //     ) : (
+              //       <span className={`badge ${statusBadgeClass(room)}`}>
+              //         {formatStatus(room)}
+              //       </span>
+              //     )}
+              //   </td>
+              //   {(role === "staff" || role === "admin") && (
+              //     <td>
+              //       {isEditing ? (
+              //         <>
+              //           <button
+              //             className="btn btn-success btn-sm me-2"
+              //             onClick={() => handleSave(room.id)}
+              //           >
+              //             Save
+              //           </button>
+              //           <button
+              //             className="btn btn-secondary btn-sm"
+              //             onClick={handleCancel}
+              //           >
+              //             Cancel
+              //           </button>
+              //         </>
+              //       ) : (
+              //         <>
+              //           <button
+              //             className="btn btn-outline-warning btn-sm me-2"
+              //             onClick={() => handleEditClick(room)}
+              //           >
+              //             <FaEdit /> Edit
+              //           </button>
+              //           <button
+              //             className="btn btn-outline-danger btn-sm"
+              //             onClick={() => onDelete(room.id)}
+              //           >
+              //             <FaTrash /> Delete
+              //           </button>
+              //         </>
+              //       )}
+              //     </td>
+              //   )}
+              // </tr>
+              <tr key={room.id} className={isEditing ? 'editing-row' : ''}>
                 <td>
-                  <FaBuilding className="icon text-primary" />
                   {isEditing ? (
-                    <input
-                      value={edited.room_code}
-                      onChange={(e) => handleChange(e, room.id, "room_code")}
-                    />
+                    <div className="form-group">
+                      <div className="input-group input-group-sm">
+                        <span className="input-group-text">
+                          <FaBuilding className="text-primary" />
+                        </span>
+                        <input
+                          className="form-control form-control-sm"
+                          value={edited.room_code}
+                          onChange={(e) => handleChange(e, room.id, "room_code")}
+                          placeholder="Room Code"
+                        />
+                      </div>
+                    </div>
                   ) : (
-                    room.room_code
+                    <div className="d-flex align-items-center">
+                      <FaBuilding className="icon text-primary me-2" />
+                      {room.room_code}
+                    </div>
                   )}
                 </td>
                 <td>
                   {isEditing ? (
                     <input
                       type="number"
+                      className="form-control form-control-sm"
                       value={edited.floor}
                       onChange={(e) => handleChange(e, room.id, "floor")}
+                      placeholder="Floor"
                     />
                   ) : (
                     room.floor
@@ -136,8 +274,10 @@ const RoomTable = ({ rooms, onDelete }) => {
                 <td>
                   {isEditing ? (
                     <input
+                      className="form-control form-control-sm"
                       value={edited.building}
                       onChange={(e) => handleChange(e, room.id, "building")}
+                      placeholder="Building"
                     />
                   ) : (
                     room.building
@@ -147,8 +287,10 @@ const RoomTable = ({ rooms, onDelete }) => {
                   {isEditing ? (
                     <input
                       type="number"
+                      className="form-control form-control-sm"
                       value={edited.bed_count}
                       onChange={(e) => handleChange(e, room.id, "bed_count")}
+                      placeholder="Bed Count"
                     />
                   ) : (
                     <span className={`badge ${room.bed_available === 0 ? 'bg-danger' : 'bg-success'}`}>
@@ -159,9 +301,11 @@ const RoomTable = ({ rooms, onDelete }) => {
                 <td>
                   {isEditing ? (
                     <select
+                      className="form-select form-select-sm"
                       value={edited.room_type}
                       onChange={(e) => handleChange(e, room.id, "room_type")}
                     >
+                      <option value="">Select Type</option>
                       <option value="standard">Standard</option>
                       <option value="vip">VIP</option>
                     </select>
@@ -173,11 +317,16 @@ const RoomTable = ({ rooms, onDelete }) => {
                 </td>
                 <td>
                   {isEditing ? (
-                    <input
-                      type="number"
-                      value={edited.price}
-                      onChange={(e) => handleChange(e, room.id, "price")}
-                    />
+                    <div className="input-group input-group-sm">
+                      <input
+                        type="number"
+                        className="form-control form-control-sm"
+                        value={edited.price}
+                        onChange={(e) => handleChange(e, room.id, "price")}
+                        placeholder="Price"
+                      />
+                      <span className="input-group-text">đ</span>
+                    </div>
                   ) : (
                     `${room.price?.toLocaleString() || 0} đ`
                   )}
@@ -185,9 +334,11 @@ const RoomTable = ({ rooms, onDelete }) => {
                 <td>
                   {isEditing ? (
                     <select
+                      className="form-select form-select-sm"
                       value={edited.status}
                       onChange={(e) => handleChange(e, room.id, "status")}
                     >
+                      <option value="">Select Status</option>
                       <option value="available">Available</option>
                       <option value="occupied">Occupied</option>
                       <option value="maintenance">Maintenance</option>
@@ -199,37 +350,41 @@ const RoomTable = ({ rooms, onDelete }) => {
                   )}
                 </td>
                 {(role === "staff" || role === "admin") && (
-                  <td>
+                  <td className="text-center">
                     {isEditing ? (
-                      <>
+                      <div className="btn-group">
                         <button
-                          className="btn btn-success btn-sm me-2"
+                          className="btn btn-success btn-sm"
                           onClick={() => handleSave(room.id)}
+                          title="Save changes"
                         >
-                          Save
+                          <FaSave /> Save
                         </button>
                         <button
-                          className="btn btn-secondary btn-sm"
+                          className="btn btn-light btn-sm"
                           onClick={handleCancel}
+                          title="Cancel editing"
                         >
-                          Cancel
+                          <FaTimes /> Cancel
                         </button>
-                      </>
+                      </div>
                     ) : (
-                      <>
+                      <div className="btn-group">
                         <button
-                          className="btn btn-outline-warning btn-sm me-2"
+                          className="btn btn-outline-primary btn-sm"
                           onClick={() => handleEditClick(room)}
+                          title="Edit room"
                         >
                           <FaEdit /> Edit
                         </button>
                         <button
                           className="btn btn-outline-danger btn-sm"
                           onClick={() => onDelete(room.id)}
+                          title="Delete room"
                         >
                           <FaTrash /> Delete
                         </button>
-                      </>
+                      </div>
                     )}
                   </td>
                 )}

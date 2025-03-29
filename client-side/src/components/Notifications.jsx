@@ -7,9 +7,9 @@ const Notifications = ({ notifications }) => {
 
   return (
     <div className="notifications-wrapper">
-      <div className="notifications-header d-flex justify-content-between align-items-center">
-        <h5 className="header-title mb-0">📢 New Notifications</h5>
-        {notifications.length > 2 && (
+      <div className="notifications-header">
+        <h5 className="header-title">New Notification</h5>
+        {notifications.length > 0 && (
           <button 
             className="expand-button btn btn-sm btn-outline-primary"
             onClick={() => setShowModal(true)}

@@ -156,6 +156,27 @@ const Dashboard = () => {
                         </div>
                       </div>
                     </div>
+                  </div> */}
+                  <div className="col-md-6">
+                    <div className="content-card mb-4">
+                      <Notifications notifications={data.notifications || []} />
+                    </div>
+                  </div>
+                  
+                  <div className="col-md-6">
+                    <div className="content-card mb-4">
+                      <h5 className="content-card-title">This Month's Finance</h5>
+                      <div className="finance-summary">
+                        <div className="finance-item income">
+                          <span>Income:</span>
+                          <strong>{data.finance?.income?.toLocaleString() || "0"} VND</strong>
+                        </div>
+                        <div className="finance-item expenses">
+                          <span>Expenses:</span>
+                          <strong>{data.finance?.expenses?.toLocaleString() || "0"} VND</strong>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="col-12">
