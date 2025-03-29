@@ -1,61 +1,147 @@
-.room-approval-container {
-    padding: 2rem;
-    background-color: #f8f9fa;
-    min-height: 100vh;
-  }
-  
-  .room-approval-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 1.5rem;
-    color: #343a40;
-  }
-  
-  .table-room-approval {
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  }
-  
-  .table-room-approval thead th {
-    background-color: #007bff;
-    color: white;
-    text-align: center;
-    vertical-align: middle;
-  }
-  
-  .table-room-approval tbody td {
-    vertical-align: middle;
-    text-align: center;
-    padding: 0.75rem;
-  }
-  
-  .room-status-badge {
-    padding: 0.35rem 0.6rem;
-    border-radius: 0.4rem;
-    font-size: 0.85rem;
-    font-weight: 500;
-  }
-  
-  .status-pending {
-    background-color: #ffc107;
-    color: #212529;
-  }
-  
-  .status-approved {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .status-rejected {
-    background-color: #dc3545;
-    color: white;
-  }
-  
-  .btn-action {
-    font-size: 0.85rem;
-    margin: 0 0.25rem;
-    padding: 0.3rem 0.75rem;
-  }
-  
+.content-wrapper {
+  padding: 1.5rem;
+}
+
+.content-header {
+  margin-bottom: 1.5rem;
+}
+
+.content-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.page-icon {
+  color: var(--primary-color);
+}
+
+.breadcrumb {
+  margin-bottom: 0;
+}
+
+.breadcrumb-item a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.card {
+  background: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.card-header {
+  background: #f8f9fa;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 1rem 1.25rem;
+}
+
+.card-title {
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table th {
+  font-weight: 600;
+  color: #495057;
+  border-bottom-width: 1px;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+/* Soft button variants */
+.btn-soft-success {
+  color: #198754;
+  background-color: rgba(25, 135, 84, 0.1);
+  border: none;
+}
+
+.btn-soft-success:hover {
+  color: #fff;
+  background-color: #198754;
+}
+
+.btn-soft-danger {
+  color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.1);
+  border: none;
+}
+
+.btn-soft-danger:hover {
+  color: #fff;
+  background-color: #dc3545;
+}
+
+.btn-soft-warning {
+  color: #ffbf00;
+  background-color: rgba(255, 193, 7, 0.1);
+  border: none;
+}
+
+.btn-soft-warning:hover {
+  color: #000;
+  background-color: #ffc107;
+}
+
+.btn-soft-secondary {
+  color: #5e6368;
+  background-color: rgba(108, 117, 125, 0.1);
+  border: none;
+}
+
+.btn-soft-secondary:hover {
+  color: #fff;
+  background-color: #6c757d;
+}
+
+/* Alert styling */
+.alert {
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.alert-success {
+  background-color: rgba(25, 135, 84, 0.1);
+  color: #198754;
+}
+
+.alert-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+/* Empty state styling */
+.text-center.py-4 {
+  background: #f8f9fa;
+  border-radius: 0.5rem;
+}
+
+/* Table responsiveness */
+.table-responsive {
+  margin: -0.25rem;
+  padding: 0.25rem;
+}
+
+/* Button icon alignment */
+.btn .me-1 {
+  margin-right: 0.25rem;
+}
+
+/* Hover effect on table rows */
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}

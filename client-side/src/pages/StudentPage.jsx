@@ -3,9 +3,8 @@ import axios from "../services/axios";
 import { AuthContext } from "../context/AuthContext";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaUserGraduate, FaSearch } from "react-icons/fa";
 import "../Styles/StudentPage.css";
-
 const StudentPage = () => {
   const { role, user } = useContext(AuthContext);
   const [students, setStudents] = useState([]);
@@ -65,129 +64,166 @@ const StudentPage = () => {
       )
     : [];
 
-  return (
-    <div className="student-container">
-      <Sidebar />
-      <div className="main-content">
-        <Navbar />
-        <div className="content-wrapper">
-          <h2 className="page-title">Student Information</h2>
-
-          {role !== "student" && (
-            <input
-              type="text"
-              placeholder="Search by name or student code"
-              className="form-control mb-3"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          )}
-
-          {error && <div className="alert alert-danger">{error}</div>}
-
-          <div className="table-responsive">
-            <table className="table table-bordered table-hover">
-              <thead className="table-dark">
-                <tr>
-                  <th>Student Code</th>
-                  <th>Full Name</th>
-                  <th>Gender</th>
-                  <th>Birth Date</th>
-                  <th>Class</th>
-                  <th>Faculty</th>
-                  <th>Phone</th>
-                  <th>Room</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredStudents.map((student) => {
-                  const isEditable = role === "admin" || role === "staff";
-                  const isSelf = role === "student" && student.user_id === user.id;
-                  const canEdit = isEditable || isSelf;
-
-                  return (
-                    <tr key={student.id}>
-                      <td>{student.student_code}</td>
-                      <td>{student.user?.name}</td>
-                      <td>
-                        {canEdit ? (
-                          <select
-                            value={student.gender}
-                            onChange={(e) => handleChange(e, student.id, "gender")}
-                            className="form-select form-select-sm"
-                          >
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                          </select>
-                        ) : (
-                          student.gender
-                        )}
-                      </td>
-                      <td>
-                        <input
-                          type="date"
-                          className="form-control form-control-sm"
-                          value={student.birth_date}
-                          onChange={(e) => handleChange(e, student.id, "birth_date")}
-                          disabled={!canEdit}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          className="form-control form-control-sm"
-                          value={student.class}
-                          onChange={(e) => handleChange(e, student.id, "class")}
-                          disabled={!canEdit}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          className="form-control form-control-sm"
-                          value={student.faculty}
-                          onChange={(e) => handleChange(e, student.id, "faculty")}
-                          disabled={!canEdit}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          className="form-control form-control-sm"
-                          value={student.phone}
-                          onChange={(e) => handleChange(e, student.id, "phone")}
-                          disabled={!canEdit}
-                        />
-                      </td>
-                      <td>{student.room_code || "-"}</td>
-                      <td>
-                        {canEdit && (
-                          <div className="d-flex gap-2">
-                            <button
-                              className="btn btn-sm btn-success"
-                              onClick={() => handleUpdate(student)}
-                            >
-                              <FaEdit /> Save
-                            </button>
-                            {isEditable && (
-                              <button
-                                className="btn btn-sm btn-danger"
-                                onClick={() => handleDelete(student.id)}
-                              >
-                                <FaTrash /> Delete
-                              </button>
-                            )}
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+    return (
+      <div className="app-container">
+        <Sidebar />
+        <div className="main-content">
+          <Navbar />
+          <div className="content-wrapper">
+            <div className="content-header">
+              <div className="container-fluid">
+                <div className="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h1 className="content-title">
+                      <FaUserGraduate className="page-icon" />
+                      Student Management
+                    </h1>
+                    <nav aria-label="breadcrumb">
+                      <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><a href="/">Dashboard</a></li>
+                        <li className="breadcrumb-item active">Student Management</li>
+                      </ol>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div className="content-body">
+              <div className="container-fluid">
+                <div className="card shadow-sm">
+                  <div className="card-body">
+                    {error && (
+                      <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                        {error}
+                        <button type="button" className="btn-close" onClick={() => setError("")}></button>
+                      </div>
+                    )}
+  
+                    {role !== "student" && (
+                      <div className="search-box mb-4">
+                        <div className="input-group">
+                          <span className="input-group-text">
+                            <FaSearch />
+                          </span>
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search by name or student code"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    )}
+  
+                    <div className="table-responsive">
+                      <table className="table table-hover">
+                        <thead className="table-light">
+                          <tr>
+                            <th>Student Code</th>
+                            <th>Full Name</th>
+                            <th>Gender</th>
+                            <th>Birth Date</th>
+                            <th>Class</th>
+                            <th>Faculty</th>
+                            <th>Phone</th>
+                            <th>Room</th>
+                            <th className="text-end">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredStudents.map((student) => {
+                            const isEditable = role === "admin" || role === "staff";
+                            const isSelf = role === "student" && student.user_id === user.id;
+                            const canEdit = isEditable || isSelf;
+  
+                            return (
+                              <tr key={student.id}>
+                                <td>{student.student_code}</td>
+                                <td>{student.user?.name}</td>
+                                <td>
+                                  {canEdit ? (
+                                    <select
+                                      value={student.gender}
+                                      onChange={(e) => handleChange(e, student.id, "gender")}
+                                      className="form-select form-select-sm"
+                                    >
+                                      <option value="Male">Male</option>
+                                      <option value="Female">Female</option>
+                                    </select>
+                                  ) : (
+                                    student.gender
+                                  )}
+                                </td>
+                                <td>
+                                  <input
+                                    type="date"
+                                    className="form-control form-control-sm"
+                                    value={student.birth_date}
+                                    onChange={(e) => handleChange(e, student.id, "birth_date")}
+                                    disabled={!canEdit}
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    className="form-control form-control-sm"
+                                    value={student.class}
+                                    onChange={(e) => handleChange(e, student.id, "class")}
+                                    disabled={!canEdit}
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    className="form-control form-control-sm"
+                                    value={student.faculty}
+                                    onChange={(e) => handleChange(e, student.id, "faculty")}
+                                    disabled={!canEdit}
+                                  />
+                                </td>
+                                <td>
+                                  <input
+                                    className="form-control form-control-sm"
+                                    value={student.phone}
+                                    onChange={(e) => handleChange(e, student.id, "phone")}
+                                    disabled={!canEdit}
+                                  />
+                                </td>
+                                <td>{student.room_code || "-"}</td>
+                                <td className="text-end">
+                                  {canEdit && (
+                                    <div className="btn-group">
+                                      <button
+                                        className="btn btn-soft-success btn-sm"
+                                        onClick={() => handleUpdate(student)}
+                                      >
+                                        <FaEdit className="me-1" /> Save
+                                      </button>
+                                      {isEditable && (
+                                        <button
+                                          className="btn btn-soft-danger btn-sm ms-2"
+                                          onClick={() => handleDelete(student.id)}
+                                        >
+                                          <FaTrash className="me-1" /> Delete
+                                        </button>
+                                      )}
+                                    </div>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
-
-export default StudentPage;
+    );
+  };
+  
+  export default StudentPage;

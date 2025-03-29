@@ -2,11 +2,19 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from '../services/axios';
 import { AuthContext } from '../context/AuthContext';
 import { Button, Table, Modal, Form } from 'react-bootstrap';
-import { FaFileInvoice, FaMoneyBill, FaTrash, FaBell } from 'react-icons/fa';
+import { 
+  FaFileInvoice, 
+  FaMoneyBill, 
+  FaTrash, 
+  FaPlus, 
+  FaFileExport,
+  FaSearch 
+} from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
+import '../Styles/PaymentPage.css';
 
 const PaymentPage = () => {
   const { role, user } = useContext(AuthContext);
@@ -50,7 +58,18 @@ const PaymentPage = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this payment?')) {
+      try {
+        await axios.delete(`/payments/${id}`);
+        fetchPayments(); // Refresh the payment list after deletion
+      } catch (error) {
+        console.error('Failed to delete payment:', error);
+        alert('Failed to delete the payment.');
+      }
+    }
+  };
+  
   const handleCreate = async (e) => {
     e.preventDefault();
     await axios.post('/payments', formData);
@@ -102,23 +121,48 @@ const PaymentPage = () => {
   };
 
   return (
-    <div className="dashboard-wrapper">
+    <div className="app-container">
       <Sidebar />
-      <div className="dashboard-main">
+      <div className="main-content">
         <Navbar />
-        <div className="container mt-4">
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h2><FaFileInvoice /> Payment Management</h2>
-            <div>
-              {(role === 'admin' || role === 'staff') && (
-                <Button variant="primary" onClick={() => setShowModal(true)}>+ New Invoice</Button>
-              )}
-              <Button variant="outline-secondary" className="ms-2" onClick={exportPDF}>
-                Export PDF
-              </Button>
+        <div className="content-wrapper">
+          <div className="content-header">
+            <div className="container-fluid">
+              <div className="d-flex justify-content-between align-items-center">
+                <div>
+                  <h1 className="content-title">
+                    <FaFileInvoice className="page-icon" />
+                    Payment Management
+                  </h1>
+                  <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                      <li className="breadcrumb-item"><a href="/">Dashboard</a></li>
+                      <li className="breadcrumb-item active">Payment Management</li>
+                    </ol>
+                  </nav>
+                </div>
+
+                <div className="d-flex gap-2">
+                  {(role === 'admin' || role === 'staff') && (
+                    <button
+                      className="btn btn-primary d-flex align-items-center"
+                      onClick={() => setShowModal(true)}
+                    >
+                      <FaPlus className="me-2" />
+                      New Invoice
+                    </button>
+                  )}
+                  <button
+                    className="btn btn-danger d-flex align-items-center"
+                    onClick={exportPDF}
+                  >
+                    <FaFileExport className="me-2" />
+                    Export PDF
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-
           <Table bordered hover responsive>
             <thead>
               <tr>
@@ -241,6 +285,92 @@ const PaymentPage = () => {
           </Modal>
         </div>
       </div>
+
+      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg" centered className="payment-modal">
+        <Modal.Header closeButton className="border-0 pb-0">
+          <Modal.Title className="d-flex align-items-center">
+            <FaPlus className="text-primary me-2" />
+            Create New Payment
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="pt-0">
+          <div className="modal-strip"></div>
+          <Form onSubmit={handleCreate} className="payment-form">
+            <div className="form-section mb-4">
+              <h6 className="section-title">
+                <span className="section-icon">📋</span>
+                Contract Information
+              </h6>
+              <div className="row g-3">
+                <div className="col-md-12">
+                  <Form.Group>
+                    <Form.Label>Contract ID</Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="contract_id"
+                      onChange={handleChange}
+                      required
+                      placeholder="Enter contract ID"
+                      className="form-control-lg"
+                    />
+                  </Form.Group>
+                </div>
+              </div>
+            </div>
+
+            <div className="form-section mb-4">
+              <h6 className="section-title">
+                <span className="section-icon">💰</span>
+                Payment Details
+              </h6>
+              <div className="row g-3">
+                <div className="col-md-6">
+                  <Form.Group>
+                    <Form.Label>Amount (VND)</Form.Label>
+                    <Form.Control
+                      type="number"
+                      name="amount"
+                      onChange={handleChange}
+                      required
+                      placeholder="Enter amount"
+                      className="form-control-lg"
+                    />
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group>
+                    <Form.Label>Payment Date</Form.Label>
+                    <Form.Control
+                      type="date"
+                      name="payment_date"
+                      onChange={handleChange}
+                      required
+                      className="form-control-lg"
+                    />
+                  </Form.Group>
+                </div>
+              </div>
+            </div>
+            
+            <div className="modal-footer border-0 pt-4">
+              <Button 
+                variant="light" 
+                onClick={() => setShowModal(false)}
+                className="btn-lg px-4"
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit" 
+                variant="primary"
+                className="btn-lg px-4"
+              >
+                Create Payment
+              </Button>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 };

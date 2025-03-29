@@ -1,0 +1,250 @@
+/* Match RoomPage.css styles */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  .content-wrapper {
+    padding: 1.5rem;
+    flex: 1;
+  }
+  
+  .content-header {
+    margin-bottom: 1.5rem;
+  }
+  
+  .content-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+  
+  .page-icon {
+    color: var(--primary-color);
+  }
+  
+  /* Search Box */
+  .search-box .input-group {
+    max-width: 400px;
+  }
+  
+  .search-box .input-group-text {
+    background: transparent;
+    border-right: none;
+  }
+  
+  .search-box .form-control {
+    border-left: none;
+  }
+  
+  /* Table Styling */
+  .table td {
+    vertical-align: middle;
+  }
+  
+  /* Badge Colors */
+  .badge {
+    padding: 0.5em 0.75em;
+  }
+  
+  /* Contract Details */
+  .contract-details {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+  }
+  
+  /* Button Icons */
+  .btn svg {
+    font-size: 1rem;
+  }
+  
+  .btn-sm {
+    padding: 0.25rem 0.5rem;
+  }
+  
+  /* Expanded Icon Animation */
+  .expanded {
+    transform: rotate(180deg);
+    transition: transform 0.3s ease;
+  }
+  
+  /* Modal Styling */
+  .modal-lg {
+    max-width: 800px;
+  }
+  
+  .modal-content {
+    border-radius: 0.5rem;
+    border: none;
+  }
+  
+  /* Pagination */
+  .pagination {
+    margin-bottom: 0;
+  }
+  
+  .page-link {
+    border-radius: 0.25rem;
+    margin: 0 0.25rem;
+  }
+  
+  /* Card */
+  .card {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  /* Alert */
+  .alert {
+    border-radius: 0.5rem;
+    border: none;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .d-flex.gap-2 {
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+    
+    .content-wrapper {
+      padding: 1rem;
+    }
+  }
+
+
+  /* Modal Styling */
+.contract-modal .modal-content {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+  
+  .modal-strip {
+    height: 4px;
+    background: linear-gradient(to right, #4c5ac0, #676b97);
+    margin: -1rem -1rem 1.5rem -1rem;
+    border-radius: 4px;
+  }
+  
+  .contract-form .form-section {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+  }
+  
+  .section-title {
+    display: flex;
+    align-items: center;
+    color: #495057;
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .section-icon {
+    font-size: 1.25rem;
+    margin-right: 0.75rem;
+  }
+  
+  .form-control-lg {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #dee2e6;
+  }
+  
+  .form-control-lg:focus {
+    border-color: #4c5ac0;
+    box-shadow: 0 0 0 0.2rem rgba(76, 90, 192, 0.25);
+  }
+  
+  .form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.5rem;
+  }
+  
+  .modal-footer .btn-lg {
+    padding: 0.75rem 2rem;
+    font-weight: 500;
+  }
+  
+  /* Form Section Hover Effect */
+  .contract-form .form-section:hover {
+    background: #fff;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: all 0.3s ease;
+  }
+  
+  /* Status Select Styling */
+  .form-select {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #dee2e6;
+  }
+  
+  .form-select:focus {
+    border-color: #4c5ac0;
+    box-shadow: 0 0 0 0.2rem rgba(76, 90, 192, 0.25);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .contract-form .form-section {
+      padding: 1rem;
+    }
+    
+    .modal-footer {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .modal-footer .btn {
+      width: 100%;
+    }
+  }
+
+
+  /* Status Badge Styles */
+.badge {
+    padding: 0.5em 0.75em;
+    font-size: 0.85em;
+    font-weight: 500;
+    text-transform: capitalize;
+    border-radius: 0.25rem;
+  }
+  
+  .bg-success {
+    background-color: #28a745 !important;
+    color: #fff;
+  }
+  
+  .bg-danger {
+    background-color: #dc3545 !important;
+    color: #fff;
+  }
+  
+  .bg-warning {
+    background-color: #ffc107 !important;
+    color: #000;
+  }
+  
+  /* Hover effect */
+  .badge:hover {
+    opacity: 0.9;
+    transition: opacity 0.2s ease;
+  }
