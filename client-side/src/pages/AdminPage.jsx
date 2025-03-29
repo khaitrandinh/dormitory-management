@@ -4,7 +4,7 @@ import { FaTrash } from "react-icons/fa";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import { AuthContext } from "../context/AuthContext";
-import "../Styles/AdminPage.css"; // Bạn có thể đổi tên file này thành UserManagement.css
+import "../Styles/AdminPage.css"; // You may rename this to UserManagement.css
 
 const AdminPage = () => {
   const { role } = useContext(AuthContext);
@@ -21,8 +21,8 @@ const AdminPage = () => {
       const response = await axios.get("/admin/users");
       setUsers(response.data);
     } catch (err) {
-      setError("Lỗi khi tải danh sách người dùng.");
-      console.error("Lỗi:", err);
+      setError("Failed to load user list.");
+      console.error("Error:", err);
     }
   };
 
@@ -32,7 +32,7 @@ const AdminPage = () => {
       await axios.put(`/admin/users/${id}`, { role: newRole });
       fetchUsers();
     } catch (err) {
-      setError("Không thể cập nhật vai trò người dùng.");
+      setError("Failed to update user role.");
     } finally {
       setLoading(false);
     }
@@ -44,21 +44,21 @@ const AdminPage = () => {
       await axios.put(`/admin/users/${id}`, { status: newStatus });
       fetchUsers();
     } catch (err) {
-      setError("Không thể cập nhật trạng thái người dùng.");
+      setError("Failed to update user status.");
     } finally {
       setLoading(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Bạn có chắc chắn muốn xóa người dùng này?")) return;
+    if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     setLoading(true);
     try {
       await axios.delete(`/admin/users/${id}`);
       fetchUsers();
     } catch (err) {
-      setError("Không thể xóa người dùng.");
+      setError("Failed to delete user.");
     } finally {
       setLoading(false);
     }
@@ -70,7 +70,7 @@ const AdminPage = () => {
       <div className="main-content">
         <Navbar />
         <div className="content-wrapper">
-          <h2 className="page-title">Quản Lý Người Dùng</h2>
+          <h2 className="page-title">User Management</h2>
 
           {error && <div className="alert alert-danger">{error}</div>}
 
@@ -78,11 +78,11 @@ const AdminPage = () => {
             <table className="table table-hover user-table">
               <thead>
                 <tr>
-                  <th>Tên</th>
+                  <th>Name</th>
                   <th>Email</th>
-                  <th>Vai Trò</th>
-                  <th>Trạng Thái</th>
-                  {role === "admin" && <th>Hành Động</th>}
+                  <th>Role</th>
+                  <th>Status</th>
+                  {role === "admin" && <th>Action</th>}
                 </tr>
               </thead>
               <tbody>
@@ -123,7 +123,7 @@ const AdminPage = () => {
                         <span
                           className={`badge bg-${user.status === "active" ? "success" : "danger"}`}
                         >
-                          {user.status === "active" ? "Đang hoạt động" : "Bị cấm"}
+                          {user.status === "active" ? "Active" : "Banned"}
                         </span>
                       )}
                     </td>
@@ -135,7 +135,7 @@ const AdminPage = () => {
                           onClick={() => handleDelete(user.id)}
                           disabled={loading}
                         >
-                          <FaTrash /> Xóa
+                          <FaTrash /> Delete
                         </button>
                       </td>
                     )}
@@ -145,7 +145,7 @@ const AdminPage = () => {
             </table>
 
             {users.length === 0 && (
-              <p className="text-center text-muted mt-3">Không có người dùng nào.</p>
+              <p className="text-center text-muted mt-3">No users found.</p>
             )}
           </div>
         </div>

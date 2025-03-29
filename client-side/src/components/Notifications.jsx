@@ -15,7 +15,7 @@ const Notifications = ({ notifications }) => {
             onClick={() => setShowModal(true)}
             title="Xem tất cả"
           >
-            <FaExpandAlt /> Xem tất cả
+            <FaExpandAlt />View All
           </button>
         )}
       </div>

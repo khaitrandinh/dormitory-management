@@ -13,7 +13,7 @@ const ProfilePage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState(null);
 
-  // 🔍 Fetch current user info
+  // Fetch current user info
   const fetchUser = async () => {
     try {
       const res = await axios.get('/me');

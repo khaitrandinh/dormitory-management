@@ -12,6 +12,8 @@ const PaymentPage = () => {
   const { role, user } = useContext(AuthContext);
   const [payments, setPayments] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showPayModal, setShowPayModal] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState(null);
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
     contract_id: '',
@@ -19,13 +21,12 @@ const PaymentPage = () => {
     payment_date: '',
     status: 'pending',
     description: '',
-    user_id: '', // optional
+    user_id: '',
   });
 
   const fetchPayments = async () => {
     const res = await axios.get('/payments');
     const all = res.data;
-
     if (role === 'student') {
       const filtered = all.filter(p => p.contract?.student?.user?.id === user?.id);
       setPayments(filtered);
@@ -65,28 +66,15 @@ const PaymentPage = () => {
     fetchPayments();
   };
 
-  const handlePayNow = async (payment) => {
-    const res = await axios.post('/payos/initiate', {
-      contract_id: payment.contract_id,
-      amount: payment.amount,
-    });
-
-    if (res.data.payment_url) {
-      window.open(res.data.payment_url, '_blank');
-    } else {
-      alert('Không thể tạo link thanh toán');
-    }
-  };
-
   const handleRemind = async (payment) => {
-    const confirm = window.confirm(`Gửi nhắc nhở sinh viên thanh toán hóa đơn #${payment.id}?`);
+    const confirm = window.confirm(`Send reminder for invoice #${payment.id}?`);
     if (!confirm) return;
 
     try {
       const res = await axios.post(`/payments/${payment.id}/remind`);
-      alert(res.data.message || 'Đã gửi nhắc nhở thành công');
+      alert(res.data.message || 'Reminder sent successfully');
     } catch (err) {
-      alert('Gửi nhắc nhở thất bại!');
+      alert('Failed to send reminder!');
       console.error(err);
     }
   };
@@ -106,6 +94,11 @@ const PaymentPage = () => {
       ]),
     });
     doc.save('invoices.pdf');
+  };
+
+  const getStudentBankInfo = (payment) => {
+    const studentName = payment.contract?.student?.user?.name || 'Student';
+    return `Bank Transfer Info:\n\nBank: ABC Bank\nAccount Number: 123456789\nRecipient: ${studentName}\nNote: PAY#${payment.id}`;
   };
 
   return (
@@ -151,11 +144,13 @@ const PaymentPage = () => {
                   <td>{p.description || `Monthly rent (contract #${p.contract_id})`}</td>
                   <td>
                     {role === 'student' && p.status === 'pending' && (
-                      <Button size="sm" variant="success" onClick={() => handlePayNow(p)}>
+                      <Button size="sm" variant="success" onClick={() => {
+                        setSelectedPayment(p);
+                        setShowPayModal(true);
+                      }}>
                         <FaMoneyBill /> Pay
                       </Button>
                     )}
-
                     {(role === 'admin' || role === 'staff') && (
                       <>
                         <Button size="sm" variant="danger" className="me-2">
@@ -207,6 +202,41 @@ const PaymentPage = () => {
                 </Form.Group>
                 <Button type="submit" variant="primary">Create</Button>
               </Form>
+            </Modal.Body>
+          </Modal>
+
+          <Modal show={showPayModal} onHide={() => setShowPayModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Select Payment Method</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>Please choose how you want to pay for invoice #{selectedPayment?.id}:</p>
+              <div className="d-flex justify-content-between">
+                <Button variant="outline-primary" onClick={() => {
+                  setShowPayModal(false);
+                  alert(getStudentBankInfo(selectedPayment));
+                }}>
+                  Manual Bank Transfer
+                </Button>
+                <Button variant="primary" onClick={async () => {
+                  setShowPayModal(false);
+                  try {
+                    const res = await axios.post('/payos/initiate', {
+                      contract_id: selectedPayment.contract_id,
+                      amount: selectedPayment.amount,
+                    });
+                    if (res.data.payment_url) {
+                      window.open(res.data.payment_url, '_blank');
+                    } else {
+                      alert("Failed to get PayOS link.");
+                    }
+                  } catch (err) {
+                    alert("Error creating payment link.");
+                  }
+                }}>
+                  Pay with PayOS
+                </Button>
+              </div>
             </Modal.Body>
           </Modal>
         </div>

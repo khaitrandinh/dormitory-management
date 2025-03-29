@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FaBuilding, FaUserCircle, FaSignOutAlt, FaCaretDown } from 'react-icons/fa';
 import '../Styles/Navbar.css';
 
@@ -90,14 +90,14 @@ const Navbar = () => {
                 <li>
                   <Link to="/profile" className="dropdown-item">
                     <FaUserCircle className="dropdown-icon" />
-                    <span>Hồ sơ</span>
+                    <span>profile</span>
                   </Link>
                 </li>
                 <li><hr className="dropdown-divider" /></li>
                 <li>
                   <button className="dropdown-item text-danger" onClick={handleLogout}>
                     <FaSignOutAlt className="dropdown-icon" />
-                    <span>Đăng xuất</span>
+                    <span>Log Out</span>
                   </button>
                 </li>
               </ul>

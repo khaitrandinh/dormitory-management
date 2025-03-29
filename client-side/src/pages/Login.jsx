@@ -16,9 +16,9 @@ const Login = () => {
       const res = await axios.post('/login', { email, password });
       localStorage.setItem('access_token', res.data.token);
       navigate('/');
-      window.location.reload(); // để AuthContext tự gọi lại API
+      window.location.reload(); // Force reload to trigger AuthContext
     } catch (error) {
-      alert('Đăng nhập thất bại');
+      alert('Login failed');
     }
   };
 
@@ -27,24 +27,17 @@ const Login = () => {
       <div className="login-wrapper">
         <div className="login-banner">
           <div className="banner-content">
-            <h2>Chào mừng trở lại!</h2>
-            <p>Hệ thống quản lý ký túc xá thông minh</p>
+            <h2>Welcome back!</h2>
+            <p>Smart Dormitory Management System</p>
           </div>
         </div>
         
         <div className="login-form-container">
           <div className="login-form-wrapper">
             <div className="login-header">
-              <h1>Đăng nhập</h1>
-              <p>Vui lòng đăng nhập để tiếp tục</p>
+              <h1>Login</h1>
+              <p>Please sign in to continue</p>
             </div>
-
-            {/* {error && (
-              <div className="alert alert-danger" role="alert">
-                <FaSignInAlt className="alert-icon" />
-                {error}
-              </div>
-            )} */}
 
             <form onSubmit={handleLogin} className="login-form">
               <div className="form-group">
@@ -55,7 +48,7 @@ const Login = () => {
                   <input
                     type="email"
                     className="form-control"
-                    placeholder="Email của bạn"
+                    placeholder="Your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -71,7 +64,7 @@ const Login = () => {
                   <input
                     type="password"
                     className="form-control"
-                    placeholder="Mật khẩu"
+                    placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -81,15 +74,15 @@ const Login = () => {
 
               <button type="submit" className="btn btn-primary login-btn">
                 <FaSignInAlt className="btn-icon" />
-                Đăng nhập
+                Login
               </button>
 
               <div className="form-footer">
                 <p>
-                  Chưa có tài khoản?{' '}
+                  Don't have an account?{' '}
                   <Link to="/register" className="register-link">
                     <FaUserPlus className="register-icon" />
-                    Đăng ký ngay
+                    Register now
                   </Link>
                 </p>
               </div>
@@ -102,3 +95,4 @@ const Login = () => {
 };
 
 export default Login;
+ 

@@ -55,6 +55,7 @@ const RoomPage = () => {
       if (data.id) {
         response = await axios.put(`${apiEndpoint}/${data.id}`, data);
       } else {
+        // eslint-disable-next-line no-unused-vars
         response = await axios.post(apiEndpoint, data);
       }
       await fetchRooms();

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { FaEdit, FaTrash, FaBed, FaBuilding } from "react-icons/fa";
+import { FaEdit, FaTrash, FaBuilding } from "react-icons/fa";
 import { AuthContext } from "../context/AuthContext";
 import axios from "../services/axios";
 import "../Styles/RoomTable.css";
@@ -56,14 +56,14 @@ const RoomTable = ({ rooms, onDelete }) => {
 
     try {
       const res = await axios.put(`/rooms/${roomId}`, payload);
-      alert("✅ Room updated successfully!");
+      alert("Room updated successfully!");
       setEditRoomId(null);
       const updatedRoom = res.data.data;
       setRoomList((prev) =>
         prev.map((r) => (r.id === roomId ? { ...r, ...updatedRoom } : r))
       );
     } catch (error) {
-      alert("❌ Failed to update room!");
+      alert("Failed to update room!");
       console.error(error.response?.data || error.message);
     }
   };

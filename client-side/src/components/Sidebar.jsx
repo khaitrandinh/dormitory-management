@@ -103,15 +103,13 @@ const Sidebar = () => {
           </li>
           )}
 
-          
-        {/* {(role === 'admin' || role === 'staff') && ( */}
         <li className={isActiveRoute('/notification')}>
           <Link to="/notification">
             <FaEnvelope className="menu-icon" />
             <span className="menu-text">Messages</span>
           </Link>
         </li>
-        {/* )} */}
+        
 
         {/* Admin Page - chỉ hiển thị cho admin */}
         {role === 'admin' && (

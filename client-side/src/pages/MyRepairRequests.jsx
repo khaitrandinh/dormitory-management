@@ -11,7 +11,7 @@ const MyRepairRequests = () => {
   const [message, setMessage] = useState(null);
   const [currentUserId, setCurrentUserId] = useState(null);
 
-  // ✅ Get current user from backend
+  //Get current user from backend
   const fetchCurrentUser = async () => {
     try {
       const res = await axios.get('/me');
@@ -21,7 +21,7 @@ const MyRepairRequests = () => {
     }
   };
 
-  // ✅ Get repair requests
+  // Get repair requests
   const fetchMyRequests = async () => {
     setLoading(true);
     try {

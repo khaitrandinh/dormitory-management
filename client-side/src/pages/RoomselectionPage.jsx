@@ -36,7 +36,7 @@ const RoomSelectionPage = () => {
         if (student.room_cancel_status === "pending") {
           setRooms([]);
         } else if (!student.room_code && student.room_cancel_status === null) {
-          fetchAvailableRooms(); // ✅ chỉ gọi khi đã được duyệt
+          fetchAvailableRooms(); //chỉ gọi khi đã được duyệt
         } else if (student.room_code) {
           // Nếu vẫn còn room_code và không đang pending huỷ thì hiển thị phòng
           const roomRes = await axios.get(`/rooms`);
