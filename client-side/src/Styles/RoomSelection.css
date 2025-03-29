@@ -1,0 +1,144 @@
+/* Layout */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.content-wrapper {
+  padding: 1.5rem;
+  flex: 1;
+}
+
+/* Header Styling */
+.content-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.page-icon {
+  color: var(--primary-color);
+}
+
+/* Room Card Styling */
+.room-card {
+  background: #fff;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  height: 100%;
+  border: 1px solid rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.room-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+
+.room-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.room-code {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.room-info p {
+  margin-bottom: 0.5rem;
+  color: #6c757d;
+}
+
+.room-info .price {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Current Room Styling */
+.current-room {
+  padding: 1rem;
+}
+
+.room-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.room-title {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.info-group {
+  margin-bottom: 1.5rem;
+}
+
+.info-group label {
+  display: block;
+  color: #6c757d;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.info-group p {
+  margin: 0;
+  color: #212529;
+}
+
+/* Badge Styling */
+.badge {
+  padding: 0.5em 0.75em;
+  font-weight: 500;
+}
+
+/* Alert Styling */
+.alert {
+  border: none;
+  border-radius: 0.5rem;
+}
+
+/* Card Styling */
+.card {
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Button Styling */
+.btn-outline-danger {
+  border-width: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content-wrapper {
+    padding: 1rem;
+  }
+  
+  .room-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .room-actions {
+    width: 100%;
+  }
+  
+  .room-actions .btn {
+    width: 100%;
+  }
+}

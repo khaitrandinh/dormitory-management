@@ -9,7 +9,7 @@ class Student extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id', // ✅ Thêm dòng này để cho phép tạo user_id
+        'user_id', 
         'student_code',
         'gender',
         'birth_date',

@@ -5,28 +5,34 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Payment;
 use App\Models\Contract;
+use Illuminate\Support\Carbon;
 
 class PaymentSeeder extends Seeder
 {
     public function run()
     {
-        // Lấy danh sách hợp đồng để tạo thanh toán
         $contracts = Contract::all();
 
         if ($contracts->isEmpty()) {
-            echo "⚠️ Không có hợp đồng nào để tạo thanh toán!";
+            echo "⚠️ No contracts available to seed payments!\n";
             return;
         }
 
         foreach ($contracts as $contract) {
-            Payment::create([
-                'contract_id' => $contract->id, // ✅ Gắn với hợp đồng có thật
-                'amount' => rand(500000, 2000000), // Số tiền random
-                'payment_date' => now()->subDays(rand(1, 30)), // Lấy ngày trong vòng 30 ngày qua
-                'status' => ['pending', 'paid', 'canceled'][rand(0, 2)], // Chọn random trạng thái
-            ]);
+            // Tạo 3 khoản thanh toán cho mỗi hợp đồng
+            for ($i = 1; $i <= 3; $i++) {
+                Payment::create([
+                    'contract_id' => $contract->id,
+                    'amount' => rand(500000, 2000000),
+                    'payment_date' => Carbon::now()->subDays(rand(5, 60)),
+                    'status' => ['pending', 'paid', 'canceled'][rand(0, 2)],
+                    'type' => 'room_booking',
+                    'description' => "Payment #$i for contract #{$contract->id}",
+                    'payos_transaction_code' => rand(10000000, 99999999),
+                ]);
+            }
         }
 
-        echo "✅ Seeder `PaymentSeeder` đã tạo dữ liệu thành công!\n";
+        echo "✅ Đã tạo thêm nhiều khoản thanh toán cho mỗi hợp đồng thành công!\n";
     }
 }

@@ -1,0 +1,139 @@
+/* Content Layout */
+.content-wrapper {
+  padding: 1.5rem;
+}
+
+.content-header {
+  margin-bottom: 1.5rem;
+}
+
+.content-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.page-icon {
+  color: var(--primary-color);
+}
+
+/* Search Box */
+.search-box .input-group {
+  max-width: 400px;
+}
+
+.search-box .input-group-text {
+  background: transparent;
+  border-right: none;
+  color: #6c757d;
+}
+
+.search-box .form-control {
+  border-left: none;
+}
+
+.search-box .form-control:focus {
+  border-color: #dee2e6;
+  box-shadow: none;
+}
+
+/* Card Styling */
+.card {
+  background: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Table Styling */
+.table {
+  margin-bottom: 0;
+}
+
+.table th {
+  font-weight: 600;
+  color: #495057;
+  border-bottom-width: 1px;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+/* Form Controls */
+.form-control-sm,
+.form-select-sm {
+  height: 50px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* Button Styling */
+.btn-soft-success {
+  color: #198754;
+  background-color: rgba(25, 135, 84, 0.1);
+  border: none;
+}
+
+.btn-soft-success:hover {
+  color: #fff;
+  background-color: #198754;
+}
+
+.btn-soft-danger {
+  color: #dc3545;
+  background-color: rgba(220, 53, 69, 0.1);
+  border: none;
+}
+
+.btn-soft-danger:hover {
+  color: #fff;
+  background-color: #dc3545;
+}
+
+/* Alert Styling */
+.alert {
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.alert-danger {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+}
+
+/* Table Hover Effect */
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .content-wrapper {
+    padding: 1rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-responsive {
+    margin: -0.25rem;
+    padding: 0.25rem;
+  }
+  
+  .content-title {
+    font-size: 1.25rem;
+  }
+}

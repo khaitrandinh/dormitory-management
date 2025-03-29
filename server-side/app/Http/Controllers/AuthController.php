@@ -6,29 +6,51 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\Student;
 
 class AuthController extends Controller
 {
     // Đăng ký tài khoản
+    
+
     public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6',
+            'gender' => 'required',
+            'birth_date' => 'required|date',
+            'class' => 'required|string',
+            'faculty' => 'required|string',
+            'phone' => 'required|string',
         ]);
+        
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => 'student', // Mặc định là student
+            'role' => 'student', 
         ]);
+
+        //Tạo bản ghi student tương ứng
+        Student::create([
+            'user_id' => $user->id,
+            'student_code' => 'S' . str_pad($user->id, 5, '0', STR_PAD_LEFT),
+            'gender' => $request->gender,
+            'birth_date' => $request->birth_date,
+            'class' => $request->class,
+            'faculty' => $request->faculty,
+            'phone' => $request->phone,
+        ]);
+        
 
         $token = JWTAuth::fromUser($user);
 
         return response()->json(compact('user', 'token'), 201);
     }
+
 
     // Đăng nhập
     public function login(Request $request)

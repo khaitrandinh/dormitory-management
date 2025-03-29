@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children, roles = [] }) => {
         return <Navigate to="/login" />;
     }
 
-    // Nếu roles được truyền vào và user không thuộc role đó thì redirect về trang chủ
+    
     if (roles.length > 0 && !roles.includes(user.role)) {
         return <Navigate to="/" />;
     }
