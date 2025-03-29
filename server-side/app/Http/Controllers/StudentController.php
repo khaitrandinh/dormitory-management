@@ -102,6 +102,7 @@ class StudentController extends Controller
                 $student->room_request_status = null;
             }
         }
+
         if ($request->has('cancel_request') && $request->cancel_request) {
             if ($student->room_code && $student->room_request_status === 'approved') {
                 $student->room_cancel_status = 'pending';
@@ -109,8 +110,6 @@ class StudentController extends Controller
                 return response()->json(['message' => 'No room to cancel'], 400);
             }
         }
-        
-        
 
         $student->fill($validated)->save();
 
@@ -124,13 +123,15 @@ class StudentController extends Controller
             return response()->json(['message' => 'No pending request to approve'], 400);
         }
 
-        // Sau khi duyệt yêu cầu chọn phòng
         $student->room_request_status = 'approved';
         $student->save();
 
-        // ✅ Tạo hợp đồng trước
         $room = Room::where('room_code', $student->room_code)->first();
-        $existingContract = Contract::where('student_id', $student->id)->first();
+
+        $existingContract = Contract::where('student_id', $student->id)
+            ->where('status', 'active')
+            ->first();
+
         if (!$existingContract) {
             $contract = Contract::create([
                 'student_id' => $student->id,
@@ -141,20 +142,21 @@ class StudentController extends Controller
             ]);
         }
 
-        // ✅ Tạo hóa đơn duy nhất nếu chưa có
-        $existingBill = Payment::where('contract_id', $contract->id ?? $existingContract->id)
+        $contractId = isset($contract) ? $contract->id : $existingContract->id;
+
+        $existingBill = Payment::where('contract_id', $contractId)
             ->where('status', '!=', 'canceled')
             ->first();
 
         if (!$existingBill) {
             Payment::create([
-                'contract_id' => $contract->id ?? $existingContract->id,
+                'contract_id' => $contractId,
                 'amount' => $room->price,
                 'payment_date' => now(),
                 'status' => 'pending',
+                'description' => 'Payment for room approval',
             ]);
         }
-
 
         return response()->json(['message' => 'Room approved and records created']);
     }
@@ -185,21 +187,22 @@ class StudentController extends Controller
 
         return response()->json(['message' => 'Student deleted']);
     }
+
     public function approveCancelRoom($id)
     {
-
         $student = Student::find($id);
         if (!$student || $student->room_cancel_status !== 'pending') {
             return response()->json(['message' => 'No cancel request pending'], 400);
         }
 
-        Contract::where('student_id', $student->id)->update(['status' => 'canceled']);
+        Contract::where('student_id', $student->id)
+            ->where('status', 'active')
+            ->update(['status' => 'canceled']);
 
         $student->room_code = null;
         $student->room_request_status = null;
         $student->room_cancel_status = null;
         $student->save();
-
 
         return response()->json(['message' => 'Room cancellation approved']);
     }
@@ -217,6 +220,4 @@ class StudentController extends Controller
 
         return response()->json(['message' => 'Room cancellation rejected']);
     }
-
-
 }
