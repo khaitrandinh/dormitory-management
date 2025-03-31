@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const token = localStorage.getItem('access_token');
         if (!token) {
-          setLoading(false); // ✅ Không gọi API nếu chưa có token
+          setLoading(false); // Không gọi API nếu chưa có token
           return;
         }
   

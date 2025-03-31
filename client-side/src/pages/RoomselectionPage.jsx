@@ -73,7 +73,7 @@ const RoomSelectionPage = () => {
 
   const handleSelectRoom = async (roomCode) => {
     if (!studentId) {
-      setMessage("❌ You are not recognized as a student.");
+      setMessage("You are not recognized as a student.");
       return;
     }
 

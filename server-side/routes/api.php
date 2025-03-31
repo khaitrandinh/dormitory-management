@@ -17,6 +17,9 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
 // Authenticated routes
+// middleware('auth:api') ensures that the routes are protected and require authentication 
+// using JWT (JSON Web Tokens). This means that only authenticated users can access these routes.
+// The 'auth:api' middleware checks the incoming request for a valid JWT token.  
 Route::middleware('auth:api')->group(function () {
 
     // Auth

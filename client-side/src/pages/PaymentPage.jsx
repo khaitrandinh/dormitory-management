@@ -23,6 +23,7 @@ const PaymentPage = () => {
   const [showPayModal, setShowPayModal] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [users, setUsers] = useState([]);
+  const [contracts, setContracts] = useState([]);
   const [formData, setFormData] = useState({
     contract_id: '',
     amount: '',
@@ -48,30 +49,57 @@ const PaymentPage = () => {
     setUsers(res.data);
   };
 
+  const fetchContracts = async () => {
+    const res = await axios.get('/contracts');
+    setContracts(res.data);
+  };
+
   useEffect(() => {
     fetchPayments();
     if (role === 'admin' || role === 'staff') {
       fetchUsers();
+      fetchContracts();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+  
+    const newValue = ['user_id', 'contract_id'].includes(name)
+      ? value === '' ? '' : Number(value)
+      : value;
+  
+    setFormData({ ...formData, [name]: newValue });
   };
+  
+
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this payment?')) {
       try {
         await axios.delete(`/payments/${id}`);
-        fetchPayments(); // Refresh the payment list after deletion
+        fetchPayments();
       } catch (error) {
         console.error('Failed to delete payment:', error);
         alert('Failed to delete the payment.');
       }
     }
   };
-  
+
   const handleCreate = async (e) => {
     e.preventDefault();
+
+    if (!formData.user_id || !formData.contract_id) {
+      alert('Please select both student and contract');
+      return;
+    }
+
+    const contract = contracts.find(c => c.id === formData.contract_id);
+    if (!contract || contract.student?.user?.id !== formData.user_id) {
+      alert('Invalid contract for selected user');
+      return;
+    }
+
     await axios.post('/payments', formData);
     setShowModal(false);
     setFormData({
@@ -134,28 +162,15 @@ const PaymentPage = () => {
                     <FaFileInvoice className="page-icon" />
                     Payment Management
                   </h1>
-                  <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb">
-                      <li className="breadcrumb-item"><a href="/">Dashboard</a></li>
-                      <li className="breadcrumb-item active">Payment Management</li>
-                    </ol>
-                  </nav>
                 </div>
-
                 <div className="d-flex gap-2">
                   {(role === 'admin' || role === 'staff') && (
-                    <button
-                      className="btn btn-primary d-flex align-items-center"
-                      onClick={() => setShowModal(true)}
-                    >
+                    <button className="btn btn-primary d-flex align-items-center" onClick={() => setShowModal(true)}>
                       <FaPlus className="me-2" />
                       New Invoice
                     </button>
                   )}
-                  <button
-                    className="btn btn-danger d-flex align-items-center"
-                    onClick={exportPDF}
-                  >
+                  <button className="btn btn-danger d-flex align-items-center" onClick={exportPDF}>
                     <FaFileExport className="me-2" />
                     Export PDF
                   </button>
@@ -163,6 +178,7 @@ const PaymentPage = () => {
               </div>
             </div>
           </div>
+
           <Table bordered hover responsive>
             <thead>
               <tr>
@@ -197,7 +213,7 @@ const PaymentPage = () => {
                     )}
                     {(role === 'admin' || role === 'staff') && (
                       <>
-                        <Button size="sm" variant="danger" className="me-2">
+                        <Button size="sm" variant="danger" className="me-2" onClick={() => handleDelete(p.id)}>
                           <FaTrash />
                         </Button>
                         {p.status === 'pending' && (
@@ -212,42 +228,6 @@ const PaymentPage = () => {
               ))}
             </tbody>
           </Table>
-
-          <Modal show={showModal} onHide={() => setShowModal(false)}>
-            <Modal.Header closeButton>
-              <Modal.Title>Create New Payment</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form onSubmit={handleCreate}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Contract ID</Form.Label>
-                  <Form.Control name="contract_id" type="number" onChange={handleChange} required />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Amount (VND)</Form.Label>
-                  <Form.Control name="amount" type="number" onChange={handleChange} required />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Payment Date</Form.Label>
-                  <Form.Control name="payment_date" type="date" onChange={handleChange} required />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Description</Form.Label>
-                  <Form.Control name="description" type="text" onChange={handleChange} />
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Assign to Student (optional)</Form.Label>
-                  <Form.Select name="user_id" value={formData.user_id} onChange={handleChange}>
-                    <option value="">-- No specific user --</option>
-                    {users.map(u => (
-                      <option key={u.id} value={u.id}>{u.name} ({u.email})</option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-                <Button type="submit" variant="primary">Create</Button>
-              </Form>
-            </Modal.Body>
-          </Modal>
 
           <Modal show={showPayModal} onHide={() => setShowPayModal(false)}>
             <Modal.Header closeButton>
@@ -283,94 +263,80 @@ const PaymentPage = () => {
               </div>
             </Modal.Body>
           </Modal>
+
+          <Modal show={showModal} onHide={() => setShowModal(false)} size="lg" centered className="payment-modal">
+            <Modal.Header closeButton className="border-0 pb-0">
+              <Modal.Title className="d-flex align-items-center">
+                <FaPlus className="text-primary me-2" />
+                Create New Payment
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body className="pt-0">
+              <div className="modal-strip"></div>
+              <Form onSubmit={handleCreate} className="payment-form">
+                {(role === 'admin' || role === 'staff') && (
+                  <Form.Group className="mb-3">
+                    <Form.Label>Assign to Student</Form.Label>
+                    <Form.Select
+                      name="user_id"
+                      value={formData.user_id || ""}
+                      onChange={handleChange}
+                      required
+                      className="form-control-lg"
+                    >
+                      <option value="">-- Select user --</option>
+                      {users.map(u => (
+                        <option key={u.id} value={u.id}>{u.name} ({u.email})</option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                )}
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Contract</Form.Label>
+                  <Form.Select
+                    name="contract_id"
+                    value={formData.contract_id || ""}
+                    onChange={handleChange}
+                    required
+                    className="form-control-lg"
+                    disabled={!formData.user_id}
+                  >
+                    <option value="">-- Select contract --</option>
+                    {contracts
+                      .filter(c => c.student?.user?.id === formData.user_id)
+                      .map(c => (
+                        <option key={c.id} value={c.id}>
+                          #{c.id} - {c.student?.user?.name} - Room {c.room?.room_code}
+                        </option>
+                      ))}
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Amount (VND)</Form.Label>
+                  <Form.Control type="number" name="amount" onChange={handleChange} required />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Payment Date</Form.Label>
+                  <Form.Control type="date" name="payment_date" onChange={handleChange} required />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control name="description" type="text" onChange={handleChange} />
+                </Form.Group>
+
+                <div className="modal-footer border-0 pt-4">
+                  <Button variant="light" onClick={() => setShowModal(false)} className="btn-lg px-4">Cancel</Button>
+                  <Button type="submit" variant="primary" className="btn-lg px-4">Create Payment</Button>
+                </div>
+              </Form>
+            </Modal.Body>
+          </Modal>
         </div>
       </div>
-
-      <Modal show={showModal} onHide={() => setShowModal(false)} size="lg" centered className="payment-modal">
-        <Modal.Header closeButton className="border-0 pb-0">
-          <Modal.Title className="d-flex align-items-center">
-            <FaPlus className="text-primary me-2" />
-            Create New Payment
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="pt-0">
-          <div className="modal-strip"></div>
-          <Form onSubmit={handleCreate} className="payment-form">
-            <div className="form-section mb-4">
-              <h6 className="section-title">
-                <span className="section-icon">📋</span>
-                Contract Information
-              </h6>
-              <div className="row g-3">
-                <div className="col-md-12">
-                  <Form.Group>
-                    <Form.Label>Contract ID</Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="contract_id"
-                      onChange={handleChange}
-                      required
-                      placeholder="Enter contract ID"
-                      className="form-control-lg"
-                    />
-                  </Form.Group>
-                </div>
-              </div>
-            </div>
-
-            <div className="form-section mb-4">
-              <h6 className="section-title">
-                <span className="section-icon">💰</span>
-                Payment Details
-              </h6>
-              <div className="row g-3">
-                <div className="col-md-6">
-                  <Form.Group>
-                    <Form.Label>Amount (VND)</Form.Label>
-                    <Form.Control
-                      type="number"
-                      name="amount"
-                      onChange={handleChange}
-                      required
-                      placeholder="Enter amount"
-                      className="form-control-lg"
-                    />
-                  </Form.Group>
-                </div>
-                <div className="col-md-6">
-                  <Form.Group>
-                    <Form.Label>Payment Date</Form.Label>
-                    <Form.Control
-                      type="date"
-                      name="payment_date"
-                      onChange={handleChange}
-                      required
-                      className="form-control-lg"
-                    />
-                  </Form.Group>
-                </div>
-              </div>
-            </div>
-            
-            <div className="modal-footer border-0 pt-4">
-              <Button 
-                variant="light" 
-                onClick={() => setShowModal(false)}
-                className="btn-lg px-4"
-              >
-                Cancel
-              </Button>
-              <Button 
-                type="submit" 
-                variant="primary"
-                className="btn-lg px-4"
-              >
-                Create Payment
-              </Button>
-            </div>
-          </Form>
-        </Modal.Body>
-      </Modal>
     </div>
   );
 };

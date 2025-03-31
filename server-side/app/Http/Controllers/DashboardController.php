@@ -37,19 +37,32 @@ class DashboardController extends Controller
                 'roomStatus' => Room::withCount('activeContracts')->get()->map(function ($room) {
                     $bedAvailable = $room->bed_count - $room->active_contracts_count;
 
-                    $status = $room->status === 'Maintenance'
-                        ? 'Maintenance'
-                        : ($bedAvailable == 0 ? 'Full' : 'Available');
+                    // ✅ Luôn giữ nguyên status do người dùng đặt
+                    $userStatus = $room->status;
+
+                    // ✅ Tính toán status hiển thị (status_display)
+                    if ($userStatus === 'Maintenance') {
+                        $statusDisplay = 'Maintenance';
+                    } elseif ($bedAvailable <= 0) {
+                        $statusDisplay = 'Full';
+                    } elseif ($bedAvailable === $room->bed_count) {
+                        $statusDisplay = 'Available';
+                    } else {
+                        $statusDisplay = 'Occupied';
+                    }
 
                     return [
                         'id' => $room->id,
                         'building' => $room->building,
                         'room' => $room->room_code,
-                        'status' => $status,
+                        'status' => $userStatus, // status được user chọn (hiển thị trong dropdown)
+                        'status_display' => $statusDisplay, // status thực tế (hiển thị badge)
                         'bed_count' => $room->bed_count,
                         'bed_available' => $bedAvailable,
                     ];
                 }),
+
+
 
                 'notifications' => Notification::orderBy('created_at', 'desc')->take(5)->get(['id', 'message', 'created_at']),
 

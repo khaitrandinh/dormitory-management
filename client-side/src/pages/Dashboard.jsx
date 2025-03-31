@@ -32,6 +32,11 @@ const Dashboard = () => {
       .catch(err => console.error("Failed to fetch dashboard data", err))
       .finally(() => setLoading(false));
   };
+  const roomStatusData = data?.roomStatus?.map(room => ({
+    ...room,
+    status_display: room.status_display || room.status
+  })) || [];
+  console.log("roomStatus data:", data?.roomStatus);
 
   useEffect(() => {
     fetchDashboardData();
@@ -168,7 +173,7 @@ const Dashboard = () => {
                   <div className="col-12">
                     <div className="content-card">
                       <h5 className="content-card-title">Room Status</h5>
-                      <RoomStatusTable data={data.roomStatus || []} onRefresh={fetchDashboardData} />
+                      <RoomStatusTable data={roomStatusData} onRefresh={fetchDashboardData} />
                     </div>
                   </div>
                 </div>
