@@ -36,6 +36,20 @@ const AdminPage = () => {
   const updateRole = async (id, newRole) => {
     setLoading(true);
     try {
+      const currentUser = users.find((user) => user.id === id);
+  
+      // Nếu đang là admin và muốn chuyển đi, kiểm tra xem có còn admin nào khác không
+      if (currentUser.role === 'admin' && newRole !== 'admin') {
+        const otherAdmins = users.filter(
+          (user) => user.role === 'admin' && user.id !== id
+        );
+        if (otherAdmins.length === 0) {
+          setError("You cannot remove the last admin.");
+          setLoading(false);
+          return;
+        }
+      }
+  
       await axios.put(`/admin/users/${id}`, { role: newRole });
       fetchUsers();
     } catch (err) {
@@ -44,6 +58,7 @@ const AdminPage = () => {
       setLoading(false);
     }
   };
+  
 
   const updateStatus = async (id, newStatus) => {
     setLoading(true);

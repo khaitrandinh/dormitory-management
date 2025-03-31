@@ -45,7 +45,7 @@ class AuthController extends Controller
             'phone' => $request->phone,
         ]);
         
-
+        //Func FromUser là hàm tạo token cho user được tich hợp sẵn trong JWTAuth
         $token = JWTAuth::fromUser($user);
 
         return response()->json(compact('user', 'token'), 201);
@@ -55,8 +55,9 @@ class AuthController extends Controller
     // Đăng nhập
     public function login(Request $request)
     {
+        
         $credentials = $request->only('email', 'password');
-
+        // attempt là hàm kiểm tra thông tin đăng nhập 
         if (!$token = JWTAuth::attempt($credentials)) {
             return response()->json(['error' => 'Sai thông tin đăng nhập'], 401);
         }
